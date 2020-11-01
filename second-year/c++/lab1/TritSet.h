@@ -17,16 +17,24 @@ class TritSet{
 private:
     vector<uint> uintVector;
     uLL cntTritsInSet = 0;
-    void setTritByFullIdx(uLL blockIdx, uLL tritInBlockIdx, Trit tritValue);
-    void setTritByIdxInSet(uLL tritInSetIdx, Trit tritValue);
+    void setTritByFullIdx(uLL blockIdx, uLL tritInBlockIdx, Trit trit);
+    void setTritByIdxInSet(uLL tritInSetIdx, Trit trit);
     Trit getTritByIdxInSet(uLL index) const;
-//    Trit getTritByFullIdx(uLL beginIdx, uLL endIdx) const;
+    uint8_t tritSign(Trit trit) const;
+    Trit bitMaskInterpreter(uint8_t value) const;
+    struct tritSignificator {
+        uint8_t operator()(Trit trit) const {
+            return static_cast<uint8_t>(trit);
+        }
+    };
 public:
     explicit TritSet(uLL size);
-    TritSet(TritSet &&sourceSet) noexcept;
-    uLL capacity();
+    TritSet(TritSet&& sourceSet) noexcept;
+    uLL capacity() const;
     uLL size() const;
     void shrink();
+    size_t cardinality(Trit value);
+    unordered_map<Trit, uLL, tritSignificator> cardinality();
     void trim(uLL lastIndex);
     uLL length();
     struct tritHandler{
