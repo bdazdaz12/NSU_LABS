@@ -5,13 +5,10 @@
 
 using namespace std;
 
-//TODO: cardinality, тесты
+//TODO: тесты
 
-int main(int argc, char** argv) {
-    TritSet a(123);
-    a[16] = Trit::False;
-    a.shrink();
-    cout << a.size();
+int main(int argc, char** argv){
+
 }
 
 //int main(int argc, char** argv) {

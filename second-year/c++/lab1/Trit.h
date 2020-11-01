@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-enum Trit : uint8_t {
+enum class Trit : uint8_t{
     False = 0, //00
     Unknown = 1, //01
     True = 3 //11
