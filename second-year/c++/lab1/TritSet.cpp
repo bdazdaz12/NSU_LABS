@@ -37,12 +37,12 @@ TritSet TritSet::operator | (TritSet& scndArg){
 }
 
 TritSet TritSet::operator & (TritSet& scndArg){
-    TritSet ans(scndArg.capacity() > this->size() ? scndArg.size() : this->size());
-    ans.uintVector = scndArg.size() > this->size() ? scndArg.uintVector : this->uintVector;
-    ans.cntTritsInSet = scndArg.size() > this->size() ? scndArg.cntTritsInSet : this->cntTritsInSet;
-    uint minSetSize = scndArg.size() > this->size() ? this->uintVector.size() : scndArg.uintVector.size();
+    TritSet ans(scndArg.size() > this->size()? scndArg.size() : this->size());
+    ans.uintVector = scndArg.size() > this->size()? scndArg.uintVector : this->uintVector;
+    ans.cntTritsInSet = scndArg.size() > this->size()? scndArg.cntTritsInSet : this->cntTritsInSet;
+    uint minSetSize = scndArg.size() > this->size()? this->uintVector.size() : scndArg.uintVector.size();
     for (uint i = 0; i < minSetSize; ++i){
-        ans.uintVector[i] &= scndArg.size() > this->size() ? this->uintVector[i] : scndArg.uintVector[i];
+        ans.uintVector[i] &= scndArg.size() > this->size()? this->uintVector[i] : scndArg.uintVector[i];
     }
     return move(ans);
 }
@@ -74,12 +74,16 @@ TritSet::TritSet(TritSet&& sourceSet) noexcept {
     sourceSet.cntTritsInSet = 0;
 }
 
-uLL TritSet::capacity() const{ ///количество занятых блоков
+uLL TritSet::capacity() const { ///количество занятых блоков
     return ceil(cntTritsInSet / 16.);
 }
 
-Trit TritSet::getTritByIdxInSet(uLL index) const {    //TODO:индексация тритов в блоке идет справа налево
-    uLL blockIdx = index / 16;                       //TODO:индексируем с нуля
+inline uLL TritSet::size() const { ///размер множества
+    return cntTritsInSet;
+}
+
+Trit TritSet::getTritByIdxInSet(uLL index) const {    //TODO:индексация тритов в блоке идет справа налево <--
+    uLL blockIdx = index / 16;                       //TODO:индексируем с нуля  ... 3 2 1 <-- 0
     uLL tritInBlockIdx = index % cntOfTritsInBlock;
     uint8_t value = 0;
     value |= getBit(uintVector[blockIdx], tritInBlockIdx * 2 + 1) << 1u;
@@ -90,7 +94,7 @@ Trit TritSet::getTritByIdxInSet(uLL index) const {    //TODO:индексаци�
 void TritSet::setTritByIdxInSet(uLL tritInSetIdx, Trit trit){
     uLL blockIdx = tritInSetIdx / 16;
     uint tritInBlockIdx = tritInSetIdx % cntOfTritsInBlock;
-///    uint8_t tritSignValue = tritSign(trit);
+///    uint8_t tritSignValue = tritSign(Trit);
     setBit(uintVector[blockIdx], tritSign(trit) & 1u, tritInBlockIdx * 2);
     setBit(uintVector[blockIdx], (tritSign(trit) >> 1) & 1u, tritInBlockIdx * 2 + 1);
 }
@@ -101,12 +105,11 @@ void TritSet::setTritByFullIdx(uLL blockIdx, uLL tritInBlockIdx, Trit trit) {
 }
 
 void TritSet::shrink(){
-    uint curAllocMemSize = uintVector.size();
-    for(uint i = curAllocMemSize - 1;; --i){
+    uLL curAllocMemSize = uintVector.size();
+    for(uLL i = curAllocMemSize - 1; i >= 0; --i){
         if(uintVector[i] ^ unknownTritMask){
             uintVector.resize(i + 1);
-            cntTritsInSet -= cntTritsInSet % cntOfTritsInBlock + 1;
-            cntTritsInSet -= (curAllocMemSize - i - 2) * cntOfTritsInBlock;
+            cntTritsInSet = (i + 1) * cntOfTritsInBlock;
             break;
         }
         if(!i){
@@ -115,10 +118,11 @@ void TritSet::shrink(){
             return;
         }
     }
+    // работаем с последним определенным блоком (вычтем кол-во тритов, которого не хватает до полного последнего блока)
     uint lastDeterminedBlock = uintVector[uintVector.size() - 1];
-    for(uint i = 0; i < cntTritsInSet % cntOfTritsInBlock; ++i){ //идем с конца блока, т.е. справа налево
+    for(int i = cntOfTritsInBlock - 1; i >= 0; --i){ //идем с конца блока, т.е. слева направо
         if ((lastDeterminedBlock >> (i * 2u + 1u) & 1u) || !(lastDeterminedBlock >> (i * 2u) & 1u)) {
-            cntTritsInSet -= cntTritsInSet % cntOfTritsInBlock - (i + 1);
+            cntTritsInSet -= cntOfTritsInBlock - (i + 1);
             break;
         }
     }
@@ -180,8 +184,4 @@ uLL TritSet::length(){ ///индекс послднего не unknown трит�
         }
     }
     return 0;
-}
-
-inline uLL TritSet::size() const {
-    return cntTritsInSet;
 }
