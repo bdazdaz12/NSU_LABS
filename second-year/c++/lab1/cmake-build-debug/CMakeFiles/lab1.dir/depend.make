@@ -22,6 +22,8 @@ CMakeFiles/lab1.dir/Tests.cpp.obj: ../googletest/googletest/include/gtest/intern
 CMakeFiles/lab1.dir/Tests.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-string.h
 CMakeFiles/lab1.dir/Tests.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-type-util.h
 CMakeFiles/lab1.dir/Tests.cpp.obj: ../Tests.cpp
+CMakeFiles/lab1.dir/Tests.cpp.obj: ../Trit.h
+CMakeFiles/lab1.dir/Tests.cpp.obj: ../TritSet.h
 
 CMakeFiles/lab1.dir/Trit.cpp.obj: ../Trit.cpp
 CMakeFiles/lab1.dir/Trit.cpp.obj: ../Trit.h
