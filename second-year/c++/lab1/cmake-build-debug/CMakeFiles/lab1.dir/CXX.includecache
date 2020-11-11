@@ -326,6 +326,18 @@ cxxabi.h
 acxx_demangle.h
 -
 
+C:/Users/user/CLionProjects/lab1/Tests.cpp
+gtest/gtest.h
+-
+iostream
+-
+TritSet.h
+C:/Users/user/CLionProjects/lab1/TritSet.h
+
+C:/Users/user/CLionProjects/lab1/Trit.cpp
+Trit.h
+C:/Users/user/CLionProjects/lab1/Trit.h
+
 C:/Users/user/CLionProjects/lab1/Trit.h
 iostream
 -

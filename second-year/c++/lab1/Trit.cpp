@@ -89,3 +89,15 @@ Trit operator & (Trit a, Trit b){
     }
     return Trit::Unknown;
 }
+
+void operator |= (Trit& a, Trit b){
+    a = a | b;
+}
+
+void operator &= (Trit& a, Trit b){
+    a = a & b;
+}
+
+uint8_t tritSign(Trit trit){
+    return static_cast<uint8_t>(trit);
+}
