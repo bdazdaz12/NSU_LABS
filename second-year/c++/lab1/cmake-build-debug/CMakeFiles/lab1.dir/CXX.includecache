@@ -334,17 +334,9 @@ iostream
 TritSet.h
 C:/Users/user/CLionProjects/lab1/TritSet.h
 
-C:/Users/user/CLionProjects/lab1/Trit.cpp
-Trit.h
-C:/Users/user/CLionProjects/lab1/Trit.h
-
 C:/Users/user/CLionProjects/lab1/Trit.h
 iostream
 -
-
-C:/Users/user/CLionProjects/lab1/TritSet.cpp
-TritSet.h
-C:/Users/user/CLionProjects/lab1/TritSet.h
 
 C:/Users/user/CLionProjects/lab1/TritSet.h
 Trit.h
@@ -355,12 +347,4 @@ vector
 -
 cmath
 -
-
-C:/Users/user/CLionProjects/lab1/main.cpp
-iostream
--
-gtest/gtest.h
--
-TritSet.h
-C:/Users/user/CLionProjects/lab1/TritSet.h
 
