@@ -18,7 +18,7 @@ TritSet::tritHandler TritSet::operator [] (uLL tritIdx) {
     return handler;
 }
 
-TritSet TritSet::operator | (const TritSet& scndArg){
+TritSet TritSet::operator | (const TritSet& scndArg) const{
     TritSet ans(scndArg.size() > this->size()? scndArg.size() : this->size());
     ans.uintVector = scndArg.size() > this->size()? scndArg.uintVector : this->uintVector;
     uint minSetSize = scndArg.size() > this->size()? this->uintVector.size() : scndArg.uintVector.size();
@@ -33,7 +33,7 @@ TritSet& TritSet::operator |= (const TritSet& scndArg){
     return *this;
 }
 
-TritSet TritSet::operator & (const TritSet& scndArg){
+TritSet TritSet::operator & (const TritSet& scndArg) const{
     TritSet ans(scndArg.size() > this->size()? scndArg.size() : this->size());
     ans.uintVector = scndArg.size() > this->size()? scndArg.uintVector : this->uintVector;
     uint minSetSize = scndArg.size() > this->size()? this->uintVector.size() : scndArg.uintVector.size();
@@ -48,7 +48,7 @@ TritSet& TritSet::operator &= (const TritSet& scndArg){
     return *this;
 }
 
-TritSet TritSet::operator ! () {
+TritSet TritSet::operator ! () const{
     TritSet reverseTritSet(this->size());
     reverseTritSet.uintVector = this->uintVector;
     reverseTritSet.cntTritsInSet = this->cntTritsInSet;
@@ -67,6 +67,11 @@ TritSet TritSet::operator ! () {
 TritSet::TritSet(uLL size){
     cntTritsInSet = size;
     uintVector.resize(ceil(size / 16.), unknownTritMask);
+}
+
+TritSet::TritSet(const TritSet& set) {
+    cntTritsInSet = set.cntTritsInSet;
+    uintVector = set.uintVector;
 }
 
 //TritSet::TritSet(TritSet&& sourceSet) noexcept {
@@ -185,4 +190,13 @@ uLL TritSet::length(){ ///индекс послднего не unknown трит�
         }
     }
     return 0;
+}
+
+TritSet & TritSet::operator=(const TritSet& set) {
+    if (this == &set) {
+        return *this;
+    }
+    this->cntTritsInSet = set.cntTritsInSet;
+    this->uintVector = set.uintVector;
+    return *this;
 }

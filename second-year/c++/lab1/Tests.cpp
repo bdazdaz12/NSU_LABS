@@ -2,6 +2,15 @@
 #include <iostream>
 #include "TritSet.h"
 
+TEST (copyOperator, cwerawr){
+    TritSet s1;
+    TritSet s2(123);
+    s2[12] = Trit::False;
+    s1 = s2;
+    s2[12] = Trit::True;
+    ASSERT_EQ(s1[12], Trit::False);
+}
+
 TEST(MemoryAllocationTest, ConstructorAllocationTest) {
     for (int i = 0; i <= 1000; ++i) {
         TritSet set(i);

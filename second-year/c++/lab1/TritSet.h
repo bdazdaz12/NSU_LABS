@@ -66,8 +66,10 @@ private:
         }
     };
 public:
+    TritSet() = default;
     explicit TritSet(uLL size);
 //    TritSet(TritSet&& sourceSet) noexcept;
+    TritSet(const TritSet& set);
     uLL capacity() const;
     uLL size() const;
     void shrink();
@@ -79,9 +81,10 @@ public:
         return outputStream << tritHandler.getProcessedSet().getTrit(tritHandler.getProcessedTritIdx());
     }
     tritHandler operator [] (uLL tritIdx);
-    TritSet operator | (const TritSet& scndArg);
+    TritSet operator | (const TritSet& scndArg) const;
     TritSet& operator |= (const TritSet& scndArg);
-    TritSet operator & (const TritSet& scndArg);
+    TritSet operator & (const TritSet& scndArg) const;
     TritSet& operator &= (const TritSet& scndArg);
-    TritSet operator ! ();
+    TritSet operator ! () const;
+    TritSet& operator = (const TritSet& set);
 };
