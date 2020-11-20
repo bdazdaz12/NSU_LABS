@@ -68,7 +68,6 @@ private:
 public:
     TritSet() = default;
     explicit TritSet(uLL size);
-//    TritSet(TritSet&& sourceSet) noexcept;
     TritSet(const TritSet& set);
     uLL capacity() const;
     uLL size() const;

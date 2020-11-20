@@ -2,15 +2,6 @@
 #include <iostream>
 #include "TritSet.h"
 
-TEST (copyOperator, cwerawr){
-    TritSet s1;
-    TritSet s2(123);
-    s2[12] = Trit::False;
-    s1 = s2;
-    s2[12] = Trit::True;
-    ASSERT_EQ(s1[12], Trit::False);
-}
-
 TEST(MemoryAllocationTest, ConstructorAllocationTest) {
     for (int i = 0; i <= 1000; ++i) {
         TritSet set(i);
@@ -81,7 +72,7 @@ TEST(MemoryAllocationTest, tritOperationAllocation) {
     ASSERT_EQ(b.capacity(), c.capacity());
 }
 
-TEST(TritSetOperationsTest, OrTest) {
+TEST(TritSetOperatorsTest, OrTest) {
     TritSet a(3);
     TritSet b(3);
     a[0] = Trit::Unknown;
@@ -96,7 +87,7 @@ TEST(TritSetOperationsTest, OrTest) {
     ASSERT_EQ(c[2], Trit::Unknown);
 }
 
-TEST(TritSetOperationsTest, AndTest) {
+TEST(TritSetOperatorsTest, AndTest) {
     TritSet a(3);
     TritSet b(3);
     a[0] = Trit::Unknown;
@@ -111,7 +102,7 @@ TEST(TritSetOperationsTest, AndTest) {
     ASSERT_EQ(c[2], Trit::Unknown);
 }
 
-TEST(TritSetOperationsTest, NotTest) {
+TEST(TritSetOperatorsTest, NotTest) {
     TritSet a(3);
     a[0] = Trit::True;
     a[1] = Trit::False;
@@ -122,7 +113,7 @@ TEST(TritSetOperationsTest, NotTest) {
     ASSERT_EQ(b[2], Trit::Unknown);
 }
 
-TEST(TritSetOperationsTest, assignmentTest) {
+TEST(TritSetOperatorsTest, assignmentTest) {
     TritSet a(3);
     a[0] = Trit::False;
     a[1] = Trit::Unknown;
@@ -132,7 +123,7 @@ TEST(TritSetOperationsTest, assignmentTest) {
     ASSERT_EQ(a[2], Trit::True);
 }
 
-TEST(TritSetOperationsTest, assignmentOrTest) {
+TEST(TritSetOperatorsTest, assignmentOrTest) {
     TritSet a(3);
     a[0] |= Trit::False;
     a[1] |= Trit::Unknown;
@@ -142,7 +133,7 @@ TEST(TritSetOperationsTest, assignmentOrTest) {
     ASSERT_EQ(a[2], Trit::True);
 }
 
-TEST(TritSetOperationsTest, assignmentAndTest) {
+TEST(TritSetOperatorsTest, assignmentAndTest) {
     TritSet a(3);
     a[0] &= Trit::False;
     a[1] &= Trit::Unknown;
@@ -152,7 +143,7 @@ TEST(TritSetOperationsTest, assignmentAndTest) {
     ASSERT_EQ(a[2], Trit::Unknown);
 }
 
-TEST(TritSetOperationsTest, tritInSetAccessTest) {
+TEST(TritSetOperatorsTest, tritInSetAccessTest) {
     TritSet a(3);
     a[0] = Trit::False;
     a[1] = Trit::Unknown;
@@ -163,6 +154,15 @@ TEST(TritSetOperationsTest, tritInSetAccessTest) {
     ASSERT_EQ(e0, Trit::False);
     ASSERT_EQ(e1, Trit::Unknown);
     ASSERT_EQ(e2, Trit::True);
+}
+
+TEST (TritSetOperatorsTest, copyOperator){
+    TritSet a(123);
+    a[12] = Trit::False;
+    TritSet b;
+    b = a;
+    a[12] = Trit::True;
+    ASSERT_EQ(b[12], Trit::False);
 }
 
 TEST(TritSetFunctionsTests, CardinalityTest) {

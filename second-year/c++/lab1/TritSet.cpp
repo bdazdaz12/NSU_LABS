@@ -64,6 +64,15 @@ TritSet TritSet::operator ! () const{
     return move(reverseTritSet);
 }
 
+TritSet& TritSet::operator = (const TritSet& set) {
+    if (this == &set) {
+        return *this;
+    }
+    this->cntTritsInSet = set.cntTritsInSet;
+    this->uintVector = set.uintVector;
+    return *this;
+}
+
 TritSet::TritSet(uLL size){
     cntTritsInSet = size;
     uintVector.resize(ceil(size / 16.), unknownTritMask);
@@ -73,12 +82,6 @@ TritSet::TritSet(const TritSet& set) {
     cntTritsInSet = set.cntTritsInSet;
     uintVector = set.uintVector;
 }
-
-//TritSet::TritSet(TritSet&& sourceSet) noexcept {
-//    uintVector = move(sourceSet.uintVector);
-//    cntTritsInSet = sourceSet.cntTritsInSet;
-//    sourceSet.cntTritsInSet = 0;
-//}
 
 uLL TritSet::capacity() const { ///количество занятых блоков
     return ceil(cntTritsInSet / 16.);
@@ -190,13 +193,4 @@ uLL TritSet::length(){ ///индекс послднего не unknown трит�
         }
     }
     return 0;
-}
-
-TritSet & TritSet::operator=(const TritSet& set) {
-    if (this == &set) {
-        return *this;
-    }
-    this->cntTritsInSet = set.cntTritsInSet;
-    this->uintVector = set.uintVector;
-    return *this;
 }
