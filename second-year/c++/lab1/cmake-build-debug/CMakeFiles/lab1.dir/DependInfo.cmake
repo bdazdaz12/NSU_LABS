@@ -4,10 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/yevsy/Desktop/lab1/Tests.cpp" "C:/Users/yevsy/Desktop/lab1/cmake-build-debug/CMakeFiles/lab1.dir/Tests.cpp.obj"
-  "C:/Users/yevsy/Desktop/lab1/Trit.cpp" "C:/Users/yevsy/Desktop/lab1/cmake-build-debug/CMakeFiles/lab1.dir/Trit.cpp.obj"
-  "C:/Users/yevsy/Desktop/lab1/TritSet.cpp" "C:/Users/yevsy/Desktop/lab1/cmake-build-debug/CMakeFiles/lab1.dir/TritSet.cpp.obj"
-  "C:/Users/yevsy/Desktop/lab1/main.cpp" "C:/Users/yevsy/Desktop/lab1/cmake-build-debug/CMakeFiles/lab1.dir/main.cpp.obj"
+  "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/Tests.cpp" "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/CMakeFiles/lab1.dir/Tests.cpp.obj"
+  "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/Trit.cpp" "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/CMakeFiles/lab1.dir/Trit.cpp.obj"
+  "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.cpp" "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/CMakeFiles/lab1.dir/TritSet.cpp.obj"
+  "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/main.cpp" "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/CMakeFiles/lab1.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -20,7 +20,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "C:/Users/yevsy/Desktop/lab1/cmake-build-debug/googletest/googletest/CMakeFiles/gtest.dir/DependInfo.cmake"
+  "C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/googletest/googletest/CMakeFiles/gtest.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

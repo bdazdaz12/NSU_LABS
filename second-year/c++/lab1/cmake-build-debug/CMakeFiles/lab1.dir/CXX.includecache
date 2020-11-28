@@ -326,25 +326,25 @@ cxxabi.h
 acxx_demangle.h
 -
 
-C:/Users/yevsy/Desktop/lab1/Tests.cpp
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/Tests.cpp
 gtest/gtest.h
 -
 iostream
 -
 TritSet.h
-C:/Users/yevsy/Desktop/lab1/TritSet.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.h
 
-C:/Users/yevsy/Desktop/lab1/Trit.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/Trit.h
 iostream
 -
 
-C:/Users/yevsy/Desktop/lab1/TritSet.cpp
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.cpp
 TritSet.h
-C:/Users/yevsy/Desktop/lab1/TritSet.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.h
 
-C:/Users/yevsy/Desktop/lab1/TritSet.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.h
 Trit.h
-C:/Users/yevsy/Desktop/lab1/Trit.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/Trit.h
 unordered_map
 -
 vector
@@ -352,11 +352,11 @@ vector
 cmath
 -
 
-C:/Users/yevsy/Desktop/lab1/main.cpp
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/main.cpp
 iostream
 -
 gtest/gtest.h
 -
 TritSet.h
-C:/Users/yevsy/Desktop/lab1/TritSet.h
+C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/TritSet.h
 
