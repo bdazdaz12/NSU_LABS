@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/yevsy/Desktop/lab1/googletest
+# Install script for directory: C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/googletest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/yevsy/Desktop/lab1/cmake-build-debug/googletest/googlemock/cmake_install.cmake")
+  include("C:/Users/yevsyukof/Desktop/git/NSU_LABS/second-year/c++/lab1/cmake-build-debug/googletest/googlemock/cmake_install.cmake")
 
 endif()
 

@@ -80,10 +80,10 @@ public:
         return outputStream << tritHandler.getProcessedSet().getTrit(tritHandler.getProcessedTritIdx());
     }
     tritHandler operator [] (uLL tritIdx);
-    TritSet operator | (const TritSet& scndArg) const;
+    const TritSet operator | (const TritSet& scndArg) const;
     TritSet& operator |= (const TritSet& scndArg);
-    TritSet operator & (const TritSet& scndArg) const;
+    const TritSet operator & (const TritSet& scndArg) const;
     TritSet& operator &= (const TritSet& scndArg);
-    TritSet operator ! () const;
+    const TritSet operator ! () const;
     TritSet& operator = (const TritSet& set);
 };
