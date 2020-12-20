@@ -11,7 +11,5 @@ class IWorker: protected IToolkit {
 protected:
     virtual ~IWorker() = default;
 public:
-    virtual bool execute(conveyor& curStage){ //TODO:
-        return true;
-    };
+    virtual void execute(conveyor& curStage) = 0;
 };

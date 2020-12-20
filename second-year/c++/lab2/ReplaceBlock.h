@@ -13,7 +13,7 @@ public:
         this->word2 = word2;
     };
     ~ReplaceBlock() override = default;
-    bool execute(conveyor& curStage) override;
-    bool isValid(conveyor& curStage) override;
+    void execute(conveyor& curStage) override;
+    string isValid(const conveyor& curStage) override;
     void errorHandler(string&& messages) override;
 };

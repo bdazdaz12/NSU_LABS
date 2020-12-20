@@ -1,8 +1,9 @@
 #include <iostream>
 #include <memory>
-#include "ProgramParser.h"
-#include "IWorker.h"
-#include "WriteFileBlock.h"
+#include <fstream>
+//#include "ProgramParser.h"
+//#include "IWorker.h"
+//#include "WriteFileBlock.h"
 
 using namespace std;
 
@@ -23,13 +24,14 @@ inline void checkInput(int argc, char** argv, string& inputFile, string& outputF
 }
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
-        throw std::invalid_argument("Wrong console haveInput! not enough!");
-    }
-    string workflowFile = argv[1];
-    string inputFile, outputFile;
-    if (argc > 2){
-        checkInput(argc, argv, inputFile, outputFile);
-    }
-    ProgramParser::parseProgram(workflowFile, inputFile, outputFile);
+    cout << "yra";
+//    if (argc < 2) {
+//        throw std::invalid_argument("Wrong console haveInput! not enough!");
+//    }
+//    string workflowFile = argv[1];
+//    string inputFile, outputFile;
+//    if (argc > 2){
+//        checkInput(argc, argv, inputFile, outputFile);
+//    }
+//    ProgramParser::parseProgram(workflowFile, inputFile, outputFile);
 }
