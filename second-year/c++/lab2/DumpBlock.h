@@ -2,11 +2,21 @@
 
 #include "IWorker.h"
 #include "IValidator.h"
+#include <fstream>
 
 class DumpBlock: public IWorker, IValidator {
+private:
+    string filename;
+    ofstream outputFile;
 public:
-    DumpBlock() = default;
-    ~DumpBlock() override = default;
-    bool execute(vector<string> *inputData, vector<string> *outputData, bool input, bool output, int idx) override;
-    bool isValid() override;
+    explicit DumpBlock(const string& filename) {
+        this->filename = filename;
+        outputFile.open(filename);
+    };
+    ~DumpBlock() override {
+        outputFile.close();
+    };
+    void execute(conveyor& curStage) override;
+    string isValid(const conveyor& curStage) override;
+    void errorHandler(string&& messages) override;
 };

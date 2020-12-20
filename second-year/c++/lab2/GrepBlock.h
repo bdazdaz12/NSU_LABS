@@ -4,9 +4,14 @@
 #include "IValidator.h"
 
 class GrepBlock: IWorker, IValidator {
+private:
+    string word;
 public:
-    GrepBlock() = default;
+    explicit GrepBlock(const string& word) {
+        this->word = word;
+    };
     ~GrepBlock() override = default;
-    bool execute(vector<string> *inputData, vector<string> *outputData, bool input, bool output, int idx) override;
-    bool isValid() override;
+    void execute(conveyor& curStage) override;
+    string isValid(const conveyor& curStage) override;
+    void errorHandler(string&& messages) override;
 };

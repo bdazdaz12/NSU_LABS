@@ -2,11 +2,13 @@
 
 #include "IWorker.h"
 #include "IValidator.h"
+#include <algorithm>
 
 class SortBlock: public IWorker, IValidator {
 public:
     SortBlock() = default;
     ~SortBlock() override = default;
-    bool execute(vector<string> *inputData, vector<string> *outputData, bool input, bool output, int idx) override;
-    bool isValid() override;
+    void execute(conveyor& curStage) override;
+    string isValid(const conveyor& curStage) override;
+    void errorHandler(string&& messages) override;
 };

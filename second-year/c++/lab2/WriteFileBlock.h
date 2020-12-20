@@ -2,10 +2,21 @@
 
 #include "IWorker.h"
 #include "IValidator.h"
+#include <fstream>
 
 class WriteFileBlock: public IWorker, IValidator {
-protected:
-    bool isValid() override;
+private:
+    string filename;
+    ofstream outputFile;
 public:
-    bool execute(vector<string> *inputData, vector<string> *outputData, bool input, bool output, int idx) override;
+    explicit WriteFileBlock(const string& filename) {
+        this->filename = filename;
+        outputFile.open(filename);
+    };
+    ~WriteFileBlock() override {
+        outputFile.close();
+    };
+    void execute(conveyor& curStage) override;
+    string isValid(const conveyor& curStage) override;
+    void errorHandler(string&& messages) override;
 };

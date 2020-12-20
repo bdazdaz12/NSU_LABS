@@ -1,24 +1,26 @@
 #include "ReplaceBlock.h"
 
-bool ReplaceBlock::isValid(conveyor& curStage) {
+string ReplaceBlock::isValid(const conveyor& curStage) {
     if (!curStage.haveInput){
-        return false;
+        return "Null data input on text replace! Block index: " + to_string(curStage.idx);
     }
-    return true;
+    return "";
 }
 
 void ReplaceBlock::errorHandler(string &&messages) {
     throw logic_error(messages);
 }
 
-bool ReplaceBlock::execute(conveyor& curStage) {
-    if(!isValid(curStage)){
-        errorHandler("Null data input on text replace! Block index: " + to_string(curStage.idx));
+void ReplaceBlock::execute(conveyor& curStage) {
+    string&& verdict = isValid(curStage);
+    if(!verdict.empty()){
+        errorHandler(move(verdict));
         //end of work
     }
+    curStage.haveOutput = true;
     curStage.output = curStage.input;
     if(curStage.input.empty()){
-        return true;
+        return;
     }
     for (auto& curStr: curStage.output){
         size_t entry;
@@ -26,6 +28,4 @@ bool ReplaceBlock::execute(conveyor& curStage) {
             curStr.replace(entry, word1.size(), word2);
         }
     }
-    curStage.haveOutput = true;
-    return true;
 }
