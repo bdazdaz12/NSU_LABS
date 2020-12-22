@@ -13,17 +13,18 @@ CMakeFiles/lab2.dir/GrepBlock.cpp.obj: ../IToolkit.h
 CMakeFiles/lab2.dir/GrepBlock.cpp.obj: ../IValidator.h
 CMakeFiles/lab2.dir/GrepBlock.cpp.obj: ../IWorker.h
 
+CMakeFiles/lab2.dir/ProgramExecutor.cpp.obj: ../Blueprint.h
 CMakeFiles/lab2.dir/ProgramExecutor.cpp.obj: ../IToolkit.h
 CMakeFiles/lab2.dir/ProgramExecutor.cpp.obj: ../IWorker.h
 CMakeFiles/lab2.dir/ProgramExecutor.cpp.obj: ../ProgramExecutor.cpp
 CMakeFiles/lab2.dir/ProgramExecutor.cpp.obj: ../ProgramExecutor.h
 
+CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../Blueprint.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../DumpBlock.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../GrepBlock.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../IToolkit.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../IValidator.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../IWorker.h
-CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../ProgramExecutor.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../ProgramParser.cpp
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../ProgramParser.h
 CMakeFiles/lab2.dir/ProgramParser.cpp.obj: ../ReadFileBlock.h
@@ -55,5 +56,17 @@ CMakeFiles/lab2.dir/WriteFileBlock.cpp.obj: ../IWorker.h
 CMakeFiles/lab2.dir/WriteFileBlock.cpp.obj: ../WriteFileBlock.cpp
 CMakeFiles/lab2.dir/WriteFileBlock.cpp.obj: ../WriteFileBlock.h
 
+CMakeFiles/lab2.dir/main.cpp.obj: ../Blueprint.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../DumpBlock.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../GrepBlock.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../IToolkit.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../IValidator.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../IWorker.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../ProgramExecutor.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../ProgramParser.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../ReadFileBlock.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../ReplaceBlock.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../SortBlock.h
+CMakeFiles/lab2.dir/main.cpp.obj: ../WriteFileBlock.h
 CMakeFiles/lab2.dir/main.cpp.obj: ../main.cpp
 

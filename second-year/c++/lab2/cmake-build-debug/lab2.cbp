@@ -80,6 +80,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab2/Blueprint.h">
+			<Option target="lab2"/>
+		</Unit>
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab2/DumpBlock.cpp">
 			<Option target="lab2"/>
 		</Unit>
