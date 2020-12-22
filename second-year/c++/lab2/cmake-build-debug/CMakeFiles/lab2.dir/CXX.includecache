@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+C:/Users/yevsyukof/CLionProjects/lab2/Blueprint.h
+list
+-
+map
+-
+
 C:/Users/yevsyukof/CLionProjects/lab2/DumpBlock.cpp
 DumpBlock.h
 C:/Users/yevsyukof/CLionProjects/lab2/DumpBlock.h
@@ -45,12 +51,20 @@ iostream
 -
 vector
 -
+memory
+-
 IToolkit.h
 C:/Users/yevsyukof/CLionProjects/lab2/IToolkit.h
+
+C:/Users/yevsyukof/CLionProjects/lab2/ProgramExecutor.cpp
+ProgramExecutor.h
+C:/Users/yevsyukof/CLionProjects/lab2/ProgramExecutor.h
 
 C:/Users/yevsyukof/CLionProjects/lab2/ProgramExecutor.h
 IWorker.h
 C:/Users/yevsyukof/CLionProjects/lab2/IWorker.h
+Blueprint.h
+C:/Users/yevsyukof/CLionProjects/lab2/Blueprint.h
 map
 -
 memory
@@ -69,12 +83,12 @@ fstream
 -
 map
 -
+list
+-
 IValidator.h
 C:/Users/yevsyukof/CLionProjects/lab2/IValidator.h
 IWorker.h
 C:/Users/yevsyukof/CLionProjects/lab2/IWorker.h
-ProgramExecutor.h
-C:/Users/yevsyukof/CLionProjects/lab2/ProgramExecutor.h
 DumpBlock.h
 C:/Users/yevsyukof/CLionProjects/lab2/DumpBlock.h
 GrepBlock.h
@@ -87,6 +101,8 @@ SortBlock.h
 C:/Users/yevsyukof/CLionProjects/lab2/SortBlock.h
 WriteFileBlock.h
 C:/Users/yevsyukof/CLionProjects/lab2/WriteFileBlock.h
+Blueprint.h
+C:/Users/yevsyukof/CLionProjects/lab2/Blueprint.h
 
 C:/Users/yevsyukof/CLionProjects/lab2/ReadFileBlock.cpp
 ReadFileBlock.h
@@ -133,4 +149,16 @@ IValidator.h
 C:/Users/yevsyukof/CLionProjects/lab2/IValidator.h
 fstream
 -
+
+C:/Users/yevsyukof/CLionProjects/lab2/main.cpp
+iostream
+-
+memory
+-
+fstream
+-
+ProgramParser.h
+C:/Users/yevsyukof/CLionProjects/lab2/ProgramParser.h
+ProgramExecutor.h
+C:/Users/yevsyukof/CLionProjects/lab2/ProgramExecutor.h
 

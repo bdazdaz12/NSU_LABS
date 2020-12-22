@@ -1,9 +1,8 @@
 #include <iostream>
 #include <memory>
 #include <fstream>
-//#include "ProgramParser.h"
-//#include "IWorker.h"
-//#include "WriteFileBlock.h"
+#include "ProgramParser.h"
+#include "ProgramExecutor.h"
 
 using namespace std;
 
@@ -18,20 +17,30 @@ inline void checkInput(int argc, char** argv, string& inputFile, string& outputF
             haveOutputFile = true;
             outputFile = argv[++i];
         } else {
-            throw std::invalid_argument("Wrong console haveInput!");
+            throw std::invalid_argument("Wrong console input!");
         }
+    }
+    if (haveInputFile && inputFile.empty() || haveOutputFile && outputFile.empty()){
+        throw std::invalid_argument("Wrong console input!");
     }
 }
 
 int main(int argc, char** argv) {
-    cout << "yra";
-//    if (argc < 2) {
-//        throw std::invalid_argument("Wrong console haveInput! not enough!");
+    if (argc < 2) {
+        throw std::invalid_argument("Wrong console haveInput! not enough!");
+    }
+    string workflowFile = argv[1];
+    string inputFile, outputFile;
+    if (argc > 2){
+        checkInput(argc, argv, inputFile, outputFile);
+    }
+
+//    ifstream input(workflowFile);
+//    while(!input.eof()){
+//        string nextLine;
+//        input >> nextLine;
+//        cout << nextLine << endl;
 //    }
-//    string workflowFile = argv[1];
-//    string inputFile, outputFile;
-//    if (argc > 2){
-//        checkInput(argc, argv, inputFile, outputFile);
-//    }
-//    ProgramParser::parseProgram(workflowFile, inputFile, outputFile);
+
+    ProgramExecutor().executeWorkflow(ProgramParser().parseProgram(workflowFile, inputFile, outputFile));
 }

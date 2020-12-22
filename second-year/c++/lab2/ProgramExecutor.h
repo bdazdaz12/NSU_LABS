@@ -1,19 +1,17 @@
 #pragma once
 
 #include "IWorker.h"
+#include "Blueprint.h"
 #include <map>
 #include <memory>
 #include <list>
+//#include <vector>
+//#include <string>
 
 
-class ProgramExecutor {
-private:
-    struct blueprint{
-        list<uint32_t>& queue;
-        map<uint32_t, shared_ptr<IWorker>>& blocks;
-    };
+class ProgramExecutor: Blueprint, IToolkit {
 public:
     ProgramExecutor() = default;
     ~ProgramExecutor() = default;
-    void executeWorkflow(blueprint& workflow);
+    void executeWorkflow(blueprint&& workflow);
 };
