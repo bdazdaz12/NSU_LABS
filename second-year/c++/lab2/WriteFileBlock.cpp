@@ -21,7 +21,7 @@ void WriteFileBlock::execute(conveyor &curStage) {
         //end of work
     }
     curStage.haveOutput = false;
-    for (const auto& str: curStage.input){
-        outputFile << str;
+    for (const auto& str: *curStage.input){
+        outputFile << str << endl;
     }
 }

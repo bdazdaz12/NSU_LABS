@@ -18,11 +18,11 @@ void ReplaceBlock::execute(conveyor& curStage) {
         //end of work
     }
     curStage.haveOutput = true;
-    curStage.output = curStage.input;
-    if(curStage.input.empty()){
+    *curStage.output = *curStage.input;
+    if(curStage.input->empty()){
         return;
     }
-    for (auto& curStr: curStage.output){
+    for (auto& curStr: *curStage.output){
         size_t entry;
         while ((entry = curStr.find(word1)) != string::npos){
             curStr.replace(entry, word1.size(), word2);

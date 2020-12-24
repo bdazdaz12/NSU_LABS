@@ -18,9 +18,9 @@ void SortBlock::execute(conveyor& curStage) {
         //end of work
     }
     curStage.haveOutput = true;
-    curStage.output = curStage.input;
-    if (curStage.input.empty()) {
+    *curStage.output = *curStage.input;
+    if (curStage.input->empty()) {
         return;
     }
-    sort(curStage.input.begin(), curStage.input.end());
+    sort(curStage.output->begin(), curStage.output->end());
 }

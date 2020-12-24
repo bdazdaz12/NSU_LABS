@@ -1,6 +1,3 @@
-#include <iostream>
-#include <memory>
-#include <fstream>
 #include "ProgramParser.h"
 #include "ProgramExecutor.h"
 
@@ -27,20 +24,12 @@ inline void checkInput(int argc, char** argv, string& inputFile, string& outputF
 
 int main(int argc, char** argv) {
     if (argc < 2) {
-        throw std::invalid_argument("Wrong console haveInput! not enough!");
+        throw std::invalid_argument("Wrong console input! not enough!");
     }
     string workflowFile = argv[1];
     string inputFile, outputFile;
     if (argc > 2){
         checkInput(argc, argv, inputFile, outputFile);
     }
-
-//    ifstream input(workflowFile);
-//    while(!input.eof()){
-//        string nextLine;
-//        input >> nextLine;
-//        cout << nextLine << endl;
-//    }
-
     ProgramExecutor().executeWorkflow(ProgramParser().parseProgram(workflowFile, inputFile, outputFile));
 }

@@ -6,8 +6,8 @@
 class IToolkit {
 protected:
     struct conveyor {
-        std::vector<std::string>& input;
-        std::vector<std::string>& output;
+        std::vector<std::string>* input = nullptr;
+        std::vector<std::string>* output = nullptr;
         int idx = -1;
         bool haveInput = false, haveOutput = false;
     };

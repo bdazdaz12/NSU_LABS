@@ -11,21 +11,21 @@ void GrepBlock::errorHandler(string &&messages) {
     throw logic_error(messages);
 }
 
-void GrepBlock::execute(conveyor &curStage) { //TODO: тут возможно придется изменить input в блок
+void GrepBlock::execute(conveyor &curStage) {
     string&& verdict = isValid(curStage);
     if(!verdict.empty()){
         errorHandler(move(verdict));
         //end of work
     }
     curStage.haveOutput = true;
-    if (curStage.input.empty()){
-        curStage.output = curStage.input;
+    if (curStage.input->empty()){
+        *curStage.output = *curStage.input;
         return;
     }
-    curStage.output = vector<string>();
-    for (const auto& str: curStage.input){
+    curStage.output->clear();///TODO: тут багаует
+    for (const auto& str: *curStage.input){
         if (str.find(word) != string::npos){
-            curStage.output.push_back(str);
+            curStage.output->push_back(str);
         }
     }
 }
