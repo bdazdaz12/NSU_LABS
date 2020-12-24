@@ -6,12 +6,12 @@ void ProgramExecutor::executeWorkflow(blueprint &&workflow) {
     }
     vector<string> input;
     vector<string> output;
-    conveyor curStage = {output, input, workflow.queue.front(), false, true};
+    conveyor curStage = {&output, &input, workflow.queue.front(), false, true};
     for(auto i: workflow.queue){
+        curStage.idx = i;
         workflow.blocks[i]->execute(curStage);
-        curStage.input = curStage.output;
-        curStage.output = input;
-        curStage.output.clear();
+        *curStage.input = *curStage.output;
+//        curStage.input = curStage.output; ///output выделиться если нужно в самих блоках на стеке
         curStage.haveInput = curStage.haveOutput;
     }
 }

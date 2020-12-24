@@ -29,5 +29,5 @@ private:
 public:
     ProgramParser() = default;
     ~ProgramParser() = default;
-    blueprint parseProgram(const string& file, const string& inputFile, const string& outputFile);
+    blueprint parseProgram(const string& workflow, const string& inputFile, const string& outputFile);
 };

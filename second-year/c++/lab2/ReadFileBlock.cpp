@@ -22,8 +22,7 @@ void ReadFileBlock::execute(conveyor &curStage) {
     }
     string nextLine;
     curStage.haveOutput = true;
-    curStage.output = vector<string>();
     while (getline(inputFile, nextLine)){
-        curStage.output.push_back(nextLine);
+        curStage.output->push_back(nextLine);
     }
 }

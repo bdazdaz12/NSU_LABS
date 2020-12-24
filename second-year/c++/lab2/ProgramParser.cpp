@@ -43,16 +43,14 @@ map<int, shared_ptr<IWorker>> ProgramParser::parseBlockPart(ifstream& workflowFi
     workflowFile >> nextLine;
     while (nextLine != "csed") {
         try {
-//            cout << "nextL: " << nextLine << endl; //TODO:
             nextIdx = stoi(nextLine);
             if (blocks.count(nextIdx)) {
                 errorHandler("Index " + to_string(nextIdx) + " already exists!");
-                //TODO: разобраться с исключ
             } else {
                 blocks[nextIdx] = parseBlock(workflowFile);
             }
             if (workflowFile.eof()) {
-                errorHandler("Bad end of block part!");
+                errorHandler("Don't have 'csed' at end of blocks part!");
             }
             workflowFile >> nextLine;
         } catch (exception &e) {
@@ -82,20 +80,27 @@ list<int> parseQueuePart(ifstream& workflowFile){
                 errorHandler("Unknown symbol at queue part: " + nextWord);
             }
         } catch (exception &e) {
-            cout << "QUEUE     \n";
             throw invalid_argument(e.what());
         }
     }
     return queue;
 }
 
-//TODO:inFile oFile потом в конце инициализировать как блоки, те добавть в queue в конец и начало
-Blueprint::blueprint ProgramParser::parseProgram(const string &file, const string &inputFile, const string &outputFile){
-    if (!isFileExists(file)){
+Blueprint::blueprint ProgramParser::parseProgram(const string &workflow, const string &inputFile,
+                                                 const string &outputFile){
+    if (!isFileExists(workflow)){
         errorHandler("Wrong input from prompt!");
     }
-    ifstream workflowFile(file);
-    map<int, shared_ptr<IWorker>>&& blocks = parseBlockPart(workflowFile);
-    list<int>&& queue = parseQueuePart(workflowFile);
+    ifstream workflowFile(workflow);
+    map<int, shared_ptr<IWorker>> &&blocks = parseBlockPart(workflowFile);
+    list<int> &&queue = parseQueuePart(workflowFile);
+    if(!inputFile.empty()){
+        queue.push_front(-1);
+        blocks[-1] = blockMap["readfile"]->initialize(make_pair(inputFile, ""));
+    }
+    if(!outputFile.empty()){
+        queue.push_back(-2);
+        blocks[-2] = blockMap["writefile"]->initialize(make_pair(outputFile, ""));
+    }
     return {queue, blocks};
 }

@@ -21,8 +21,8 @@ void DumpBlock::execute(conveyor &curStage) {
         //end of work
     }
     curStage.haveOutput = true;
-    curStage.output = curStage.input;
-    for (const auto& str: curStage.input){
+    *curStage.output = *curStage.input;
+    for (const auto& str: *curStage.input){
         outputFile << str;
     }
 }
