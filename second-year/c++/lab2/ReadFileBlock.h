@@ -17,8 +17,11 @@ public:
     ~ReadFileBlock() override {
         inputFile.close();
     };
-    shared_ptr<IWorker> initialize(pair<string, string>&& input) override{
-        return make_shared<ReadFileBlock>(input.first);
+    shared_ptr<IWorker> initialize(const list<string>& input) override{
+        if (input.empty()){
+            throw invalid_argument("Not enough input in 'readfile' block!");
+        }
+        return make_shared<ReadFileBlock>(input.front());
     };
     string isValid(const conveyor& curStage) override;
     void errorHandler(string&& messages) override;

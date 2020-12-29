@@ -12,6 +12,23 @@ inline void errorHandler(const string&& message){
     throw invalid_argument(message);
 }
 
+list<string> parseString(const string &inputStr){
+    list<string> wordsInStr;
+    string curWord;
+    for(const char& i : inputStr){
+        if(i != ' '){
+            curWord += i;
+        } else if (!curWord.empty()) {
+            wordsInStr.push_back(curWord);
+            curWord.erase(0);
+        }
+    }
+    if (!curWord.empty()){
+        wordsInStr.push_back(curWord);
+    }
+    return wordsInStr;
+}
+
 shared_ptr<IWorker> ProgramParser::parseBlock(ifstream& workflowFile) {
     string nextWord;
     workflowFile >> nextWord;
@@ -19,14 +36,9 @@ shared_ptr<IWorker> ProgramParser::parseBlock(ifstream& workflowFile) {
         errorHandler("Haven't '=' at block part!");
     }
     workflowFile >> nextWord;
-    string arg1, arg2;
-    if(nextWord != "sort") {
-        workflowFile >> arg1;
-    }
-    if (nextWord == "replace") {
-        workflowFile >> arg2;
-    }
-    return blockMap[nextWord]->initialize(make_pair(arg1, arg2));
+    string args;
+    getline(workflowFile, args);
+    return blockMap[nextWord]->initialize(parseString(args));
 }
 
 map<int, shared_ptr<IWorker>> ProgramParser::parseBlockPart(ifstream& workflowFile){
@@ -96,11 +108,11 @@ Blueprint::blueprint ProgramParser::parseProgram(const string &workflow, const s
     list<int> &&queue = parseQueuePart(workflowFile);
     if(!inputFile.empty()){
         queue.push_front(-1);
-        blocks[-1] = blockMap["readfile"]->initialize(make_pair(inputFile, ""));
+        blocks[-1] = blockMap["readfile"]->initialize({inputFile});
     }
     if(!outputFile.empty()){
         queue.push_back(-2);
-        blocks[-2] = blockMap["writefile"]->initialize(make_pair(outputFile, ""));
+        blocks[-2] = blockMap["writefile"]->initialize({outputFile});
     }
     return {queue, blocks};
 }
