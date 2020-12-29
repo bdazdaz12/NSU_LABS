@@ -12,8 +12,11 @@ public:
         this->word = word;
     };
     ~GrepBlock() override = default;
-    shared_ptr<IWorker> initialize(pair<string, string>&& input) override{
-        return make_shared<GrepBlock>(input.first);
+    shared_ptr<IWorker> initialize(const list<string>& input) override{
+        if (input.empty()){
+            throw invalid_argument("Not enough input in 'grep' block!");
+        }
+        return make_shared<GrepBlock>(input.front());
     };
     void execute(conveyor& curStage) override;
     string isValid(const conveyor& curStage) override;

@@ -14,8 +14,11 @@ public:
         this->word2 = word2;
     };
     ~ReplaceBlock() override = default;
-    shared_ptr<IWorker> initialize(pair<string, string>&& input) override{
-        return make_shared<ReplaceBlock>(input.first, input.second);
+    shared_ptr<IWorker> initialize(const list<string>& input) override{
+        if (input.size() != 2){
+            throw invalid_argument("Wrong input in 'replace' block!");
+        }
+        return make_shared<ReplaceBlock>(input.front(), input.back());
     };
     void execute(conveyor& curStage) override;
     string isValid(const conveyor& curStage) override;

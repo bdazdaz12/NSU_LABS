@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include "IToolkit.h"
-//#include <list>
+#include <list>
 
 using namespace std;
 
@@ -12,6 +12,6 @@ class IWorker: protected IToolkit {
 protected:
     virtual ~IWorker() = default;
 public:
-    virtual shared_ptr<IWorker> initialize(pair<string, string>&& input) = 0;
+    virtual shared_ptr<IWorker> initialize(const list<string>& input) = 0;
     virtual void execute(conveyor& curStage) = 0;
 };
