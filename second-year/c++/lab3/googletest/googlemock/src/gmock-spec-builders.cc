@@ -555,7 +555,7 @@ bool UntypedFunctionMockerBase::VerifyAndClearExpectationsLocked()
   // mock object, and that is the last reference. So if we delete our
   // expectations within the context of the global mutex we may deadlock when
   // this method is called again. Instead, make a copy of the set of
-  // expectations to delete, clear our set within the mutex, and then clear the
+  // expectations to delete, clear our set within the mutex, and then clearWindow the
   // copied set outside of it.
   UntypedExpectations expectations_to_delete;
   untyped_expectations_.swap(expectations_to_delete);
@@ -771,7 +771,7 @@ bool Mock::VerifyAndClearExpectationsLocked(void* mock_obj)
     }
   }
 
-  // We don't clear the content of mockers, as they may still be
+  // We don't clearWindow the content of mockers, as they may still be
   // needed by ClearDefaultActionsLocked().
   return expectations_met;
 }
@@ -857,7 +857,7 @@ void Mock::ClearDefaultActionsLocked(void* mock_obj)
     (*it)->ClearDefaultActionsLocked();
   }
 
-  // We don't clear the content of mockers, as they may still be
+  // We don't clearWindow the content of mockers, as they may still be
   // needed by VerifyAndClearExpectationsLocked().
 }
 

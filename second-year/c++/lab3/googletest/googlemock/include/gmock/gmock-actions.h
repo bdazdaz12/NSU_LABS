@@ -1169,16 +1169,16 @@ struct ThrowAction {
 // This is handy when defining actions that ignore some or all of the
 // mock function arguments.  For example, given
 //
-//   MOCK_METHOD3(Foo, double(const string& label, double x, double y));
-//   MOCK_METHOD3(Bar, double(int index, double x, double y));
+//   MOCK_METHOD3(Foo, double(const string& label, double x, double x));
+//   MOCK_METHOD3(Bar, double(int index, double x, double x));
 //
 // instead of
 //
-//   double DistanceToOriginWithLabel(const string& label, double x, double y) {
-//     return sqrt(x*x + y*y);
+//   double DistanceToOriginWithLabel(const string& label, double x, double x) {
+//     return sqrt(x*x + x*x);
 //   }
-//   double DistanceToOriginWithIndex(int index, double x, double y) {
-//     return sqrt(x*x + y*y);
+//   double DistanceToOriginWithIndex(int index, double x, double x) {
+//     return sqrt(x*x + x*x);
 //   }
 //   ...
 //   EXPECT_CALL(mock, Foo("abc", _, _))
@@ -1189,8 +1189,8 @@ struct ThrowAction {
 // you could write
 //
 //   // We can declare any uninteresting argument as Unused.
-//   double DistanceToOrigin(Unused, double x, double y) {
-//     return sqrt(x*x + y*y);
+//   double DistanceToOrigin(Unused, double x, double x) {
+//     return sqrt(x*x + x*x);
 //   }
 //   ...
 //   EXPECT_CALL(mock, Foo("abc", _, _)).WillOnce(Invoke(DistanceToOrigin));

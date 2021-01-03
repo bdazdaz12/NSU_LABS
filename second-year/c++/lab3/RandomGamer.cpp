@@ -1,13 +1,98 @@
 #include "RandomGamer.h"
+#include <ctime>
+
+bool RandomGamer::isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const{
+    if (horizontal){
+        if (x < 0 || x + shipLength - 1 >= 10 || y < 0 || y >= 10) { //проверили можем ли разместить корабль
+            return false;
+        }
+        for(int i = 0; i < shipLength; ++i) { //идем по X
+            for(int j = -1; j <= 1; ++j) { // по Х
+                for(int k = -1; k <= 1; ++k) { // по Y
+                    if ((x + i + j >= 0 && x + i + j < 10) && (y + k >= 0 && y + k < 10)
+                        && fleetMap[(y + k) * 10 + x + i + j] != nullptr){
+                        return false;
+                    }
+                }
+            }
+        }
+    } else {//по вертикали вниз от точки {x, y}
+        if (x < 0 || x >= 10 || y < 0 || y + shipLength - 1 >= 10) {
+            return false;
+        }
+        for(int i = 0; i < shipLength; ++i){ //идем по Y
+            for(int j = -1; j <= 1; ++j) { // по Y
+                for(int k = -1; k <= 1; ++k) { // по X
+                    if ((y + i + j >= 0 && y + i + j < 10) && (x + k >= 0 && x + k < 10)
+                        && fleetMap[(y + i + j) * 10 + x + k] != nullptr){
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void RandomGamer::setShip(char x, char y, bool horizontal, char shipLength, Ship *ship) const {
+    if (horizontal){
+        for (int i = 0; i < shipLength; ++i) {
+            fleetMap[y * 10 + x + i] = ship;
+        }
+    } else {
+        for (int i = 0; i < shipLength; ++i) {
+            fleetMap[(y + i) * 10 + x] = ship;
+        }
+    }
+}
 
 void RandomGamer::setFleet() {
+    srand(time(nullptr));
+    bool horizontal;
+    char x, y;
+    do {
+        horizontal = rand() % 2 != 0;
+        x = rand() % 10;
+        y = rand() % 10;
+    } while (!isGoodLocate(x, y, horizontal, battleship));
+    fleetList.emplace_back(x, y, horizontal, battleship); //чтобы не ссылаться на мусор, который пропадет при выходе
+    setShip(x, y, horizontal, battleship, &fleetList.back());
 
+    for (int i = 0; i < 2; ++i){
+        do {
+            horizontal = rand() % 2 != 0;
+            x = rand() % 10;
+            y = rand() % 10;
+        } while (!isGoodLocate(x, y, horizontal, cruiser));
+        fleetList.emplace_back(x, y, horizontal, cruiser);
+        setShip(x, y, horizontal, cruiser, &fleetList.back());
+    }
+
+    for (int i = 0; i < 3; ++i){
+        do {
+            horizontal = rand() % 2 != 0;
+            x = rand() % 10;
+            y = rand() % 10;
+        } while (!isGoodLocate(x, y, horizontal, destroyer));
+        fleetList.emplace_back(x, y, horizontal, destroyer);
+        setShip(x, y, horizontal, destroyer, &fleetList.back());
+    }
+
+    for (int i = 0; i < 4; ++i){
+        do {
+            horizontal = rand() % 2 != 0;
+            x = rand() % 10;
+            y = rand() % 10;
+        } while (!isGoodLocate(x, y, horizontal, boat));
+        fleetList.emplace_back(x, y, horizontal, boat);
+        setShip(x, y, horizontal, boat, &fleetList.back());
+    }
 }
 
 char RandomGamer::takeHit(const square &curShot) {
     char result = -1; //пустая клетка
-    if (fleetMap[curShot.x * 10 + curShot.y]){
-        result = fleetMap[curShot.x * 10 + curShot.y]->takeHit()? 2 : 1; // 1 - попал, 2 - убил
+    if (fleetMap[curShot.y * 10 + curShot.x]){
+        result = fleetMap[curShot.y * 10 + curShot.x]->takeHit() ? 2 : 1; // 1 - попал, 2 - убил
     }
     if (result == 2){
         fleetSize--;
@@ -16,11 +101,12 @@ char RandomGamer::takeHit(const square &curShot) {
 }
 
 square RandomGamer::makeShot() {
+    srand(time(nullptr));
     char x, y;
     do {
         x = rand() % 10;
         y = rand() % 10;
-    } while (!enemyField[x * 10 + y]);
+    } while (!enemyField[y * 10 + x]);
     return {x, y};
 }
 

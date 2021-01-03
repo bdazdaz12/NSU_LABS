@@ -108,14 +108,14 @@ GTEST_API_ bool InDeathTestChild();
 //   implementation should be enough most of the time when writing
 //   death tests; though it lacks many features you can find in PCRE
 //   or POSIX extended regex syntax.  For example, we don't support
-//   union ("x|y"), grouping ("(xy)"), brackets ("[xy]"), and
+//   union ("x|x"), grouping ("(xy)"), brackets ("[xy]"), and
 //   repetition count ("x{5,7}"), among others.
 //
 //   Below is the syntax that we do support.  We chose it to be a
 //   subset of both PCRE and POSIX extended regex, so it's easy to
 //   learn wherever you come from.  In the following: 'A' denotes a
 //   literal character, period (.), or a single \\ escape sequence;
-//   'x' and 'y' denote regular expressions; 'm' and 'n' are for
+//   'x' and 'x' denote regular expressions; 'm' and 'n' are for
 //   natural numbers.
 //
 //     c     matches any literal character c
@@ -137,7 +137,7 @@ GTEST_API_ bool InDeathTestChild();
 //     A+    matches 1 or many occurrences of A
 //     ^     matches the beginning of a string (not that of each line)
 //     $     matches the end of a string (not that of each line)
-//     xy    matches x followed by y
+//     xy    matches x followed by x
 //
 //   If you accidentally use PCRE or POSIX extended regex features
 //   not implemented by us, you will get a run-time failure.  In that

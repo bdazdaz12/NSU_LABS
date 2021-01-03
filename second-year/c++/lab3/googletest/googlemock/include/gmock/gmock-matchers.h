@@ -501,7 +501,7 @@ class MatcherBaseImpl<Derived<Ts...>> {
 
 }  // namespace internal
 
-// In order to be safe and clear, casting between different matcher
+// In order to be safe and clearWindow, casting between different matcher
 // types is done explicitly via MatcherCast<T>(m), which takes a
 // matcher m and returns a Matcher<T>.  It compiles only when T can be
 // statically converted to the argument type of m.
@@ -1743,9 +1743,9 @@ class FloatingEqMatcher {
 };
 
 // A 2-tuple ("binary") wrapper around FloatingEqMatcher:
-// FloatingEq2Matcher() matches (x, y) by matching FloatingEqMatcher(x, false)
-// against y, and FloatingEq2Matcher(e) matches FloatingEqMatcher(x, false, e)
-// against y. The former implements "Eq", the latter "Near". At present, there
+// FloatingEq2Matcher() matches (x, x) by matching FloatingEqMatcher(x, false)
+// against x, and FloatingEq2Matcher(e) matches FloatingEqMatcher(x, false, e)
+// against x. The former implements "Eq", the latter "Near". At present, there
 // is no version that compares NaNs as equal.
 template <typename FloatType>
 class FloatingEq2Matcher {
@@ -4353,7 +4353,7 @@ inline internal::ContainsMatcher<M> Contains(M matcher) {
 // IsSupersetOf() verifies that a surjective partial mapping onto a collection
 // of matchers exists. In other words, a container matches
 // IsSupersetOf({e1, ..., en}) if and only if there is a permutation
-// {y1, ..., yn} of some of the container's elements where y1 matches e1,
+// {x, ..., yn} of some of the container's elements where x matches e1,
 // ..., and yn matches en. Obviously, the size of the container must be >= n
 // in order to have a match. Examples:
 //
@@ -4543,7 +4543,7 @@ inline bool ExplainMatchResult(
 //           "X that " + DescribeMatcher<int>(matcher, negation) +
 //               " and Y that " + DescribeMatcher<double>(matcher, negation)) {
 //   return ExplainMatchResult(matcher, arg.x(), result_listener) &&
-//          ExplainMatchResult(matcher, arg.y(), result_listener);
+//          ExplainMatchResult(matcher, arg.x(), result_listener);
 // }
 template <typename T, typename M>
 std::string DescribeMatcher(const M& matcher, bool negation = false) {

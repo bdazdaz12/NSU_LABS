@@ -51,6 +51,7 @@ CMakeFiles/lab3.dir/Tests.cpp.obj: ../googletest/googletest/include/gtest/intern
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../ConsoleGamer.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../IGamer.h
+CMakeFiles/lab3.dir/Tests.cpp.obj: ../RandomGamer.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../Ship.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../Tests.cpp
 
@@ -74,9 +75,5 @@ CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/interna
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-port.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-string.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-type-util.h
-CMakeFiles/lab3.dir/main.cpp.obj: ../BasicGameElements.h
-CMakeFiles/lab3.dir/main.cpp.obj: ../ConsoleGamer.h
-CMakeFiles/lab3.dir/main.cpp.obj: ../IGamer.h
-CMakeFiles/lab3.dir/main.cpp.obj: ../Ship.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../main.cpp
 

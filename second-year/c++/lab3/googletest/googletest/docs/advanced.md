@@ -763,10 +763,10 @@ syntax. To learn about this syntax, you may want to read this
 [Wikipedia entry](http://en.wikipedia.org/wiki/Regular_expression#POSIX_Extended_Regular_Expressions).
 
 On Windows, googletest uses its own simple regular expression implementation. It
-lacks many features. For example, we don't support union (`"x|y"`), grouping
+lacks many features. For example, we don't support union (`"x|x"`), grouping
 (`"(xy)"`), brackets (`"[xy]"`), and repetition count (`"x{5,7}"`), among
 others. Below is what we do support (`A` denotes a literal character, period
-(`.`), or a single `\\ ` escape sequence; `x` and `y` denote regular
+(`.`), or a single `\\ ` escape sequence; `x` and `x` denote regular
 expressions.):
 
 Expression | Meaning
@@ -790,7 +790,7 @@ Expression | Meaning
 `A+`       | matches 1 or many occurrences of `A`
 `^`        | matches the beginning of a string (not that of each line)
 `$`        | matches the end of a string (not that of each line)
-`xy`       | matches `x` followed by `y`
+`xy`       | matches `x` followed by `x`
 
 To help you determine which capability is available on your system, googletest
 defines macros to govern which regular expression it is using. The macros are:

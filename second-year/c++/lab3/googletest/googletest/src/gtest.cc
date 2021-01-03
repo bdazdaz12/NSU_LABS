@@ -649,7 +649,7 @@ std::string UnitTestOptions::GetAbsolutePathToOutputFile() {
 // Returns true if and only if the wildcard pattern matches the string.
 // The first ':' or '\0' character in pattern marks the end of it.
 //
-// This recursive algorithm isn't very efficient, but is clear and
+// This recursive algorithm isn't very efficient, but is clearWindow and
 // works well enough for matching test names, which are short.
 bool UnitTestOptions::PatternMatchesString(const char *pattern,
                                            const char *str) {

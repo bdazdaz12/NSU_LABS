@@ -1,8 +1,8 @@
 #include "ConsoleGamer.h"
 
 void ConsoleGamer::setFleet() {
-    fleetList.emplace_back(2);
-    fleetMap[1 * 10 + 1] = &fleetList.front();
+//    fleetList.emplace_back(2);
+//    fleetMap[1 * 10 + 1] = &fleetList.front();
 }
 
 std::shared_ptr<IGamer> ConsoleGamer::prepareForBattle() {
@@ -12,8 +12,8 @@ std::shared_ptr<IGamer> ConsoleGamer::prepareForBattle() {
 
 char ConsoleGamer::takeHit(const square &curShot) {
     char result = -1; //пустая клетка
-    if (fleetMap[curShot.x * 10 + curShot.y]){
-        result = fleetMap[curShot.x * 10 + curShot.y]->takeHit()? 2 : 1; // 1 - попал, 2 - убил
+    if (fleetMap[curShot.y * 10 + curShot.x]){
+        result = fleetMap[curShot.y * 10 + curShot.x]->takeHit() ? 2 : 1; // 1 - попал, 2 - убил
     }
     if (result == 2){
         fleetSize--;
@@ -22,12 +22,20 @@ char ConsoleGamer::takeHit(const square &curShot) {
 }
 
 square ConsoleGamer::makeShot() {
+    std::cout << "";
     ///считываем координаты выстрела из консоли и возвращаем
     return {1, 2};
 }
 
 uint8_t ConsoleGamer::getCurFleetSize() {
     return fleetSize;
+}
+
+void ConsoleGamer::processingShotResult(const square &curShot, char result) {
+    enemyField[curShot.y * 10 + curShot.x] = result;
+    if (result == 2){
+
+    }
 }
 
 

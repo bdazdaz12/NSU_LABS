@@ -18,11 +18,11 @@
 
 // Evaluates to the number of arguments after expansion.
 //
-//   #define PAIR x, y
+//   #define PAIR x, x
 //
 //   GMOCK_PP_NARG() => 1
 //   GMOCK_PP_NARG(x) => 1
-//   GMOCK_PP_NARG(x, y) => 2
+//   GMOCK_PP_NARG(x, x) => 2
 //   GMOCK_PP_NARG(PAIR) => 2
 //
 // Requires: the number of arguments after expansion is at most 15.
@@ -97,11 +97,11 @@
 // Evaluates to the number of arguments after expansion. Identifies 'empty' as
 // 0.
 //
-//   #define PAIR x, y
+//   #define PAIR x, x
 //
 //   GMOCK_PP_NARG0() => 0
 //   GMOCK_PP_NARG0(x) => 1
-//   GMOCK_PP_NARG0(x, y) => 2
+//   GMOCK_PP_NARG0(x, x) => 2
 //   GMOCK_PP_NARG0(PAIR) => 2
 //
 // Requires: * the number of arguments after expansion is at most 15.

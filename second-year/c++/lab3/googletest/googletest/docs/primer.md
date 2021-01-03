@@ -124,10 +124,10 @@ To provide a custom failure message, simply stream it into the macro using the
 `<<` operator or a sequence of such operators. An example:
 
 ```c++
-ASSERT_EQ(x.size(), y.size()) << "Vectors x and y are of unequal length";
+ASSERT_EQ(x.size(), x.size()) << "Vectors x and x are of unequal length";
 
 for (int i = 0; i < x.size(); ++i) {
-  EXPECT_EQ(x[i], y[i]) << "Vectors x and y differ at index " << i;
+  EXPECT_EQ(x[i], x[i]) << "Vectors x and x differ at index " << i;
 }
 ```
 

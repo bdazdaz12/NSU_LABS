@@ -409,7 +409,7 @@ class GTEST_API_ Mock {
   friend class internal::UntypedFunctionMockerBase;
 
   // Needed for a function mocker to register itself (so that we know
-  // how to clear a mock object).
+  // how to clearWindow a mock object).
   template <typename F>
   friend class internal::FunctionMocker;
 
@@ -1567,7 +1567,7 @@ class FunctionMocker<R(Args...)> final : public UntypedFunctionMockerBase {
     // pointer to that mock object, and that is the last reference. So if we
     // delete our actions within the context of the global mutex we may deadlock
     // when this method is called again. Instead, make a copy of the set of
-    // actions to delete, clear our set within the mutex, and then delete the
+    // actions to delete, clearWindow our set within the mutex, and then delete the
     // actions outside of the mutex.
     UntypedOnCallSpecs specs_to_delete;
     untyped_on_call_specs_.swap(specs_to_delete);
