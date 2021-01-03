@@ -14,5 +14,6 @@ private:
     map<string, shared_ptr<IGamer>> gamersType = {{"console", make_shared<ConsoleGamer>()},
                                                   {"random",  make_shared<RandomGamer>()}};
 public:
-    void runTournament(int cntOfRounds, const string& firstPlayerType, const string& secondPlayerType);//TODO
+    void run(int cntOfRounds, const string& firstPlayerType, const string& secondPlayerType);//TODO;
+    void runTournament(int cntOfRounds, const string& firstPlayerType, const string& secondPlayerType);
 };

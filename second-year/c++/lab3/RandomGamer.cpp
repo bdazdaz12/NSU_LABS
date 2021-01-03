@@ -55,7 +55,7 @@ void RandomGamer::setFleet() {
         x = rand() % 10;
         y = rand() % 10;
     } while (!isGoodLocate(x, y, horizontal, battleship));
-    fleetList.emplace_back(x, y, horizontal, battleship); //чтобы не ссылаться на мусор, который пропадет при выходе
+    fleetList.emplace_back(x, y, horizontal, battleship, 4); //чтобы не ссылаться на мусор, который пропадет при выходе
     setShip(x, y, horizontal, battleship, &fleetList.back());
 
     for (int i = 0; i < 2; ++i){
@@ -64,7 +64,7 @@ void RandomGamer::setFleet() {
             x = rand() % 10;
             y = rand() % 10;
         } while (!isGoodLocate(x, y, horizontal, cruiser));
-        fleetList.emplace_back(x, y, horizontal, cruiser);
+        fleetList.emplace_back(x, y, horizontal, cruiser, 3);
         setShip(x, y, horizontal, cruiser, &fleetList.back());
     }
 
@@ -74,7 +74,7 @@ void RandomGamer::setFleet() {
             x = rand() % 10;
             y = rand() % 10;
         } while (!isGoodLocate(x, y, horizontal, destroyer));
-        fleetList.emplace_back(x, y, horizontal, destroyer);
+        fleetList.emplace_back(x, y, horizontal, destroyer, 2);
         setShip(x, y, horizontal, destroyer, &fleetList.back());
     }
 
@@ -84,7 +84,7 @@ void RandomGamer::setFleet() {
             x = rand() % 10;
             y = rand() % 10;
         } while (!isGoodLocate(x, y, horizontal, boat));
-        fleetList.emplace_back(x, y, horizontal, boat);
+        fleetList.emplace_back(x, y, horizontal, boat, 1);
         setShip(x, y, horizontal, boat, &fleetList.back());
     }
 }
@@ -92,7 +92,7 @@ void RandomGamer::setFleet() {
 char RandomGamer::takeHit(const square &curShot) {
     char result = -1; //пустая клетка
     if (fleetMap[curShot.y * 10 + curShot.x]){
-        result = fleetMap[curShot.y * 10 + curShot.x]->takeHit() ? 2 : 1; // 1 - попал, 2 - убил
+        result = fleetMap[curShot.y * 10 + curShot.x]->takeHit()? 2 : 1; // 1 - попал, 2 - убил
     }
     if (result == 2){
         fleetSize--;
@@ -117,4 +117,42 @@ std::shared_ptr<IGamer> RandomGamer::prepareForBattle() {
 
 uint8_t RandomGamer::getCurFleetSize() {
     return fleetSize;
+}
+
+void RandomGamer::processShotResult(const square &curShot, char result) {
+    enemyField[curShot.y * 10 + curShot.x] = result;
+}
+
+inline void RandomGamer::surroundShip(const Ship& destroyedShip){
+    char x = destroyedShip.getX();
+    char y = destroyedShip.getY();
+    for (int i = 0; i < destroyedShip.getLength(); ++i){
+        if (destroyedShip.getHorizontal()) { ///идем по X
+            for (int j = -1; j <= 1; ++j) { // по Х
+                for (int k = -1; k <= 1; ++k) { // по Y
+                    if ((x + i + j >= 0 && x + i + j < 10) && (y + k >= 0 && y + k < 10)
+                        && enemyField[(y + k) * 10 + x + i + j] == 0) {
+                        enemyField[(y + k) * 10 + x + i + j] = -1; //означиваем ореол промахами
+                    }
+                }
+            }
+        } else { ///идем по Y
+            for (int j = -1; j <= 1; ++j) { // по Y
+                for (int k = -1; k <= 1; ++k) { // по X
+                    if ((y + i + j >= 0 && y + i + j < 10) && (x + k >= 0 && x + k < 10)
+                        && enemyField[(y + i + j) * 10 + x + k] == 0) {
+                        enemyField[(y + i + j) * 10 + x + k] = -1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void RandomGamer::processDestruction(const Ship &destroyedShip) {
+    surroundShip(destroyedShip);
+}
+
+const Ship &RandomGamer::getShipByCoord(const square &square) {
+    return *fleetMap[square.y * 10 + square.x];
 }

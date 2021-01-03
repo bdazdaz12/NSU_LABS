@@ -348,6 +348,33 @@ Judge.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/Judge.cpp.s
 .PHONY : Judge.cpp.s
 
+OptimalGamer.obj: OptimalGamer.cpp.obj
+
+.PHONY : OptimalGamer.obj
+
+# target to build an object file
+OptimalGamer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/OptimalGamer.cpp.obj
+.PHONY : OptimalGamer.cpp.obj
+
+OptimalGamer.i: OptimalGamer.cpp.i
+
+.PHONY : OptimalGamer.i
+
+# target to preprocess a source file
+OptimalGamer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/OptimalGamer.cpp.i
+.PHONY : OptimalGamer.cpp.i
+
+OptimalGamer.s: OptimalGamer.cpp.s
+
+.PHONY : OptimalGamer.s
+
+# target to generate assembly for a file
+OptimalGamer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/OptimalGamer.cpp.s
+.PHONY : OptimalGamer.cpp.s
+
 RandomGamer.obj: RandomGamer.cpp.obj
 
 .PHONY : RandomGamer.obj
@@ -458,6 +485,9 @@ help:
 	@echo ... Judge.obj
 	@echo ... Judge.i
 	@echo ... Judge.s
+	@echo ... OptimalGamer.obj
+	@echo ... OptimalGamer.i
+	@echo ... OptimalGamer.s
 	@echo ... RandomGamer.obj
 	@echo ... RandomGamer.i
 	@echo ... RandomGamer.s
