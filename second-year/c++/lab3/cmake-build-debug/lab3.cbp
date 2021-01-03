@@ -327,6 +327,12 @@
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h">
 			<Option target="lab3"/>
 		</Unit>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.cpp">
+			<Option target="lab3"/>
+		</Unit>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h">
+			<Option target="lab3"/>
+		</Unit>
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/GameCore.cpp">
 			<Option target="lab3"/>
 		</Unit>

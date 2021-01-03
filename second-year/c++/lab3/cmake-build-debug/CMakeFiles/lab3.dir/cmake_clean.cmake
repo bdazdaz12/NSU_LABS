@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj"
+  "CMakeFiles/lab3.dir/ConsoleView.cpp.obj"
   "CMakeFiles/lab3.dir/GameCore.cpp.obj"
   "CMakeFiles/lab3.dir/Judge.cpp.obj"
   "CMakeFiles/lab3.dir/RandomGamer.cpp.obj"

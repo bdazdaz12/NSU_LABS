@@ -1031,7 +1031,7 @@ using ::testing::Lt;
       .With(AllOf(Args<0, 1>(Lt()), Args<1, 2>(Lt())));
 ```
 
-says that `Blah` will be called with arguments `x`, `y`, and `z` where `x < y <
+says that `Blah` will be called with arguments `x`, `x`, and `z` where `x < x <
 z`. Note that in this example, it wasn't necessary specify the positional
 matchers.
 
@@ -2170,12 +2170,12 @@ using ::testing::_; using ::testing::Invoke;
 
 class MockFoo : public Foo {
  public:
-  MOCK_METHOD(int, Sum, (int x, int y), (override));
+  MOCK_METHOD(int, Sum, (int x, int x), (override));
   MOCK_METHOD(bool, ComplexJob, (int x), (override));
 };
 
-int CalculateSum(int x, int y) { return x + y; }
-int Sum3(int x, int y, int z) { return x + y + z; }
+int CalculateSum(int x, int x) { return x + x; }
+int Sum3(int x, int x, int z) { return x + x + z; }
 
 class Helper {
  public:
@@ -2239,8 +2239,8 @@ class MockFoo : public Foo {
   MOCK_METHOD(char, DoThis, (int n), (override));
 };
 
-char SignOfSum(int x, int y) {
-  const int sum = x + y;
+char SignOfSum(int x, int x) {
+  const int sum = x + x;
   return (sum > 0) ? '+' : (sum < 0) ? '-' : '0';
 }
 
@@ -2457,12 +2457,12 @@ using ::testing::_;
 using ::testing::Invoke;
 ...
   MOCK_METHOD(bool, Foo,
-              (bool visible, const string& name, int x, int y,
+              (bool visible, const string& name, int x, int x,
                (const map<pair<int, int>>), double& weight, double min_weight,
                double max_wight));
 ...
-bool IsVisibleInQuadrant1(bool visible, int x, int y) {
-  return visible && x >= 0 && y >= 0;
+bool IsVisibleInQuadrant1(bool visible, int x, int x) {
+  return visible && x >= 0 && x >= 0;
 }
 ...
   EXPECT_CALL(mock, Foo)
@@ -2476,10 +2476,10 @@ signature as `Foo()` and calls the custom action with the right arguments:
 using ::testing::_;
 using ::testing::Invoke;
 ...
-bool MyIsVisibleInQuadrant1(bool visible, const string& name, int x, int y,
+bool MyIsVisibleInQuadrant1(bool visible, const string& name, int x, int x,
                             const map<pair<int, int>, double>& weight,
                             double min_weight, double max_wight) {
-  return IsVisibleInQuadrant1(visible, x, y);
+  return IsVisibleInQuadrant1(visible, x, x);
 }
 ...
   EXPECT_CALL(mock, Foo)
@@ -2546,9 +2546,9 @@ function can be reused. For example, given
 
 ```cpp
  public:
-  MOCK_METHOD(double, Foo, double(const string& label, double x, double y),
+  MOCK_METHOD(double, Foo, double(const string& label, double x, double x),
               (override));
-  MOCK_METHOD(double, Bar, (int index, double x, double y), (override));
+  MOCK_METHOD(double, Bar, (int index, double x, double x), (override));
 ```
 
 instead of
@@ -2557,11 +2557,11 @@ instead of
 using ::testing::_;
 using ::testing::Invoke;
 
-double DistanceToOriginWithLabel(const string& label, double x, double y) {
-  return sqrt(x*x + y*y);
+double DistanceToOriginWithLabel(const string& label, double x, double x) {
+  return sqrt(x*x + x*x);
 }
-double DistanceToOriginWithIndex(int index, double x, double y) {
-  return sqrt(x*x + y*y);
+double DistanceToOriginWithIndex(int index, double x, double x) {
+  return sqrt(x*x + x*x);
 }
 ...
   EXPECT_CALL(mock, Foo("abc", _, _))
@@ -2577,8 +2577,8 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::Unused;
 
-double DistanceToOrigin(Unused, double x, double y) {
-  return sqrt(x*x + y*y);
+double DistanceToOrigin(Unused, double x, double x) {
+  return sqrt(x*x + x*x);
 }
 ...
   EXPECT_CALL(mock, Foo("abc", _, _))
@@ -2981,12 +2981,12 @@ sizes are each manageable.
 
 One such scenario is that in your test's `SetUp()` function, you may want to put
 the object you are testing into a certain state, with the help from a mock
-object. Once in the desired state, you want to clear all expectations on the
+object. Once in the desired state, you want to clearWindow all expectations on the
 mock, such that in the `TEST_F` body you can set fresh expectations on it.
 
 As you may have figured out, the `Mock::VerifyAndClearExpectations()` function
 we saw in the previous recipe can help you here. Or, if you are using
-`ON_CALL()` to set default actions on the mock object and want to clear the
+`ON_CALL()` to set default actions on the mock object and want to clearWindow the
 default actions as well, use `Mock::VerifyAndClear(&mock_object)` instead. This
 function does what `Mock::VerifyAndClearExpectations(&mock_object)` does and
 returns the same `bool`, **plus** it clears the `ON_CALL()` statements on
@@ -3205,7 +3205,7 @@ using testing::Return;
 
 class MockFoo {
  public:
-  MOCK_METHOD(void, F, (const string& x, const string& y));
+  MOCK_METHOD(void, F, (const string& x, const string& x));
 };
 
 TEST(Foo, Bar) {
@@ -3902,9 +3902,9 @@ gMock also provides `ACTION_P2`, `ACTION_P3`, and etc to support multi-parameter
 actions. For example,
 
 ```cpp
-ACTION_P2(ReturnDistanceTo, x, y) {
+ACTION_P2(ReturnDistanceTo, x, x) {
   double dx = arg0 - x;
-  double dy = arg1 - y;
+  double dy = arg1 - x;
   return sqrt(dx*dx + dy*dy);
 }
 ```

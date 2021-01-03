@@ -1,5 +1,8 @@
 #pragma once
 
-class IGameView{
+#include <iostream>
 
+class IGameView{
+public:
+    virtual void clearWindow() = 0;
 };

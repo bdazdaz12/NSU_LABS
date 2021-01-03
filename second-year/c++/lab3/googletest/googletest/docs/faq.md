@@ -641,7 +641,7 @@ with the requirement to run `BarTest.DefDeathTest` before `FooTest.Uvw`.
 ## But I don't like calling my entire test suite \*DeathTest when it contains both death tests and non-death tests. What do I do?
 
 You don't have to, but if you like, you may split up the test suite into
-`FooTest` and `FooDeathTest`, where the names make it clear that they are
+`FooTest` and `FooDeathTest`, where the names make it clearWindow that they are
 related:
 
 ```c++

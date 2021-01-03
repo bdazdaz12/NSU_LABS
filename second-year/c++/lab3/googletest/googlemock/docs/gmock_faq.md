@@ -286,7 +286,7 @@ argument:
 ```cpp
 using ::testing::_;
   ...
-  MOCK_METHOD(void, Bar, (X* x, const Y& y));
+  MOCK_METHOD(void, Bar, (X* x, const Y& x));
   ...
   EXPECT_CALL(mock_foo_, Bar(_, _))
       .WillOnce(testing::DeleteArg<0>()));

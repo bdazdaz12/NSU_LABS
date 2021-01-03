@@ -267,6 +267,33 @@ ConsoleGamer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/ConsoleGamer.cpp.s
 .PHONY : ConsoleGamer.cpp.s
 
+ConsoleView.obj: ConsoleView.cpp.obj
+
+.PHONY : ConsoleView.obj
+
+# target to build an object file
+ConsoleView.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/ConsoleView.cpp.obj
+.PHONY : ConsoleView.cpp.obj
+
+ConsoleView.i: ConsoleView.cpp.i
+
+.PHONY : ConsoleView.i
+
+# target to preprocess a source file
+ConsoleView.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/ConsoleView.cpp.i
+.PHONY : ConsoleView.cpp.i
+
+ConsoleView.s: ConsoleView.cpp.s
+
+.PHONY : ConsoleView.s
+
+# target to generate assembly for a file
+ConsoleView.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/ConsoleView.cpp.s
+.PHONY : ConsoleView.cpp.s
+
 GameCore.obj: GameCore.cpp.obj
 
 .PHONY : GameCore.obj
@@ -422,6 +449,9 @@ help:
 	@echo ... ConsoleGamer.obj
 	@echo ... ConsoleGamer.i
 	@echo ... ConsoleGamer.s
+	@echo ... ConsoleView.obj
+	@echo ... ConsoleView.i
+	@echo ... ConsoleView.s
 	@echo ... GameCore.obj
 	@echo ... GameCore.i
 	@echo ... GameCore.s

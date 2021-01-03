@@ -2,6 +2,6 @@
 
 struct square {
 public:
-    char x;
-    char y;
+    char x; //ориентация по горизонтали
+    char y; //ориентация по вертикали
 };

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <list>
 #include <vector>
 #include "IGamer.h"
@@ -25,5 +26,6 @@ public:
     std::shared_ptr<IGamer> prepareForBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;//TODO
+    void processingShotResult(const square &curShot, char result) override;
     uint8_t getCurFleetSize() override;
 };

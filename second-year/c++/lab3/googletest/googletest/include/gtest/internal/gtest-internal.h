@@ -83,7 +83,7 @@
 //
 //   #define GTEST_STRINGIFY_(name) #name
 //   #define MACRO(a, b, c) ... GTEST_STRINGIFY_(a) ...
-//   MACRO(, x, y)
+//   MACRO(, x, x)
 //
 // Complaining about the argument to GTEST_STRINGIFY_ being empty.
 // This is allowed by the spec.

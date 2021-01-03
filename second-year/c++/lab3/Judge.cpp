@@ -6,10 +6,10 @@ char Judge::processingShot(const square &curShot, const shared_ptr<IGamer>& rece
 
 char Judge::playRound(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer>& player1) {
     curPlayer = player0;//TODO возможно стоит изменить первого игрока("ходят белые")
-    prevStepResult = -1;
+    curStepResult = -1;
     while(player0->getCurFleetSize() && player1->getCurFleetSize()){
         processingNextStep(player0, player1);
-        if (prevStepResult == -1){
+        if (curStepResult == -1){
             curPlayer = curPlayer == player0? player1 : player0;
         }
     }
@@ -17,7 +17,9 @@ char Judge::playRound(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer
 }
 
 void Judge::processingNextStep(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer>& player1) {
-    prevStepResult = processingShot(curPlayer->makeShot(), curPlayer == player0? player1 : player0);
+    square curShot = curPlayer->makeShot();
+    curStepResult = processingShot(curShot, curPlayer == player0 ? player1 : player0);
+    curPlayer->processingShotResult(curShot, curStepResult);
 }
 
 

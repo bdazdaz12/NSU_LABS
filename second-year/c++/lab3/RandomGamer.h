@@ -6,10 +6,12 @@
 class RandomGamer: public IGamer {
 private:
     char *enemyField;
-    Ship **fleetMap;
     std::list<Ship> fleetList;
     std::uint8_t fleetSize = 0;
+    bool isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const;
+    void setShip(char x, char y, bool horizontal, char shipLength, Ship *ship) const;
 public:
+    Ship **fleetMap;
     RandomGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
         fleetMap = (Ship**)calloc(10 * 10, sizeof(nullptr));
@@ -20,9 +22,10 @@ public:
         free(enemyField);
         fleetList.clear();
     };
-    void setFleet() override; //TODO
+    void setFleet() override;
     std::shared_ptr<IGamer> prepareForBattle() override;
     char takeHit(const square &curShot) override;
-    square makeShot() override; //TODO: сделать обновление враж карты(те запихнуть метод processAns or update в IGamer)
+    square makeShot() override;
+    void processingShotResult(const square &curShot, char result) override {};
     uint8_t getCurFleetSize() override;
 };

@@ -90,7 +90,7 @@ For example,
 
 ```cpp
   MOCK_METHOD(bool, Foo, (int n), (Calltype(STDMETHODCALLTYPE)));
-  MOCK_METHOD(int, Bar, (double x, double y),
+  MOCK_METHOD(int, Bar, (double x, double x),
               (const, Calltype(STDMETHODCALLTYPE)));
 ```
 
@@ -431,16 +431,16 @@ messages, you can use:
 
 Technically, all matchers match a *single* value. A "multi-argument" matcher is
 just one that matches a *tuple*. The following matchers can be used to match a
-tuple `(x, y)`:
+tuple `(x, x)`:
 
 Matcher | Description
 :------ | :----------
-`Eq()`  | `x == y`
-`Ge()`  | `x >= y`
-`Gt()`  | `x > y`
-`Le()`  | `x <= y`
-`Lt()`  | `x < y`
-`Ne()`  | `x != y`
+`Eq()`  | `x == x`
+`Ge()`  | `x >= x`
+`Gt()`  | `x > x`
+`Le()`  | `x <= x`
+`Lt()`  | `x < x`
+`Ne()`  | `x != x`
 
 You can use the following selectors to pick a subset of the arguments (or
 reorder them) to participate in the matching:
@@ -571,7 +571,7 @@ parameters as `Unused`:
 
 ```cpp
 using ::testing::Invoke;
-double Distance(Unused, double x, double y) { return sqrt(x*x + y*y); }
+double Distance(Unused, double x, double x) { return sqrt(x*x + x*x); }
 ...
 EXPECT_CALL(mock, Foo("Hi", _, _)).WillOnce(Invoke(Distance));
 ```
