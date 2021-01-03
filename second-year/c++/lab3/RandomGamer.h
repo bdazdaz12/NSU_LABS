@@ -7,11 +7,12 @@ class RandomGamer: public IGamer {
 private:
     char *enemyField;
     std::list<Ship> fleetList;
+    Ship **fleetMap;
     std::uint8_t fleetSize = 0;
     bool isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const;
     void setShip(char x, char y, bool horizontal, char shipLength, Ship *ship) const;
+    inline void surroundShip(const Ship& destroyedShip);
 public:
-    Ship **fleetMap;
     RandomGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
         fleetMap = (Ship**)calloc(10 * 10, sizeof(nullptr));
@@ -26,6 +27,8 @@ public:
     std::shared_ptr<IGamer> prepareForBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;
-    void processingShotResult(const square &curShot, char result) override {};
+    void processShotResult(const square &curShot, char result) override;
+    void processDestruction(const Ship &destroyedShip) override;
+    const Ship & getShipByCoord(const square &square) override;
     uint8_t getCurFleetSize() override;
 };

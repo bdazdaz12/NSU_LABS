@@ -17,9 +17,11 @@ char Judge::playRound(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer
 }
 
 void Judge::processingNextStep(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer>& player1) {
+    const shared_ptr<IGamer>& receivingPart = curPlayer == player0 ? player1 : player0; ///терпила
     square curShot = curPlayer->makeShot();
-    curStepResult = processingShot(curShot, curPlayer == player0 ? player1 : player0);
-    curPlayer->processingShotResult(curShot, curStepResult);
+    curStepResult = processingShot(curShot, receivingPart);
+    curPlayer->processShotResult(curShot, curStepResult);
+    if (curStepResult == 2) {
+        curPlayer->processDestruction(receivingPart->getShipByCoord(curShot));
+    }
 }
-
-

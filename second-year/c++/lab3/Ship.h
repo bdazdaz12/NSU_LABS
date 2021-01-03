@@ -13,12 +13,14 @@ private:
     char y;
     bool horizontal;
     char HP;
+    char length;
 public:
-    explicit Ship(char x, char y, bool horizontal, char HP){
+    explicit Ship(char x, char y, bool horizontal, char HP, char length){
         this->x = x;
         this->y = y;
         this->horizontal = horizontal;
         this->HP = HP;
+        this->length = length;
     };
     ~Ship() = default;
     inline char getX() const{
@@ -32,6 +34,9 @@ public:
     }
     inline char getHP() const {
         return HP;
+    }
+    inline char getLength() const{
+        return length;
     }
     bool takeHit(){
         HP--;

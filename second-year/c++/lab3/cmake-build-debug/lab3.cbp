@@ -351,6 +351,12 @@
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/Judge.h">
 			<Option target="lab3"/>
 		</Unit>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.cpp">
+			<Option target="lab3"/>
+		</Unit>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h">
+			<Option target="lab3"/>
+		</Unit>
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.cpp">
 			<Option target="lab3"/>
 		</Unit>
