@@ -7,6 +7,10 @@ CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../ConsoleGamer.h
 CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../IGamer.h
 CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../Ship.h
 
+CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.cpp
+CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.h
+CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../IGameView.h
+
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../ConsoleGamer.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.cpp
@@ -21,6 +25,12 @@ CMakeFiles/lab3.dir/Judge.cpp.obj: ../IGamer.h
 CMakeFiles/lab3.dir/Judge.cpp.obj: ../Judge.cpp
 CMakeFiles/lab3.dir/Judge.cpp.obj: ../Judge.h
 CMakeFiles/lab3.dir/Judge.cpp.obj: ../Ship.h
+
+CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../BasicGameElements.h
+CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../IGamer.h
+CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../OptimalGamer.cpp
+CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../OptimalGamer.h
+CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../Ship.h
 
 CMakeFiles/lab3.dir/RandomGamer.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/RandomGamer.cpp.obj: ../IGamer.h
@@ -51,6 +61,7 @@ CMakeFiles/lab3.dir/Tests.cpp.obj: ../googletest/googletest/include/gtest/intern
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../ConsoleGamer.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../IGamer.h
+CMakeFiles/lab3.dir/Tests.cpp.obj: ../OptimalGamer.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../RandomGamer.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../Ship.h
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../Tests.cpp
@@ -75,5 +86,9 @@ CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/interna
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-port.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-string.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-type-util.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../BasicGameElements.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../IGamer.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../OptimalGamer.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../Ship.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../main.cpp
 
