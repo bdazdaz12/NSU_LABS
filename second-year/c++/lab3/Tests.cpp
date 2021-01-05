@@ -6,13 +6,18 @@
 #include "OptimalGamer.h"
 
 //TEST(PlayerLogic, OptimalSetFleet) {
-////    std::shared_ptr<IGamer> gamer = RandomGamer().prepareForBattle();
+//    std::shared_ptr<IGamer> gamer = RandomGamer().prepareForBattle();
 //    OptimalGamer optimalGamer;
 //    optimalGamer.prepareForBattle();
-//    optimalGamer.processShotResult({4, 4}, 1);
-//    optimalGamer.processShotResult({5, 4}, 1);
-//    optimalGamer.processShotResult({6, 4}, 2);
-//    optimalGamer.processDestruction(Ship(4, 4, true, 3, 3));
+//    square a = {0, 0};
+//    do{
+//        a = optimalGamer.makeShot();
+//    } while(a.x != 0 || a.y != 0);
+//    optimalGamer.processShotResult(a, 1);
+//    a = optimalGamer.makeShot();
+//    std::cout << a.x << " " << a.y;
+
+
 //    for (int i = 0; i < 10; ++i){
 //        for (int j = 0; j < 10; ++j){
 //            char ans;

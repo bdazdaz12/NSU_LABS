@@ -24,7 +24,7 @@ private:
     bool isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const;
     void setShip(char x, char y, bool horizontal, char shipLength, Ship *ship) const;
     inline void surroundShip(const Ship& destroyedShip);
-    bool canMoveInDirection(char x, char y, uint8_t direction);
+    bool canMoveInDirection(char x, char y, uint8_t direction) const;
 public:
     OptimalGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
