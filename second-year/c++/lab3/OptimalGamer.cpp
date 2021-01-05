@@ -66,24 +66,45 @@ void reverseDirection(uint8_t& direction){
 
 void tryDetermineDirection(uint8_t& direction){
     switch (direction) {
-        case Unknown: direction = Right;
-        case Right: direction = Left;
-        case Left: direction = Up;
-        case Up: direction = Down;
-        case Down: direction = Unknown;
+        case Unknown:
+            direction = Right;
+            break;
+        case Right:
+            direction = Left;
+            break;
+        case Left:
+            direction = Up;
+            break;
+        case Up:
+            direction = Down;
+            break;
+        case Down:
+            direction = Unknown;
+            break;
     }
 }
 
 void moveInDefinedDirection(char& x, char& y, uint8_t direction){
-    switch (direction) {
-        case Right: x += 1;
-        case Left: x -= 1;
-        case Up: y -= 1;
-        case Down: y += 1;
+    switch (direction) { ///свичи - говно! У этой штуки ужасный синтаксис, какие breaks?! а фигурные скобки не работают(
+        case Right:
+            ++x;
+            break;
+        case Left:
+            --x;
+            break;
+        case Up:
+            --y;
+            break;
+        case Down:
+            ++y;
+            break;
     }
 }
 
-bool OptimalGamer::canMoveInDirection(char x, char y, uint8_t curDirection){
+bool OptimalGamer::canMoveInDirection(char x, char y, uint8_t curDirection) const {
+    if (curDirection == Unknown){
+        return false;
+    }
     moveInDefinedDirection(x, y, curDirection);
     if (x < 0 || x >= 10 || y < 0 || y >= 10 || enemyField[y * 10 + x] == -1){
         return false;
@@ -92,7 +113,6 @@ bool OptimalGamer::canMoveInDirection(char x, char y, uint8_t curDirection){
 }
 
 square OptimalGamer::makeShot() {
-    srand(time(nullptr));
     char x, y;
     if (haveShipToBurn){
         x = shipToBurn.x;
@@ -119,6 +139,7 @@ square OptimalGamer::makeShot() {
              * при этом при неправильном определении мы не сдвинимся из самой первой точки-попадания */
         }
     } else {
+        srand(time(nullptr));
         do {
             x = rand() % 10;
             y = rand() % 10;
