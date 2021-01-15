@@ -42,7 +42,7 @@ void OptimalGamer::setFleet() {
     }
 }
 
-void OptimalGamer::prepareForBattle() {
+void OptimalGamer::prepareForBattle(IGameView* gameView) {
     fleetSize = 10;
     setFleet();
 }

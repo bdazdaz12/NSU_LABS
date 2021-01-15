@@ -18,14 +18,11 @@ private:
     IGamer* makeGamer(const string& gamerType);
 public:
     explicit GameCore(const string& gameViewType){
-        if (gameViewType == "console"){
-            gameView = new ConsoleView;
-        } else {
-            //TODO: add GUI
-        }
+        gameView = new ConsoleView;
+        //TODO: add GUI
     }
     ~GameCore(){
         delete gameView;
     }
-    void runTournament(int cntOfRounds, const string& firstPlayerType, const string& secondPlayerType);
+    void run(int cntOfRounds, const string& firstPlayerType, const string& secondPlayerType);
 };

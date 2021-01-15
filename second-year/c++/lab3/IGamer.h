@@ -4,10 +4,11 @@
 #include <string>
 #include "Ship.h"
 #include "BasicGameElements.h"
+#include "IGameView.h"
 
 class IGamer {
 public:
-    virtual void prepareForBattle() = 0;
+    virtual void prepareForBattle(IGameView* gameView) = 0;
     virtual void prepareForNewBattle() = 0;
     virtual ~IGamer() = default;
     virtual void setFleet() = 0;

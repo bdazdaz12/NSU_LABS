@@ -24,7 +24,7 @@ public:
         fleetList.clear();
     };
     void setFleet() override;
-    void prepareForBattle() override;
+    void prepareForBattle(IGameView* gameView) override;
     void prepareForNewBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;

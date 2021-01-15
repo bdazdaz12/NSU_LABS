@@ -91,15 +91,95 @@ void ConsoleGamer::setRandomFleet(){
 void ConsoleGamer::setFleet() {
     char ans = 0;
     while (tolower(ans, std::locale()) != 'y' && tolower(ans, std::locale()) != 'n') {
-        std::cout << "Do you want to set the ships by yourself? y/n\n";
+        std::cout << "Do you want to set the ships by yourself? (y/n): ";
         std::cin >> ans;
     }
     if (tolower(ans, std::locale()) == 'n'){
         setRandomFleet();
+    } else {
+        gameView->showFleetLocationMenu(fleetMap);
+        uint8_t battleships = 0;
+        uint8_t cruisers = 0;
+        uint8_t destroyers = 0;
+        uint8_t boats = 0;
+
+        char x = 0, y = 0;
+        char horizontal = 0;
+        int shipType = 0;
+        while(battleships + cruisers + destroyers + boats != 10){
+            printf("Entre ship args: ");
+            std::cin >> y >> x >> horizontal >> shipType;
+            if(!(x >= '0' && x <= '9' && y >= 'A' && y <= 'J' && (horizontal == 'y' || horizontal == 'n')
+                 && shipType >= boat && shipType <= battleship)){
+                printf("Wrong input! Pls repeat\n");
+                continue;
+            }
+            x -= '0';
+            y -= 'A';
+            switch (shipType) {
+                case battleship: {
+                    if (battleships == 1) {
+                        std::cout << "Wrong ship type! You already have a battleship!" << std::endl;
+                        continue;
+                    }
+                    break;
+                }
+                case cruiser:{
+                    if (cruisers == 2) {
+                        std::cout << "Wrong ship type! You already have a cruisers!" << std::endl;
+                        continue;
+                    }
+                    break;
+                }
+                case destroyer:{
+                    if (destroyers == 3) {
+                        std::cout << "Wrong ship type! You already have a destroyers!" << std::endl;
+                        continue;
+                    }
+                    break;
+                }
+                case boat:{
+                    if (boats == 4) {
+                        std::cout << "Wrong ship type! You already have a boats!" << std::endl;
+                        continue;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+            if (!isGoodLocate(x, y, horizontal == 'y', shipType)){
+                std::cout << "You can't locate ship at this area!" << std::endl;
+                continue;
+            } else {
+                fleetList.emplace_back(x, y, horizontal == 'y', shipType, shipType);
+                setShip(x, y, horizontal == 'y', shipType, &fleetList.back());
+                switch (shipType){
+                    case battleship: {
+                        battleships++;
+                        break;
+                    }
+                    case cruiser:{
+                        cruisers++;
+                        break;
+                    }
+                    case destroyer:{
+                        destroyers++;
+                        break;
+                    }
+                    case boat:{
+                        boats++;
+                        break;
+                    }
+                }
+                gameView->showFleetLocationMenu(fleetMap);
+            }
+        }
     }
 }
 
-void ConsoleGamer::prepareForBattle() {
+void ConsoleGamer::prepareForBattle(IGameView* iGameView) {
+    gameView = iGameView;
     fleetSize = 10;
     setFleet();
 }

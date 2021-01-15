@@ -1,5 +1,5 @@
 #include <iostream>
-#include <gtest/gtest.h>
+//#include <gtest/gtest.h>
 #include <ctime>
 #include <memory>
 #include "GameCore.h"
@@ -100,7 +100,6 @@ int main(int argc, char** argv){
             return 1;
         }
     }
-
     string secondPlayerType = "random";
     if (options[SECOND]) {
         if (((string) "Optimal") == options[SECOND].arg) {
@@ -112,8 +111,8 @@ int main(int argc, char** argv){
             return 1;
         }
     }
-    GameCore gameCore;
-    gameCore.runTournament(countOfRounds, firstPlayerType, secondPlayerType);
+    GameCore gameCore("console");
+    gameCore.run(countOfRounds, firstPlayerType, secondPlayerType);
 }
 
 

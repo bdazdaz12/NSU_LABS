@@ -1,11 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <windows.h>
+#include "Ship.h"
 
 class IGameView{
 public:
-    virtual ~IGameView() = 0;
+    virtual ~IGameView() = default;
     virtual void clearWindow() = 0;
-    virtual void createWindow(int width, int height) = 0;
+    virtual void paintWindow() = 0;
+    virtual void showFleetLocationMenu(Ship **fleetMap) = 0;
 };
