@@ -106,7 +106,7 @@ square RandomGamer::makeShot() {
     do {
         x = rand() % 10;
         y = rand() % 10;
-    } while (!enemyField[y * 10 + x]);
+    } while (enemyField[y * 10 + x] != 0);
     return {x, y};
 }
 

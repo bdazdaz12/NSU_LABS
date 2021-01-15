@@ -7,12 +7,12 @@ using namespace std;
 
 class Judge {
 private:
-    shared_ptr<IGamer> curPlayer;
+    IGamer* curPlayer = nullptr;
     char curStepResult = 0;
-    char processingShot(const square& curShot, const shared_ptr<IGamer>& receivingPart);
-    void processingNextStep(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer>& player1);
+    char processingShot(const square& curShot, IGamer* receivingPart);
+    void processingNextStep(IGamer* player0, IGamer* player1);
 public:
     Judge() = default;
     ~Judge() = default;
-    char playRound(const shared_ptr<IGamer>& player0, const shared_ptr<IGamer>& player1);
+    char playRound(IGamer* player0, IGamer* player1);
 };
