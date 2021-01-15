@@ -8,6 +8,7 @@
 class IGamer {
 public:
     virtual void prepareForBattle() = 0;
+    virtual void prepareForNewBattle() = 0;
     virtual ~IGamer() = default;
     virtual void setFleet() = 0;
     virtual char takeHit(const square& curShot) = 0;

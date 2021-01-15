@@ -112,3 +112,15 @@ void ConsoleGamer::setShip(char x, char y, bool horizontal, char shipLength, Shi
         }
     }
 }
+
+void ConsoleGamer::prepareForNewBattle() {
+    for (int i = 0; i < 10; ++i){
+        for (int j = 0; j < 10; ++j){
+           enemyField[i * 10 + j] = 0;
+           fleetMap[i * 10 + j] = nullptr;
+        }
+    }
+    fleetSize = 10;
+    fleetList.clear();
+    setFleet();
+}

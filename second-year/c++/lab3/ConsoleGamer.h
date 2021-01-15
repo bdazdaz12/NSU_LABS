@@ -27,6 +27,7 @@ public:
     };
     void setFleet() override;//TODO: это не так должно работать
     void prepareForBattle() override;
+    void prepareForNewBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;//TODO
     void processShotResult(const square &curShot, char result) override;

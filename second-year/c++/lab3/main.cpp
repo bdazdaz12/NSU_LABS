@@ -2,28 +2,14 @@
 #include <gtest/gtest.h>
 #include <ctime>
 #include <memory>
-#include "OptimalGamer.h"
-#include "RandomGamer.h"
-#include "IGamer.h"
-#include "Judge.h"
+#include "GameCore.h"
 
 using namespace std;
 
 int main(int argc, char** argv){
     srand(time(NULL));
-    OptimalGamer optimalGamer0;
-//    OptimalGamer optimalGamer1;
-    RandomGamer randomGamer;
-    IGamer* player0 = &optimalGamer0;
-    IGamer* player1 = &randomGamer;
-    player0->prepareForBattle();
-    player1->prepareForBattle();
-    Judge judge;
-    if (judge.playRound(player0, player1) == 0) {
-        cout << "da";
-    } else {
-        cout << "net";
-    }
+    GameCore gameCore;
+    gameCore.runTournament(2, "random", "random");
 }
 
 //int main(int argc, char** argv) {

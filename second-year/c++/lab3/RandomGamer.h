@@ -25,6 +25,7 @@ public:
     };
     void setFleet() override;
     void prepareForBattle() override;
+    void prepareForNewBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;
     void processShotResult(const square &curShot, char result) override;

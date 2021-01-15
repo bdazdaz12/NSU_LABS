@@ -11,7 +11,15 @@ CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.cpp
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.h
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../IGameView.h
 
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../BasicGameElements.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../ConsoleGamer.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.cpp
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../IGamer.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../Judge.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../OptimalGamer.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../RandomGamer.h
+CMakeFiles/lab3.dir/GameCore.cpp.obj: ../Ship.h
 
 CMakeFiles/lab3.dir/Judge.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/Judge.cpp.obj: ../IGamer.h
@@ -80,6 +88,8 @@ CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/interna
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-string.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../googletest/googletest/include/gtest/internal/gtest-type-util.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../BasicGameElements.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../ConsoleGamer.h
+CMakeFiles/lab3.dir/main.cpp.obj: ../GameCore.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../IGamer.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../Judge.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../OptimalGamer.h

@@ -152,3 +152,15 @@ void RandomGamer::processDestruction(const Ship &destroyedShip) {
 const Ship &RandomGamer::getShipByCoord(const square &square) {
     return *fleetMap[square.y * 10 + square.x];
 }
+
+void RandomGamer::prepareForNewBattle() {
+    for (int i = 0; i < 10; ++i){
+        for (int j = 0; j < 10; ++j){
+            enemyField[i * 10 + j] = 0;
+            fleetMap[i * 10 + j] = nullptr;
+        }
+    }
+    fleetSize = 10;
+    fleetList.clear();
+    setFleet();
+}
