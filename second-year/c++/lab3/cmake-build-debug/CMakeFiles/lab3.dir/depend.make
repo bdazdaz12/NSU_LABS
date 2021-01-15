@@ -96,4 +96,5 @@ CMakeFiles/lab3.dir/main.cpp.obj: ../OptimalGamer.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../RandomGamer.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../Ship.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../main.cpp
+CMakeFiles/lab3.dir/main.cpp.obj: ../optionparser.h
 

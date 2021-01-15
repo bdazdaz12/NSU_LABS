@@ -338,10 +338,6 @@ vector
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
 
-C:/Users/yevsyukof/CLionProjects/lab3/GameCore.cpp
-GameCore.h
-C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
-
 C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
 string
 -
@@ -380,10 +376,6 @@ list
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
 
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.cpp
-RandomGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
-
 C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
@@ -391,20 +383,6 @@ list
 -
 
 C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/Tests.cpp
-gtest/gtest.h
--
-iostream
--
-memory
--
-ConsoleGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
-RandomGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
-OptimalGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 
 C:/Users/yevsyukof/CLionProjects/lab3/main.cpp
 iostream
@@ -417,4 +395,10 @@ memory
 -
 GameCore.h
 C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
+optionparser.h
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+intrin.h
+-
 

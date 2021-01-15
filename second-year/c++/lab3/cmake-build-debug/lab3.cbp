@@ -384,6 +384,9 @@
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/main.cpp">
 			<Option target="lab3"/>
 		</Unit>
+		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h">
+			<Option target="lab3"/>
+		</Unit>
 		<Unit filename="C:/Users/yevsyukof/CLionProjects/lab3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
