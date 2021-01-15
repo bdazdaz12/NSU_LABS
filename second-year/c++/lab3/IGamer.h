@@ -7,7 +7,7 @@
 
 class IGamer {
 public:
-    virtual std::shared_ptr<IGamer> prepareForBattle() = 0;
+    virtual void prepareForBattle() = 0;
     virtual ~IGamer() = default;
     virtual void setFleet() = 0;
     virtual char takeHit(const square& curShot) = 0;

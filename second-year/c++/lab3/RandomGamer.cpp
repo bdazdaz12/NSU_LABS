@@ -1,5 +1,4 @@
 #include "RandomGamer.h"
-#include <ctime>
 
 bool RandomGamer::isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const{
     if (horizontal){
@@ -47,7 +46,6 @@ void RandomGamer::setShip(char x, char y, bool horizontal, char shipLength, Ship
 }
 
 void RandomGamer::setFleet() {
-    srand(time(nullptr));
     bool horizontal;
     char x, y;
     do {
@@ -101,7 +99,6 @@ char RandomGamer::takeHit(const square &curShot) {
 }
 
 square RandomGamer::makeShot() {
-    srand(time(nullptr));
     char x, y;
     do {
         x = rand() % 10;
@@ -110,9 +107,8 @@ square RandomGamer::makeShot() {
     return {x, y};
 }
 
-std::shared_ptr<IGamer> RandomGamer::prepareForBattle() {
+void RandomGamer::prepareForBattle() {
     setFleet();
-    return std::shared_ptr<RandomGamer>();
 }
 
 uint8_t RandomGamer::getCurFleetSize() {

@@ -24,7 +24,7 @@ public:
         fleetList.clear();
     };
     void setFleet() override;
-    std::shared_ptr<IGamer> prepareForBattle() override;
+    void prepareForBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;
     void processShotResult(const square &curShot, char result) override;

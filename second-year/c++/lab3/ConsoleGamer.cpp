@@ -5,9 +5,8 @@ void ConsoleGamer::setFleet() {
 //    fleetMap[1 * 10 + 1] = &fleetList.front();
 }
 
-std::shared_ptr<IGamer> ConsoleGamer::prepareForBattle() {
+void ConsoleGamer::prepareForBattle() {
     setFleet();
-    return std::shared_ptr<ConsoleGamer>();
 }
 
 char ConsoleGamer::takeHit(const square &curShot) {

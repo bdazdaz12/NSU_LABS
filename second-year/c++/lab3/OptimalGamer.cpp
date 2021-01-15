@@ -1,5 +1,4 @@
 #include "OptimalGamer.h"
-#include <ctime>
 
 void OptimalGamer::setFleet() {
     bool horizontal;
@@ -43,9 +42,8 @@ void OptimalGamer::setFleet() {
     }
 }
 
-std::shared_ptr<IGamer> OptimalGamer::prepareForBattle() {
+void OptimalGamer::prepareForBattle() {
     setFleet();
-    return std::shared_ptr<OptimalGamer>();
 }
 
 char OptimalGamer::takeHit(const square &curShot) {
