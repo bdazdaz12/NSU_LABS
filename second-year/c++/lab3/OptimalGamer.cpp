@@ -2,7 +2,6 @@
 #include <ctime>
 
 void OptimalGamer::setFleet() {
-    srand(time(nullptr));
     bool horizontal;
     char x, y;
     do {
@@ -139,7 +138,6 @@ square OptimalGamer::makeShot() {
              * при этом при неправильном определении мы не сдвинимся из самой первой точки-попадания */
         }
     } else {
-        srand(time(nullptr));
         do {
             x = rand() % 10;
             y = rand() % 10;
