@@ -29,7 +29,6 @@ public:
     OptimalGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
         fleetMap = (Ship**)calloc(10 * 10, sizeof(nullptr));
-        fleetSize = 10;
     }
     ~OptimalGamer() override {
         free(fleetMap);

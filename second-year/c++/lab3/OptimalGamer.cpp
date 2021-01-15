@@ -43,6 +43,7 @@ void OptimalGamer::setFleet() {
 }
 
 void OptimalGamer::prepareForBattle() {
+    fleetSize = 10;
     setFleet();
 }
 
@@ -252,5 +253,8 @@ void OptimalGamer::prepareForNewBattle() {
     }
     fleetSize = 10;
     fleetList.clear();
+    isTrueDirectionDefined = false;
+    haveShipToBurn = false;
+    direction = Unknown;
     setFleet();
 }

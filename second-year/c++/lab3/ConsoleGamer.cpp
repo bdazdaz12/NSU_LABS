@@ -6,6 +6,7 @@ void ConsoleGamer::setFleet() {
 }
 
 void ConsoleGamer::prepareForBattle() {
+    fleetSize = 10;
     setFleet();
 }
 

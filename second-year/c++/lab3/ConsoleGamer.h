@@ -18,7 +18,6 @@ public:
     ConsoleGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
         fleetMap = (Ship**)calloc(10 * 10, sizeof(nullptr));
-        fleetSize = 10;
     }
     ~ConsoleGamer() override {
         free(fleetMap);
