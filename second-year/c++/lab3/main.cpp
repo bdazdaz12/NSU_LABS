@@ -112,22 +112,10 @@ int main(int argc, char** argv){
             return 1;
         }
     }
-//    cout << firstPlayerType << endl;
-//    cout << secondPlayerType << endl;
     GameCore gameCore;
     gameCore.runTournament(countOfRounds, firstPlayerType, secondPlayerType);
-
 }
 
-
-
-
-
-//int main(int argc, char** argv){
-//    srand(time(NULL));
-//    GameCore gameCore;
-//    gameCore.runTournament(2, "random", "random");
-//}
 
 //int main(int argc, char** argv) {
 //    return RUN_ALL_TESTS();

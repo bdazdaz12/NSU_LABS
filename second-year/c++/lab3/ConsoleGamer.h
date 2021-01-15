@@ -14,6 +14,8 @@ private:
     bool isGoodLocate(char x, char y, bool horizontal, uint8_t shipLength) const;
     void setShip(char x, char y, bool horizontal, char shipLength, Ship *ship) const;
     inline void surroundShip(const Ship& destroyedShip);
+    bool isCorrectSquare(char x, char y);
+    void setRandomFleet();
 public:
     ConsoleGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));

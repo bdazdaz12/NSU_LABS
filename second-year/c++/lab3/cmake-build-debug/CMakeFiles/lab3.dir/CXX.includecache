@@ -338,6 +338,14 @@ vector
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
 
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.cpp
+ConsoleView.h
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
+IGameView.h
+C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
+
 C:/Users/yevsyukof/CLionProjects/lab3/GameCore.cpp
 GameCore.h
 C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
@@ -357,6 +365,16 @@ OptimalGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 Judge.h
 C:/Users/yevsyukof/CLionProjects/lab3/Judge.h
+ConsoleView.h
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
+IGameView.h
+C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
+iostream
+-
+windows.h
+-
 
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
 memory
@@ -374,10 +392,6 @@ C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
 
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.cpp
-OptimalGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
-
 C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 list
 -
@@ -391,20 +405,6 @@ list
 -
 
 C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/Tests.cpp
-gtest/gtest.h
--
-iostream
--
-memory
--
-ConsoleGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
-RandomGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
-OptimalGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 
 C:/Users/yevsyukof/CLionProjects/lab3/main.cpp
 iostream

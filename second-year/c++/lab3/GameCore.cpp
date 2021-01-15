@@ -13,6 +13,7 @@ IGamer* GameCore::makeGamer(const string &gamerType) {
 }
 
 void GameCore::runTournament(int cntOfRounds, const string &firstPlayerType, const string &secondPlayerType) {
+    gameView->createWindow(750, 330);
     IGamer* player0 = makeGamer(firstPlayerType);
     IGamer* player1 = makeGamer(secondPlayerType);
     player0->prepareForBattle();
