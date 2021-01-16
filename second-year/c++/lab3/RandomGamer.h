@@ -16,7 +16,6 @@ public:
     RandomGamer(){
         enemyField = (char*)calloc(10 * 10, sizeof(char));
         fleetMap = (Ship**)calloc(10 * 10, sizeof(nullptr));
-        fleetSize = 10;
     }
     ~RandomGamer() override {
         free(fleetMap);

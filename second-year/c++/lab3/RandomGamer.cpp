@@ -85,6 +85,7 @@ Ship** RandomGamer::setFleet() {
         fleetList.emplace_back(x, y, horizontal, boat, 1);
         setShip(x, y, horizontal, boat, &fleetList.back());
     }
+    fleetSize = 10;
     return fleetMap;
 }
 
@@ -157,7 +158,7 @@ void RandomGamer::clear() {
             fleetMap[i * 10 + j] = nullptr;
         }
     }
-    fleetSize = 10;
+    fleetSize = 0;
     fleetList.clear();
 }
 

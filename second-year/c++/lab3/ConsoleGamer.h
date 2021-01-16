@@ -33,10 +33,10 @@ public:
         free(enemyField);
         fleetList.clear();
     };
-    Ship** setFleet() override;//TODO: это не так должно работать
+    Ship** setFleet() override;
     void clear() override;
     char takeHit(const square &curShot) override;
-    square makeShot() override;//TODO
+    square makeShot() override;
     void processShotResult(const square &curShot, char result) override;
     void processDestruction(const Ship &destroyedShip) override;
     const Ship & getShipByCoord(const square &square) override;

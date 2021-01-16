@@ -8,6 +8,10 @@
 
 C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.cpp
+ConsoleGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
+
 C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
 iostream
 -
@@ -62,11 +66,19 @@ C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 IGameView.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
 
+C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.cpp
+OptimalGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
+
 C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 list
 -
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.cpp
+RandomGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
 
 C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
 IGamer.h
@@ -75,4 +87,32 @@ list
 -
 
 C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/Tests.cpp
+iostream
+-
+memory
+-
+ConsoleGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
+RandomGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
+OptimalGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/main.cpp
+iostream
+-
+ctime
+-
+memory
+-
+GameCore.h
+C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
+optionparser.h
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+intrin.h
+-
 

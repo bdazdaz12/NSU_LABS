@@ -168,7 +168,7 @@ Ship** ConsoleGamer::setFleet() {
                         break;
                     }
                 }
-                return fleetMap;// TODO
+                return fleetMap;
             }
         }
         return nullptr;
@@ -192,7 +192,7 @@ bool ConsoleGamer::isCorrectSquare(char x, char y){
 
 square ConsoleGamer::makeShot() {
     std::cout << "Enter the coordinates of the next square in format x(num = {0, ..., 9}) y(char = {A, ..., J})\n";
-    std::cout << "Enter it here: "; //TODO
+    std::cout << "Enter it here: ";
     char x = 28, y = 28;
     bool isCorrect = true;
     do {
