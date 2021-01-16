@@ -191,7 +191,7 @@ bool ConsoleGamer::isCorrectSquare(char x, char y){
 }
 
 square ConsoleGamer::makeShot() {
-    std::cout << "Enter the coordinates of the next square in format x(num = {0, ..., 9}) y(char = {A, ..., J})\n";
+    std::cout << "Enter the coordinates of the next square in format y(char = {A, ..., J}) x(num = {0, ..., 9})\n";
     std::cout << "Enter it here: ";
     char x = 28, y = 28;
     bool isCorrect = true;
@@ -199,7 +199,7 @@ square ConsoleGamer::makeShot() {
         if (!isCorrect){
             std::cout << "Wrong square! Pls repeat: ";
         }
-        std::cin >> x >> y;
+        std::cin >> y >> x;
         x -= '0';
         y -= 'A';
     } while(!(isCorrect = isCorrectSquare(x, y)));

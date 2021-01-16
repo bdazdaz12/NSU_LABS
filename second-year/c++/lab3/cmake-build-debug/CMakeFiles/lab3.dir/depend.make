@@ -8,9 +8,11 @@ CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../IGameView.h
 CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../IGamer.h
 CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj: ../Ship.h
 
+CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.cpp
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.h
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../IGameView.h
+CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../IGamer.h
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../Ship.h
 
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../BasicGameElements.h

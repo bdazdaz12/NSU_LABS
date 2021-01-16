@@ -12,10 +12,10 @@ void ConsoleView::paintWindow() {
 void ConsoleView::printFleetMap(Ship **fleetMap) {
     clearWindow();
     std::cout << "   0 1 2 3 4 5 6 7 8 9" << std::endl;
-    for (int i = 0; i < 10; ++i){
-        printf(" %c ", 'A' + i);
-        for (int j = 0; j < 10; ++j){
-            if (fleetMap[i * 10 + j] == nullptr){
+    for (int y = 0; y < 10; ++y){
+        printf(" %c ", 'A' + y);
+        for (int x = 0; x < 10; ++x){
+            if (fleetMap[y * 10 + x] == nullptr){
                 printf("~ ");
             } else {
                 printf("# ");
@@ -23,6 +23,7 @@ void ConsoleView::printFleetMap(Ship **fleetMap) {
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 void ConsoleView::showFleetLocationMenu(Ship **fleetMap) {
@@ -37,4 +38,47 @@ void ConsoleView::showFleetLocationMenu(Ship **fleetMap) {
 
 void ConsoleView::wait(int cntOfSeconds) {
     Sleep(cntOfSeconds * 1000);
+}
+
+void ConsoleView::printCurGamerFleetMap(Ship **curGamerFleetMap, char *viewFromOtherSide) {
+    std::cout << "   0 1 2 3 4 5 6 7 8 9" << std::endl;
+    for(int y = 0; y < 10; ++y){
+        printf(" %c ", 'A' + y);
+        for (int x = 0; x < 10; ++x){
+            if (curGamerFleetMap[y * 10 + x] != nullptr){
+                if (viewFromOtherSide[y * 10 + x] >= 1){ // 1 или 2
+                    printf("X ");
+                } else {
+                    printf("# ");
+                }
+            } else {
+                if (viewFromOtherSide[y * 10 + x] == 0){
+                    printf("~ ");
+                } else if (viewFromOtherSide[y * 10 + x] == -1){
+                    printf("* ");
+                }
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void ConsoleView::printEnemyField(char *enemyField) {
+    clearWindow();
+    std::cout << "   0 1 2 3 4 5 6 7 8 9" << std::endl;
+    for (int y = 0; y < 10; ++y){
+        printf(" %c ", 'A' + y);
+        for (int x = 0; x < 10; ++x){
+            if (enemyField[y * 10 + x] == 0){
+                printf("~ ");
+            } else if (enemyField[y * 10 + x] >= 1){ // 1 или 2
+                printf("X ");
+            } else if(enemyField[y * 10 + x] == -1){
+                printf("* ");
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
 }

@@ -36,15 +36,11 @@ void GameCore::run(int cntOfRounds, const string &firstPlayerType, const string 
     requestGamerSetFleet(firstPlayerType, player0);
     requestGamerSetFleet(secondPlayerType, player1);
 
-    uint16_t player0_stat = 0;
-    uint16_t player1_stat = 0;
+    int player0_stat = 0;
+    int player1_stat = 0;
     for (int i = 0; i < cntOfRounds; ++i){
-        if(playRound(player0, player1) == 0){
-            ++player0_stat;
-        } else {
-            ++player1_stat;
-        }
-        if (cntOfRounds > 1) {
+        playRound(player0, player1) == 0? ++player0_stat : ++player1_stat;
+        if (cntOfRounds - player0_stat - player1_stat >= 1) { // чтобы не запускать расстановку кораблей в конце
             player0->clear();
             player1->clear();
             requestGamerSetFleet(firstPlayerType, player0);
@@ -57,28 +53,27 @@ void GameCore::run(int cntOfRounds, const string &firstPlayerType, const string 
 
 char GameCore::playRound(IGamer *player0, IGamer *player1) {
     curPlayer = player0;
+    receivingPart = player1;
     curStepResult = -1;
     while(player0->getCurFleetSize() && player1->getCurFleetSize()){
-        processingNextStep(player0, player1);//TODO никакие ходы я выводить не буду
+        gameView->printEnemyField(curPlayer->getEnemyField());
+        gameView->printCurGamerFleetMap(curPlayer->getYourFleetMap(),
+                                        receivingPart->getEnemyField());
+        processingNextStep();
         if (curStepResult == -1){
-            printf("change side\n");//TODO: удалить
-            curPlayer = curPlayer == player0? player1 : player0;
+            swap(curPlayer, receivingPart); //TODO: надеюсь тут не будет багов
         }
     }
-    printf("%d \n", player0->getCurFleetSize());//TODO: удалить
-    printf("%d \n", player1->getCurFleetSize());//TODO: удалить
     return player0->getCurFleetSize() != 0? 0 : 1;
 }
 
-char GameCore::processingShot(const square &curShot, IGamer *receivingPart) {
+char GameCore::processingShot(const square &curShot) {
     return receivingPart->takeHit(curShot);
 }
 
-void GameCore::processingNextStep(IGamer *player0, IGamer *player1) {
-    IGamer* receivingPart = curPlayer == player0? player1 : player0; ///терпила
+void GameCore::processingNextStep() {
     square curShot = curPlayer->makeShot();
-    printf("cur shot: %d %d \n", curShot.x, curShot.y);//TODO: удалить
-    curStepResult = processingShot(curShot, receivingPart);
+    curStepResult = processingShot(curShot);
     curPlayer->processShotResult(curShot, curStepResult);
     if (curStepResult == 2) {
         curPlayer->processDestruction(receivingPart->getShipByCoord(curShot));

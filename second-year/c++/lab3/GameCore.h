@@ -15,10 +15,11 @@ class GameCore {
 private:
     IGameView* gameView = nullptr;
     IGamer* curPlayer = nullptr;
+    IGamer* receivingPart = nullptr;
     char curStepResult = 0;
     IGamer* makeGamer(const string& gamerType);
-    char processingShot(const square& curShot, IGamer* receivingPart);
-    void processingNextStep(IGamer* player0, IGamer* player1);
+    char processingShot(const square& curShot);
+    void processingNextStep();
     char playRound(IGamer* player0, IGamer* player1);
     void requestGamerSetFleet(const string& playerType,IGamer* player);
 public:

@@ -10,4 +10,6 @@ public:
     void showFleetLocationMenu(Ship **fleetMap) override;
     void printFleetMap(Ship **fleetMap);
     void wait(int cntOfSeconds) override;
+    void printCurGamerFleetMap(Ship **curGamerFleetMap, char *viewFromOtherSide) override;
+    void printEnemyField(char *enemyField) override;
 };

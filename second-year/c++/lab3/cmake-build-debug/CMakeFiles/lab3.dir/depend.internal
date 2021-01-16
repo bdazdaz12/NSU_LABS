@@ -9,9 +9,11 @@ CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj
  C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
  C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj
+ C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
  C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.cpp
  C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
  C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
+ C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
  C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj
  C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
