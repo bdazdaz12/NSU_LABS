@@ -7,7 +7,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj"
   "C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/ConsoleView.cpp.obj"
   "C:/Users/yevsyukof/CLionProjects/lab3/GameCore.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/GameCore.cpp.obj"
-  "C:/Users/yevsyukof/CLionProjects/lab3/Judge.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/Judge.cpp.obj"
   "C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/OptimalGamer.cpp.obj"
   "C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/RandomGamer.cpp.obj"
   "C:/Users/yevsyukof/CLionProjects/lab3/Tests.cpp" "C:/Users/yevsyukof/CLionProjects/lab3/cmake-build-debug/CMakeFiles/lab3.dir/Tests.cpp.obj"

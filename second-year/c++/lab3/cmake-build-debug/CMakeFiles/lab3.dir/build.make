@@ -104,24 +104,10 @@ CMakeFiles/lab3.dir/ConsoleGamer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lab3.dir/ConsoleGamer.cpp.s"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\yevsyukof\CLionProjects\lab3\ConsoleGamer.cpp -o CMakeFiles\lab3.dir\ConsoleGamer.cpp.s
 
-CMakeFiles/lab3.dir/Judge.cpp.obj: CMakeFiles/lab3.dir/flags.make
-CMakeFiles/lab3.dir/Judge.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../Judge.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/lab3.dir/Judge.cpp.obj"
-	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\Judge.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\Judge.cpp
-
-CMakeFiles/lab3.dir/Judge.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/lab3.dir/Judge.cpp.i"
-	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\yevsyukof\CLionProjects\lab3\Judge.cpp > CMakeFiles\lab3.dir\Judge.cpp.i
-
-CMakeFiles/lab3.dir/Judge.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/lab3.dir/Judge.cpp.s"
-	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\yevsyukof\CLionProjects\lab3\Judge.cpp -o CMakeFiles\lab3.dir\Judge.cpp.s
-
 CMakeFiles/lab3.dir/Tests.cpp.obj: CMakeFiles/lab3.dir/flags.make
 CMakeFiles/lab3.dir/Tests.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
 CMakeFiles/lab3.dir/Tests.cpp.obj: ../Tests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/lab3.dir/Tests.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/lab3.dir/Tests.cpp.obj"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\Tests.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\Tests.cpp
 
 CMakeFiles/lab3.dir/Tests.cpp.i: cmake_force
@@ -135,7 +121,7 @@ CMakeFiles/lab3.dir/Tests.cpp.s: cmake_force
 CMakeFiles/lab3.dir/RandomGamer.cpp.obj: CMakeFiles/lab3.dir/flags.make
 CMakeFiles/lab3.dir/RandomGamer.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
 CMakeFiles/lab3.dir/RandomGamer.cpp.obj: ../RandomGamer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lab3.dir/RandomGamer.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/lab3.dir/RandomGamer.cpp.obj"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\RandomGamer.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\RandomGamer.cpp
 
 CMakeFiles/lab3.dir/RandomGamer.cpp.i: cmake_force
@@ -149,7 +135,7 @@ CMakeFiles/lab3.dir/RandomGamer.cpp.s: cmake_force
 CMakeFiles/lab3.dir/GameCore.cpp.obj: CMakeFiles/lab3.dir/flags.make
 CMakeFiles/lab3.dir/GameCore.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lab3.dir/GameCore.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/lab3.dir/GameCore.cpp.obj"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\GameCore.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\GameCore.cpp
 
 CMakeFiles/lab3.dir/GameCore.cpp.i: cmake_force
@@ -163,7 +149,7 @@ CMakeFiles/lab3.dir/GameCore.cpp.s: cmake_force
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: CMakeFiles/lab3.dir/flags.make
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
 CMakeFiles/lab3.dir/ConsoleView.cpp.obj: ../ConsoleView.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lab3.dir/ConsoleView.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/lab3.dir/ConsoleView.cpp.obj"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\ConsoleView.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\ConsoleView.cpp
 
 CMakeFiles/lab3.dir/ConsoleView.cpp.i: cmake_force
@@ -177,7 +163,7 @@ CMakeFiles/lab3.dir/ConsoleView.cpp.s: cmake_force
 CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: CMakeFiles/lab3.dir/flags.make
 CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: CMakeFiles/lab3.dir/includes_CXX.rsp
 CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../OptimalGamer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/lab3.dir/OptimalGamer.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/lab3.dir/OptimalGamer.cpp.obj"
 	C:\programming_soft\mingw-w64\x86_64-8.1.0-posix-seh-rt_v6-rev0\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\lab3.dir\OptimalGamer.cpp.obj -c C:\Users\yevsyukof\CLionProjects\lab3\OptimalGamer.cpp
 
 CMakeFiles/lab3.dir/OptimalGamer.cpp.i: cmake_force
@@ -192,7 +178,6 @@ CMakeFiles/lab3.dir/OptimalGamer.cpp.s: cmake_force
 lab3_OBJECTS = \
 "CMakeFiles/lab3.dir/main.cpp.obj" \
 "CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj" \
-"CMakeFiles/lab3.dir/Judge.cpp.obj" \
 "CMakeFiles/lab3.dir/Tests.cpp.obj" \
 "CMakeFiles/lab3.dir/RandomGamer.cpp.obj" \
 "CMakeFiles/lab3.dir/GameCore.cpp.obj" \
@@ -204,7 +189,6 @@ lab3_EXTERNAL_OBJECTS =
 
 lab3.exe: CMakeFiles/lab3.dir/main.cpp.obj
 lab3.exe: CMakeFiles/lab3.dir/ConsoleGamer.cpp.obj
-lab3.exe: CMakeFiles/lab3.dir/Judge.cpp.obj
 lab3.exe: CMakeFiles/lab3.dir/Tests.cpp.obj
 lab3.exe: CMakeFiles/lab3.dir/RandomGamer.cpp.obj
 lab3.exe: CMakeFiles/lab3.dir/GameCore.cpp.obj
@@ -215,7 +199,7 @@ lab3.exe: lib/libgtestd.a
 lab3.exe: CMakeFiles/lab3.dir/linklibs.rsp
 lab3.exe: CMakeFiles/lab3.dir/objects1.rsp
 lab3.exe: CMakeFiles/lab3.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable lab3.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\yevsyukof\CLionProjects\lab3\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable lab3.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\lab3.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -39,8 +39,6 @@ ConsoleGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
 OptimalGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
-Judge.h
-C:/Users/yevsyukof/CLionProjects/lab3/Judge.h
 ConsoleView.h
 C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
 IGameView.h
@@ -64,12 +62,6 @@ C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 IGameView.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
 
-C:/Users/yevsyukof/CLionProjects/lab3/Judge.h
-BasicGameElements.h
-C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
-IGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
-
 C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
 list
 -
@@ -83,4 +75,20 @@ list
 -
 
 C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/main.cpp
+iostream
+-
+ctime
+-
+memory
+-
+GameCore.h
+C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
+optionparser.h
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+
+C:/Users/yevsyukof/CLionProjects/lab3/optionparser.h
+intrin.h
+-
 

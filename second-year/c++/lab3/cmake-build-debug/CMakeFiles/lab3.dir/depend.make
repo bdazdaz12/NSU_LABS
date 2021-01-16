@@ -20,17 +20,9 @@ CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.cpp
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../GameCore.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../IGameView.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../IGamer.h
-CMakeFiles/lab3.dir/GameCore.cpp.obj: ../Judge.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../OptimalGamer.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../RandomGamer.h
 CMakeFiles/lab3.dir/GameCore.cpp.obj: ../Ship.h
-
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../BasicGameElements.h
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../IGameView.h
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../IGamer.h
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../Judge.cpp
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../Judge.h
-CMakeFiles/lab3.dir/Judge.cpp.obj: ../Ship.h
 
 CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../BasicGameElements.h
 CMakeFiles/lab3.dir/OptimalGamer.cpp.obj: ../IGameView.h
@@ -61,7 +53,6 @@ CMakeFiles/lab3.dir/main.cpp.obj: ../ConsoleView.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../GameCore.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../IGameView.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../IGamer.h
-CMakeFiles/lab3.dir/main.cpp.obj: ../Judge.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../OptimalGamer.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../RandomGamer.h
 CMakeFiles/lab3.dir/main.cpp.obj: ../Ship.h

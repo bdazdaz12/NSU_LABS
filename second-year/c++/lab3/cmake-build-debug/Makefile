@@ -321,33 +321,6 @@ GameCore.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/GameCore.cpp.s
 .PHONY : GameCore.cpp.s
 
-Judge.obj: Judge.cpp.obj
-
-.PHONY : Judge.obj
-
-# target to build an object file
-Judge.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/Judge.cpp.obj
-.PHONY : Judge.cpp.obj
-
-Judge.i: Judge.cpp.i
-
-.PHONY : Judge.i
-
-# target to preprocess a source file
-Judge.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/Judge.cpp.i
-.PHONY : Judge.cpp.i
-
-Judge.s: Judge.cpp.s
-
-.PHONY : Judge.s
-
-# target to generate assembly for a file
-Judge.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\lab3.dir\build.make CMakeFiles/lab3.dir/Judge.cpp.s
-.PHONY : Judge.cpp.s
-
 OptimalGamer.obj: OptimalGamer.cpp.obj
 
 .PHONY : OptimalGamer.obj
@@ -482,9 +455,6 @@ help:
 	@echo ... GameCore.obj
 	@echo ... GameCore.i
 	@echo ... GameCore.s
-	@echo ... Judge.obj
-	@echo ... Judge.i
-	@echo ... Judge.s
 	@echo ... OptimalGamer.obj
 	@echo ... OptimalGamer.i
 	@echo ... OptimalGamer.s
