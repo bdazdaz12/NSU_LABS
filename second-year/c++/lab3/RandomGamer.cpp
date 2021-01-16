@@ -45,7 +45,7 @@ void RandomGamer::setShip(char x, char y, bool horizontal, char shipLength, Ship
     }
 }
 
-void RandomGamer::setFleet() {
+Ship** RandomGamer::setFleet() {
     bool horizontal;
     char x, y;
     do {
@@ -85,6 +85,7 @@ void RandomGamer::setFleet() {
         fleetList.emplace_back(x, y, horizontal, boat, 1);
         setShip(x, y, horizontal, boat, &fleetList.back());
     }
+    return fleetMap;
 }
 
 char RandomGamer::takeHit(const square &curShot) {
@@ -105,11 +106,6 @@ square RandomGamer::makeShot() {
         y = rand() % 10;
     } while (enemyField[y * 10 + x] != 0);
     return {x, y};
-}
-
-void RandomGamer::prepareForBattle(IGameView* iGameView) {
-    gameView = iGameView;
-    setFleet();
 }
 
 uint8_t RandomGamer::getCurFleetSize() {
@@ -154,7 +150,7 @@ const Ship &RandomGamer::getShipByCoord(const square &square) {
     return *fleetMap[square.y * 10 + square.x];
 }
 
-void RandomGamer::prepareForNewBattle() {
+void RandomGamer::clear() {
     for (int i = 0; i < 10; ++i){
         for (int j = 0; j < 10; ++j){
             enemyField[i * 10 + j] = 0;
@@ -163,5 +159,12 @@ void RandomGamer::prepareForNewBattle() {
     }
     fleetSize = 10;
     fleetList.clear();
-    setFleet();
+}
+
+char *RandomGamer::getEnemyField() {
+    return enemyField;
+}
+
+Ship **RandomGamer::getYourFleetMap() {
+    return fleetMap;
 }

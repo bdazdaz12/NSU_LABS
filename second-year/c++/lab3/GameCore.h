@@ -20,6 +20,7 @@ private:
     char processingShot(const square& curShot, IGamer* receivingPart);
     void processingNextStep(IGamer* player0, IGamer* player1);
     char playRound(IGamer* player0, IGamer* player1);
+    void requestGamerSetFleet(const string& playerType,IGamer* player);
 public:
     explicit GameCore(const string& gameViewType){
         gameView = new ConsoleView;

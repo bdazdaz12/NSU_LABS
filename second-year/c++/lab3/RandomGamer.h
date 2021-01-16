@@ -5,7 +5,6 @@
 
 class RandomGamer: public IGamer {
 private:
-    IGameView* gameView = nullptr;
     char *enemyField;
     std::list<Ship> fleetList;
     Ship **fleetMap;
@@ -24,13 +23,14 @@ public:
         free(enemyField);
         fleetList.clear();
     };
-    void setFleet() override;
-    void prepareForBattle(IGameView* iGameView) override;
-    void prepareForNewBattle() override;
+    Ship** setFleet() override;
+    void clear() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;
     void processShotResult(const square &curShot, char result) override;
     void processDestruction(const Ship &destroyedShip) override;
     const Ship & getShipByCoord(const square &square) override;
     uint8_t getCurFleetSize() override;
+    char * getEnemyField() override;
+    Ship ** getYourFleetMap() override;
 };

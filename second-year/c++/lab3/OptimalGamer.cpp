@@ -1,6 +1,6 @@
 #include "OptimalGamer.h"
 
-void OptimalGamer::setFleet() {
+Ship** OptimalGamer::setFleet() {
     bool horizontal;
     char x, y;
     do {
@@ -40,13 +40,10 @@ void OptimalGamer::setFleet() {
         fleetList.emplace_back(x, y, horizontal, boat, 1);
         setShip(x, y, horizontal, boat, &fleetList.back());
     }
+    fleetSize = 10;
+    return fleetMap;
 }
 
-void OptimalGamer::prepareForBattle(IGameView* iGameView) {
-    gameView = iGameView;
-    fleetSize = 10;
-    setFleet();
-}
 
 char OptimalGamer::takeHit(const square &curShot) {
     char result = -1; //пустая клетка
@@ -245,17 +242,24 @@ void OptimalGamer::setShip(char x, char y, bool horizontal, char shipLength, Shi
     }
 }
 
-void OptimalGamer::prepareForNewBattle() {
+void OptimalGamer::clear() {
     for (int i = 0; i < 10; ++i){
         for (int j = 0; j < 10; ++j){
             enemyField[i * 10 + j] = 0;
             fleetMap[i * 10 + j] = nullptr;
         }
     }
-    fleetSize = 10;
+    fleetSize = 0;
     fleetList.clear();
     isTrueDirectionDefined = false;
     haveShipToBurn = false;
     direction = Unknown;
-    setFleet();
+}
+
+char *OptimalGamer::getEnemyField() {
+    return enemyField;
+}
+
+Ship **OptimalGamer::getYourFleetMap() {
+    return fleetMap;
 }

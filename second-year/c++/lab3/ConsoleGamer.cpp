@@ -47,6 +47,7 @@ void ConsoleGamer::setShip(char x, char y, bool horizontal, char shipLength, Shi
 }
 
 void ConsoleGamer::setRandomFleet(){
+    fleetSize = 10;
     bool horizontal;
     char x, y;
     do {
@@ -88,25 +89,19 @@ void ConsoleGamer::setRandomFleet(){
     }
 }
 
-void ConsoleGamer::setFleet() {
-    char ans = 0;
-    while (tolower(ans, std::locale()) != 'y' && tolower(ans, std::locale()) != 'n') {
+Ship** ConsoleGamer::setFleet() {
+    while (tolower(shipLocateMode, std::locale()) != 'y' && tolower(shipLocateMode, std::locale()) != 'n') {
         std::cout << "Do you want to set the ships by yourself? (y/n): ";
-        std::cin >> ans;
+        std::cin >> shipLocateMode;
     }
-    if (tolower(ans, std::locale()) == 'n'){
+    if (tolower(shipLocateMode, std::locale()) == 'n'){
         setRandomFleet();
+        return nullptr; //TODO: если возвращается NULL, значит игрок выбрал RandomSET
     } else {
-        gameView->showFleetLocationMenu(fleetMap);
-        uint8_t battleships = 0;
-        uint8_t cruisers = 0;
-        uint8_t destroyers = 0;
-        uint8_t boats = 0;
-
         char x = 0, y = 0;
         char horizontal = 0;
         int shipType = 0;
-        while(battleships + cruisers + destroyers + boats != 10){
+        while(fleetSize != 10){
             printf("Entre ship args: ");
             std::cin >> y >> x >> horizontal >> shipType;
             if(!(x >= '0' && x <= '9' && y >= 'A' && y <= 'J' && (horizontal == 'y' || horizontal == 'n')
@@ -154,6 +149,7 @@ void ConsoleGamer::setFleet() {
             } else {
                 fleetList.emplace_back(x, y, horizontal == 'y', shipType, shipType);
                 setShip(x, y, horizontal == 'y', shipType, &fleetList.back());
+                fleetSize++;
                 switch (shipType){
                     case battleship: {
                         battleships++;
@@ -172,16 +168,11 @@ void ConsoleGamer::setFleet() {
                         break;
                     }
                 }
-                gameView->showFleetLocationMenu(fleetMap);
+                return fleetMap;// TODO
             }
         }
+        return nullptr;
     }
-}
-
-void ConsoleGamer::prepareForBattle(IGameView* iGameView) {
-    gameView = iGameView;
-    fleetSize = 10;
-    setFleet();
 }
 
 char ConsoleGamer::takeHit(const square &curShot) {
@@ -257,14 +248,26 @@ const Ship &ConsoleGamer::getShipByCoord(const square &square) {
     return *fleetMap[square.y * 10 + square.x];
 }
 
-void ConsoleGamer::prepareForNewBattle() {
+void ConsoleGamer::clear() {
     for (int i = 0; i < 10; ++i){
         for (int j = 0; j < 10; ++j){
            enemyField[i * 10 + j] = 0;
            fleetMap[i * 10 + j] = nullptr;
         }
     }
-    fleetSize = 10;
+    fleetSize = 0;
     fleetList.clear();
-    setFleet();
+    battleships = 0;
+    cruisers = 0;
+    destroyers = 0;
+    boats = 0;
+    shipLocateMode = 0;
+}
+
+char* ConsoleGamer::getEnemyField() {
+    return enemyField;
+}
+
+Ship **ConsoleGamer::getYourFleetMap() {
+    return fleetMap;
 }
