@@ -9,4 +9,5 @@ public:
     virtual void clearWindow() = 0;
     virtual void paintWindow() = 0;
     virtual void showFleetLocationMenu(Ship **fleetMap) = 0;
+    virtual void wait(int cntOfSeconds) = 0;
 };

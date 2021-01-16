@@ -9,4 +9,5 @@ public:
     void paintWindow() override;
     void showFleetLocationMenu(Ship **fleetMap) override;
     void printFleetMap(Ship **fleetMap);
+    void wait(int cntOfSeconds) override;
 };

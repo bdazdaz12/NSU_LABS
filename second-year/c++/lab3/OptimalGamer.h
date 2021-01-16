@@ -13,6 +13,7 @@ enum Direction: uint8_t {
 
 class OptimalGamer: public IGamer {
 private:
+    IGameView* gameView = nullptr;
     char *enemyField;
     std::list<Ship> fleetList;
     Ship **fleetMap;
@@ -36,7 +37,7 @@ public:
         fleetList.clear();
     };
     void setFleet() override;
-    void prepareForBattle(IGameView* gameView) override;
+    void prepareForBattle(IGameView* iGameView) override;
     void prepareForNewBattle() override;
     char takeHit(const square &curShot) override;
     square makeShot() override;//TODO: отдебажить

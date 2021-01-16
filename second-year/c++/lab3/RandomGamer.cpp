@@ -107,7 +107,8 @@ square RandomGamer::makeShot() {
     return {x, y};
 }
 
-void RandomGamer::prepareForBattle(IGameView* gameView) {
+void RandomGamer::prepareForBattle(IGameView* iGameView) {
+    gameView = iGameView;
     setFleet();
 }
 

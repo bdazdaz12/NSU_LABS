@@ -34,3 +34,7 @@ void ConsoleView::showFleetLocationMenu(Ship **fleetMap) {
     std::cout << "\t3 - cruiser" << std::endl;
     std::cout << "\t4 - battleship" << std::endl << std::endl;
 }
+
+void ConsoleView::wait(int cntOfSeconds) {
+    Sleep(cntOfSeconds * 1000);
+}
