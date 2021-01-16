@@ -36,7 +36,7 @@ void ConsoleView::showFleetLocationMenu(Ship **fleetMap) {
     std::cout << "\t4 - battleship" << std::endl << std::endl;
 }
 
-void ConsoleView::wait(int cntOfSeconds) {
+void ConsoleView::wait(float cntOfSeconds) {
     Sleep(cntOfSeconds * 1000);
 }
 
@@ -65,7 +65,6 @@ void ConsoleView::printCurGamerFleetMap(Ship **curGamerFleetMap, char *viewFromO
 }
 
 void ConsoleView::printEnemyField(char *enemyField) {
-    clearWindow();
     std::cout << "   0 1 2 3 4 5 6 7 8 9" << std::endl;
     for (int y = 0; y < 10; ++y){
         printf(" %c ", 'A' + y);
@@ -81,4 +80,8 @@ void ConsoleView::printEnemyField(char *enemyField) {
         printf("\n");
     }
     printf("\n");
+}
+
+void ConsoleView::printMessage(const std::string &message) {
+    std::cout << message << '\n';
 }

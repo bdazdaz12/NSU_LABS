@@ -195,13 +195,18 @@ square ConsoleGamer::makeShot() {
     std::cout << "Enter it here: ";
     char x = 28, y = 28;
     bool isCorrect = true;
+    std::string str;
     do {
         if (!isCorrect){
             std::cout << "Wrong square! Pls repeat: ";
         }
-        std::cin >> y >> x;
-        x -= '0';
-        y -= 'A';
+        std::cin >> str;//чтобы исключить баги неправильного ввода
+        if (str.size() == 2){
+            y = str[0];
+            x = str[1];
+            y -= 'A';
+            x -= '0';
+        }
     } while(!(isCorrect = isCorrectSquare(x, y)));
     return {x, y};
 }

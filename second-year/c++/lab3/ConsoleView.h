@@ -9,7 +9,8 @@ public:
     void paintWindow() override;
     void showFleetLocationMenu(Ship **fleetMap) override;
     void printFleetMap(Ship **fleetMap);
-    void wait(int cntOfSeconds) override;
+    void wait(float cntOfSeconds) override;
     void printCurGamerFleetMap(Ship **curGamerFleetMap, char *viewFromOtherSide) override;
     void printEnemyField(char *enemyField) override;
+    void printMessage(const std::string &message) override;
 };
