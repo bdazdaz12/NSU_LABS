@@ -103,7 +103,7 @@ Ship** ConsoleGamer::setFleet() {
         int shipType = 0;
         while(fleetSize != 10){
             printf("Entre ship args: ");
-            std::cin >> y >> x >> horizontal >> shipType;
+            std::cin >> y >> x >> horizontal >> shipType; //TODO: fix bugs
             if(!(x >= '0' && x <= '9' && y >= 'A' && y <= 'J' && (horizontal == 'y' || horizontal == 'n')
                  && shipType >= boat && shipType <= battleship)){
                 printf("Wrong input! Pls repeat\n");
@@ -191,14 +191,14 @@ bool ConsoleGamer::isCorrectSquare(char x, char y){
 }
 
 square ConsoleGamer::makeShot() {
-    std::cout << "Enter the coordinates of the next square in format y(char = {A, ..., J}) x(num = {0, ..., 9})\n";
+    std::cout << "Enter the coordinates of the next square in format y(char = {A, ..., J}) + x(num = {0, ..., 9})\n";
     std::cout << "Enter it here: ";
     char x = 28, y = 28;
     bool isCorrect = true;
     std::string str;
     do {
         if (!isCorrect){
-            std::cout << "Wrong square! Pls repeat: ";
+            std::cout << "Wrong square! Pls repeat: "; ///координатами буду считать только два символа подряд
         }
         std::cin >> str;//чтобы исключить баги неправильного ввода
         if (str.size() == 2){

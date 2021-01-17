@@ -8,6 +8,10 @@
 
 C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.cpp
+ConsoleGamer.h
+C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
+
 C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
 iostream
 -
@@ -17,32 +21,6 @@ vector
 -
 IGamer.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
-IGameView.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/GameCore.cpp
-GameCore.h
-C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/GameCore.h
-string
--
-map
--
-IGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
-RandomGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
-ConsoleGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/ConsoleGamer.h
-OptimalGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
-ConsoleView.h
-C:/Users/yevsyukof/CLionProjects/lab3/ConsoleView.h
-IGameView.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
 
 C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
 iostream
@@ -63,18 +41,6 @@ BasicGameElements.h
 C:/Users/yevsyukof/CLionProjects/lab3/BasicGameElements.h
 IGameView.h
 C:/Users/yevsyukof/CLionProjects/lab3/IGameView.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/OptimalGamer.h
-list
--
-IGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
-
-C:/Users/yevsyukof/CLionProjects/lab3/RandomGamer.h
-IGamer.h
-C:/Users/yevsyukof/CLionProjects/lab3/IGamer.h
-list
--
 
 C:/Users/yevsyukof/CLionProjects/lab3/Ship.h
 
