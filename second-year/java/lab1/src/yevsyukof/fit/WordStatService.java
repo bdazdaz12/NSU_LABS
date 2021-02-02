@@ -38,7 +38,7 @@ public class WordStatService {
         Arrays.sort(statistic, new Comparator<StatisticString>() {
             @Override
             public int compare(StatisticString o1, StatisticString o2) {
-                return Long.compare(o1.frequency, o2.frequency);
+                return Long.compare(o2.frequency, o1.frequency);
             }
         });
         return statistic;
