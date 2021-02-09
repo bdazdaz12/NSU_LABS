@@ -24,20 +24,20 @@ public class WordStatService {
         return wordStat;
     }
 
-    public StatisticString[] makeStatistic() {
-        StatisticString[] statistic = new StatisticString[wordStat.size()];
+    public StatisticObj[] makeStatistic() {
+        StatisticObj[] statistic = new StatisticObj[wordStat.size()];
         Iterator<HashMap.Entry<String, Long>> iterator = wordStat.entrySet().iterator();
         int idx = 0;
         for (HashMap.Entry<String, Long> entry : wordStat.entrySet()) {
-            statistic[idx] = new StatisticString();
+            statistic[idx] = new StatisticObj();
             statistic[idx].word = entry.getKey();
             statistic[idx].frequency = entry.getValue();
             statistic[idx].freqPercentage = 100. * ((double) entry.getValue()) / cntOfWords;
             idx++;
         }
-        Arrays.sort(statistic, new Comparator<StatisticString>() {
+        Arrays.sort(statistic, new Comparator<StatisticObj>() {
             @Override
-            public int compare(StatisticString o1, StatisticString o2) {
+            public int compare(StatisticObj o1, StatisticObj o2) {
                 return Long.compare(o2.frequency, o1.frequency);
             }
         });

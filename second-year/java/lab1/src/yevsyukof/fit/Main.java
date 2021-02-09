@@ -16,7 +16,7 @@ public class Main {
                 }
             }
         } catch (IOException e){
-            System.err.println("Error while read file: " + e);
+            System.err.println("Error " + e + " while read file " + args[0]);
         }
         ReportService reportService = new ReportService();
         reportService.printStatistic(args[1], stat.makeStatistic());
