@@ -81,19 +81,37 @@ double *calcX(double *A, double *b, double *x) {
  * ну и загрузку данных проводить придеться так же
  */
 
-inline void allocMem(double **matrixPart, double **bPart, double **xPart, int rank, int cntOfProcesses) {
+inline void calcSendDataParam(int cntOfProcesses, int **sendVectorSize, int **sendVectStartPos,
+                       int **sendMatrixSize, int **sendMatrixStartPos){
+    *sendVectorSize = new int[cntOfProcesses];
+    *sendVectStartPos = new int[cntOfProcesses];
+    *sendMatrixSize = new int[cntOfProcesses];
+    *sendMatrixStartPos = new int[cntOfProcesses];
+    int offsetIdx = 0;
+    for (int i = 0; i < cntOfProcesses; ++i) {
+        (*sendVectorSize)[i] = N; // N / cntOfProcesses + 1 при разрезании
+        (*sendVectStartPos)[i] = 0;
+        if (i < N % cntOfProcesses) {
+            (*sendMatrixSize)[i] = N * N / cntOfProcesses + N;
+        } else {
+            (*sendMatrixSize)[i] = N * N / cntOfProcesses;
+        }
+        (*sendMatrixStartPos)[i] = offsetIdx;
+        offsetIdx += (*sendMatrixSize)[i];
+    }
+}
+
+inline void allocMem(double **matrixPart, double **bPart, double **xPart, int rank, const int *sendMatrixSize) {
     if (rank == 0) {
         *matrixPart = new double[N * N];
-    } else if (rank < N % cntOfProcesses) {
-        *matrixPart = new double[N * N / cntOfProcesses + N];
     } else {
-        *matrixPart = new double[N * N / cntOfProcesses];
+        *matrixPart = new double[sendMatrixSize[rank]];
     }
-    *bPart = new double[N];
+    *bPart = new double[N]; ////
     *xPart = new double[N];
 }
 
-void loadData(double *matrixPart, double *bPart, double *xPart, int rank, int cntOfProcesses) {
+void loadData(double *matrixPart, double *bPart, double *xPart){
     for (int i = 0; i < N; ++i) {
         bPart[i] = N + 1;
         xPart[i] = 0;
@@ -109,15 +127,23 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &cntOfProcesses);
 
-    double *matrixPart, *bPart, *xPart;
-    allocMem(&matrixPart, &bPart, &xPart, rank, cntOfProcesses);
+    int *sendVectorSize, *sendMatrixSize; // эти данные имеют(вычисляют) все, чтобы не считать для всех все постоянно
+    int *sendVectStartPos, *sendMatrixStartPos;
+    double *matrixPart, *bPart, *xPart; //// в процессе rank==0 это все полные начальные данные
 
+    calcSendDataParam(cntOfProcesses, &sendVectorSize, &sendVectStartPos, &sendMatrixSize, &sendMatrixStartPos);
+    allocMem(&matrixPart, &bPart, &xPart, rank, sendMatrixSize);
     if (rank == 0) {
-        loadData(matrixPart, bPart, xPart, rank, cntOfProcesses);
+        loadData(matrixPart, bPart, xPart);
     }
 
+    //TODO: раздать всем данные и начать считать
     delete[](matrixPart);
     delete[](bPart);
+    delete[](sendVectorSize);////
+    delete[](sendMatrixSize);
+    delete[](sendVectStartPos);
+    delete[](sendMatrixStartPos);
     if (rank != 0) {
         delete[](xPart);
     }
