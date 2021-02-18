@@ -166,6 +166,7 @@ int main(int argc, char **argv) {
 
     MPI_Scatterv(aPart, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
                  aPart, sendMatrixSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем A из rank=0
+                 //TODO решить проблему с aPart, возможно просто добавив в rank=0 саму матрицу A
     MPI_Scatterv(bPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
                  bPart, sendVectorSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем b из rank=0
     MPI_Scatterv(xPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
