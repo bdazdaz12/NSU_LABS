@@ -96,15 +96,17 @@ double *calcNextYn(double *aPart, double *xnPart, const double *bPart) {
      * YN записываться с idx = 0
      * но в НАЧАЛЬНЫХ данных он может "начинаться" не с 0
      */
-    auto *yn = (double *) calloc(N , sizeof(double)); // поставил N вместо рабочей части, потому что нужен целиком
+    auto *ynPart = (double *) calloc(N , sizeof(double)); // поставил N вместо рабочей части, потому что нужен целиком
     double *partA_xn = matrixMulVect(aPart, xnPart);
     for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
-        yn[i] = partA_xn[i] - bPart[i];
-        ///вычисляем соответств rank часть yn
+        ynPart[i] = partA_xn[i] - bPart[i];
+        ///вычисляем соответств rank часть ynPart
     }
-    //TODO объединить YN после подсчета частей в процессах
+    //TODO объединить YN после подсчета частей в процессах;
+//    MPI_Allgatherv(ynPart, vectWorkZoneSize[rank], MPI_DOUBLE,
+//                   ynPart, vectWorkZoneSize, vectWorkZoneStartIdx, MPI_DOUBLE, MPI_COMM_WORLD);
     delete[](partA_xn);
-    return yn;
+    return ynPart;
 }
 
 double scalarVectMul(const double *v1, const double *v2) {
@@ -123,7 +125,7 @@ double scalarVectMul(const double *v1, const double *v2) {
     return res;
 }
 
-double calcNextTau(double *aPart, double *ynPart) { // TODO тут все заебись все соберется само
+double calcNextTau(double *aPart, double *ynPart) {
     double *A_yn = matrixMulVect(aPart, ynPart);
     double numerator = scalarVectMul(ynPart, A_yn);
     double denominator = scalarVectMul(A_yn, A_yn);
@@ -134,8 +136,10 @@ double calcNextTau(double *aPart, double *ynPart) { // TODO тут все зае
 double *calcNextX(double *prevXPart, double tau, const double *ynPart) {
     for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
         prevXPart[i] -= tau * ynPart[i];
-        //TODO мы имеем только часть след XN, но каждому процессу нужна полная часть. ОБЪЕДИНИТЬ НИЖЕ после этого
     }
+    //TODO мы имеем только часть след XN, но каждому процессу нужна полная часть. ОБЪЕДИНИТЬ НИЖЕ после этого
+//    MPI_Allgatherv(prevXPart, vectWorkZoneSize[rank], MPI_DOUBLE,
+//                   prevXPart, vectWorkZoneSize, vectWorkZoneStartIdx, MPI_DOUBLE, MPI_COMM_WORLD);
     return prevXPart;
 }
 
@@ -170,7 +174,6 @@ inline void calcX(double *aPart, double *bPart, double *xPart) {
         MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         xPart = calcNextX(xPart, tau, ynPart);
     }
-//    //TODO: собрать конечный X со всех. По идее сделали это уже в цикле
 //    MPI_Gatherv(xPart, vectWorkZoneSize[rank], MPI_DOUBLE,
 //                xPart, vectWorkZoneSize, vectWorkZoneStartIdx, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 }
