@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mpi.h>
 
-#define N 251
+#define N 20000
 
 int *sendVectorSize, *sendMatrixSize, *sendVectStartPos, *sendMatrixStartPos, *vectWorkZoneSize;
 int *vectWorkZoneStartIdx;
@@ -45,7 +45,7 @@ double scalarVectMul(const double *v1, const double *v2) {
     }
     MPI_Reduce(&curNodeRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     if (rank != 0){
-        res = 1.0;
+        res = 1.0; ////костыльчик
     }
     return res;
 }
@@ -93,16 +93,14 @@ bool canFinish(double *aPart, double *xnPart, double *bPart) {
 void calcX(double *aPart, double *bPart, double *xnFull) {
     auto *ynPart = new double [vectWorkZoneSize[rank]];
     auto *fullYN = new double [N];
-    double tau = 0;
-    int cnt = 0;
-    while (!canFinish(aPart, xnFull, bPart) && cnt < 2) {
+    double tau;
+    while (!canFinish(aPart, xnFull, bPart)) {
         calcNextYn(aPart, xnFull, bPart, ynPart, fullYN);
         tau = calcNextTau(aPart, ynPart, fullYN);
-        MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD); ///этого не правил
+        MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         calcNextX(xnFull, tau, fullYN);
-        cnt++;
     }
-    delete[](ynPart); /// здесь ошибки каво?
+    delete[](ynPart);
     delete[](fullYN);
 }
 
@@ -155,17 +153,16 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &cntOfProcesses);
 
-    auto *A = new double[N * N];
     double *aPart, *bPart, *xPart;
     //// в процессе rank==0 это все полные начальные данные(A, b, x), в других узлах - только их часть
 
     calcSendDataParam();
     allocMem(&aPart, &bPart, &xPart);
     if (rank == 0) {
-        loadData(A, bPart, xPart);
+        loadData(aPart, bPart, xPart);
     }
 
-    MPI_Scatterv(A, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
+    MPI_Scatterv(aPart, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
                  aPart, sendMatrixSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем A из rank=0
                  //TODO решить проблему с aPart, возможно просто добавив в rank=0 саму матрицу A
     MPI_Scatterv(bPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
@@ -173,23 +170,8 @@ int main(int argc, char **argv) {
     MPI_Scatterv(xPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
                  xPart, sendVectorSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем x из rank=0
 
-//    for (int k = 0; k < 2; ++k) { //TODO что то тут не так
-//        MPI_Barrier(MPI_COMM_WORLD);
-//        if (rank == k) {
-//            printf("A part rank = %d \n", rank);
-//            for (int i = 0; i < sendMatrixSize[rank] / N; i++) {
-//                for (int j = 0; j < N; ++j) {
-//                    std::cout << aPart[i * N + j] << " ";
-//                }
-//                std::cout << "\n";
-//            }
-//            std::cout << "\n\n";
-//        }
-//    }
-
     calcX(aPart, bPart, xPart);
 
-    delete[](A);
     delete[](aPart);
     delete[](bPart);
     delete[](sendVectorSize);////
@@ -200,7 +182,7 @@ int main(int argc, char **argv) {
     delete[](vectWorkZoneStartIdx);
     if (rank == 0) {
         printf("answer\n");
-        for (int i = 0; i < N; ++i){
+        for (int i = 0; i < 10; ++i){
             std::cout << xPart[i] << " ";
         }
         std::cout << "\n";
