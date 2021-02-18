@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mpi.h>
 
-#define N 5
+#define N 251
 
 int *sendVectorSize, *sendMatrixSize, *sendVectStartPos, *sendMatrixStartPos, *vectWorkZoneSize;
 int *vectWorkZoneStartIdx;
@@ -114,18 +114,18 @@ inline void calcSendDataParam() {
     vectWorkZoneSize = new int[cntOfProcesses];
     vectWorkZoneStartIdx = new int[cntOfProcesses];
     int offsetIdx = 0;
-    for (int i = 0; i < cntOfProcesses; ++i) {
-        sendVectorSize[i] = N; ///
-        sendVectStartPos[i] = 0;
-        if (i < N % cntOfProcesses) {
-            sendMatrixSize[i] = N * N / cntOfProcesses + N;
+    for (int procRank = 0; procRank < cntOfProcesses; ++procRank) {
+        sendVectorSize[procRank] = N; ///
+        sendVectStartPos[procRank] = 0;
+        if (procRank < N % cntOfProcesses) {
+            sendMatrixSize[procRank] = (N / cntOfProcesses + 1) * N; //целочисленное деление не оч
         } else {
-            sendMatrixSize[i] = N * N / cntOfProcesses;
+            sendMatrixSize[procRank] = (N / cntOfProcesses) * N;
         }
-        sendMatrixStartPos[i] = offsetIdx;
-        vectWorkZoneStartIdx[i] = offsetIdx / N;
-        offsetIdx += sendMatrixSize[i];
-        vectWorkZoneSize[i] = sendMatrixSize[i] / N;
+        sendMatrixStartPos[procRank] = offsetIdx;
+        vectWorkZoneStartIdx[procRank] = offsetIdx / N;
+        offsetIdx += sendMatrixSize[procRank];
+        vectWorkZoneSize[procRank] = sendMatrixSize[procRank] / N;
     }
 }
 
@@ -155,16 +155,17 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &cntOfProcesses);
 
+    auto *A = new double[N * N];
     double *aPart, *bPart, *xPart;
     //// в процессе rank==0 это все полные начальные данные(A, b, x), в других узлах - только их часть
 
     calcSendDataParam();
     allocMem(&aPart, &bPart, &xPart);
     if (rank == 0) {
-        loadData(aPart, bPart, xPart);
+        loadData(A, bPart, xPart);
     }
 
-    MPI_Scatterv(aPart, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
+    MPI_Scatterv(A, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
                  aPart, sendMatrixSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем A из rank=0
                  //TODO решить проблему с aPart, возможно просто добавив в rank=0 саму матрицу A
     MPI_Scatterv(bPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
@@ -172,22 +173,23 @@ int main(int argc, char **argv) {
     MPI_Scatterv(xPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
                  xPart, sendVectorSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем x из rank=0
 
-    for (int k = 0; k < 2; ++k) { //TODO что то тут не так
-        MPI_Barrier(MPI_COMM_WORLD);
-        if (rank == k) {
-            printf("A part rank = %d \n", rank);
-            for (int i = 0; i < sendMatrixSize[rank] / N; i++) {
-                for (int j = 0; j < N; ++j) {
-                    std::cout << aPart[i * N + j] << " ";
-                }
-                std::cout << "\n";
-            }
-            std::cout << "\n\n";
-        }
-    }
+//    for (int k = 0; k < 2; ++k) { //TODO что то тут не так
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        if (rank == k) {
+//            printf("A part rank = %d \n", rank);
+//            for (int i = 0; i < sendMatrixSize[rank] / N; i++) {
+//                for (int j = 0; j < N; ++j) {
+//                    std::cout << aPart[i * N + j] << " ";
+//                }
+//                std::cout << "\n";
+//            }
+//            std::cout << "\n\n";
+//        }
+//    }
 
-//    calcX(aPart, bPart, xPart);
+    calcX(aPart, bPart, xPart);
 
+    delete[](A);
     delete[](aPart);
     delete[](bPart);
     delete[](sendVectorSize);////
@@ -196,13 +198,13 @@ int main(int argc, char **argv) {
     delete[](sendMatrixStartPos);
     delete[](vectWorkZoneSize);
     delete[](vectWorkZoneStartIdx);
-//    if (rank == 0) {
-//        printf("answer\n");
-//        for (int i = 0; i < N; ++i){
-//            std::cout << xPart[i] << " ";
-//        }
-//        std::cout << "\n";
-//    }
+    if (rank == 0) {
+        printf("answer\n");
+        for (int i = 0; i < N; ++i){
+            std::cout << xPart[i] << " ";
+        }
+        std::cout << "\n";
+    }
     delete[](xPart);
     MPI_Finalize();
     return 0;
