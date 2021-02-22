@@ -33,20 +33,16 @@ void calcNextYn(double *aPart, double *xn, const double *B, double *ynPart, doub
     delete[](partA_xn);
 }
 
-double scalarVectMul(const double *v1, const double *v2) {
+double scalarVectMul(const double *v1, const double *v2) { //TODO
     /*
-     * остальные считаю только произведение части координат, что хранятся у них
-     * полное скалярное имеет только rank=0
+     * в конце метода все процессы собирают с друг друга части полного итогового произведения
      */
-    double res, curNodeRes = 0;
+    double curNodeRes = 0, scalarMulRes = 0;
     for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
         curNodeRes += v1[i] * v2[i];
     }
-    MPI_Reduce(&curNodeRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); //TODO вынести отсюда
-    if (rank != 0) {     ///использовать это сразу после вызова scalar отправив 0ому рез ото всех
-        res = 1.0; ////костыльчик
-    }
-    return res;
+    MPI_Allreduce(&curNodeRes, &scalarMulRes, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    return scalarMulRes;
 }
 
 double calcNextTau(double *aPart, double *ynPart, double *fullYN) {
@@ -82,12 +78,7 @@ bool canFinish(double *aPart, double *xn, double *B) {
     for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
         numerator[i] -= B[i];
     }
-    bool flag = (calcVectLen(numerator) / bLen) < epsilon; /// TODO переделать
-//    bool flag = true;
-//    if (rank == 0) {
-//        flag = (calcVectLen(numerator) / bLen) < epsilon;
-//    }
-    MPI_Bcast(&flag, 1, MPI_CXX_BOOL, 0, MPI_COMM_WORLD);
+    bool flag = (calcVectLen(numerator) / bLen) < epsilon;
     delete[](numerator);
     return flag;
 }
@@ -99,7 +90,6 @@ void calcX(double *aPart, double *B, double *xn) {
     while (!canFinish(aPart, xn, B)) {
         calcNextYn(aPart, xn, B, ynPart, fullYN);
         tau = calcNextTau(aPart, ynPart, fullYN);
-        MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         calcNextX(xn, tau, fullYN);
     }
     delete[](ynPart);
