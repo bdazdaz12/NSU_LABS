@@ -43,8 +43,8 @@ double scalarVectMul(const double *v1, const double *v2) {
     for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
         curNodeRes += v1[i] * v2[i];
     }
-    MPI_Reduce(&curNodeRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    if (rank != 0){
+    MPI_Reduce(&curNodeRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); //TODO вынести отсюда
+    if (rank != 0){     ///использовать это сразу после вызова scalar отправив 0ому рез ото всех
         res = 1.0; ////костыльчик
     }
     return res;
@@ -84,7 +84,7 @@ bool canFinish(double *aPart, double *xnPart, double *bPart) {
     for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
         numerator[i] -= bPart[i];
     }
-    flag = (calcVectLen(numerator) / bLen) < epsilon;
+    flag = (calcVectLen(numerator) / bLen) < epsilon; /// TODO переделать
     delete[](numerator);
     MPI_Bcast(&flag, 1, MPI_CXX_BOOL, 0, MPI_COMM_WORLD);
     return flag;
@@ -105,12 +105,12 @@ void calcX(double *aPart, double *bPart, double *xnFull) {
 }
 
 inline void calcSendDataParam() {
-    sendVectorSize = new int[cntOfProcesses];
-    sendVectStartPos = new int[cntOfProcesses];
+    sendVectorSize = new int[cntOfProcesses]; /// TODO аттавиз
+    sendVectStartPos = new int[cntOfProcesses]; /// TODO аттавиз
     sendMatrixSize = new int[cntOfProcesses];
     sendMatrixStartPos = new int[cntOfProcesses];
-    vectWorkZoneSize = new int[cntOfProcesses];
-    vectWorkZoneStartIdx = new int[cntOfProcesses];
+    vectWorkZoneSize = new int[cntOfProcesses]; /// TODO аттавиз
+    vectWorkZoneStartIdx = new int[cntOfProcesses]; /// TODO аттавиз
     int offsetIdx = 0;
     for (int procRank = 0; procRank < cntOfProcesses; ++procRank) {
         sendVectorSize[procRank] = N; ///
@@ -133,14 +133,14 @@ inline void allocMem(double **aPart, double **bPart, double **xPart) {
     } else {
         *aPart = new double[sendMatrixSize[rank]];
     }
-    *bPart = new double[N]; ////
-    *xPart = new double[N];
+    *bPart = new double[N]; /// TODO аттавиз
+    *xPart = new double[N];/// TODO аттавиз
 }
 
 inline void loadData(double *matrixPart, double *bPart, double *xPart) {
     for (int i = 0; i < N; ++i) {
-        bPart[i] = N + 1;
-        xPart[i] = 0;
+        bPart[i] = N + 1; /// TODO аттавиз
+        xPart[i] = 0;      ///как и это
         for (int j = 0; j < N; ++j) {
             matrixPart[i * N + j] = i == j ? 2.0 : 1.0;
         }
