@@ -2,35 +2,34 @@
 #include <cmath>
 #include <mpi.h>
 
-#define N 20000
+#define N 201
 
-int *sendVectorSize, *sendMatrixSize, *sendVectStartPos, *sendMatrixStartPos, *vectWorkZoneSize;
-int *vectWorkZoneStartIdx;
+int *sendMatrixSize, *sendMatrixStartPos, *aPartCntOfStrs, *aPartBeginPosInFull;
 int cntOfProcesses, rank;
 const double epsilon = 0.00001;
 
-double *matrixMulVect(const double *matrixPart, const double *vectPart) {
-    auto *res = (double *) calloc(vectWorkZoneSize[rank], sizeof(double));
-    for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
+double *matrixMulVect(const double *matrixPart, const double *vector) {
+    auto *res = (double *) calloc(aPartCntOfStrs[rank], sizeof(double));
+    for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
         for (int j = 0; j < N; ++j) {
-            res[i] += matrixPart[i * N + j] * vectPart[j];
+            res[i] += matrixPart[i * N + j] * vector[j];
         }
     }
     return res;
 }
 
-void calcNextYn(double *aPart, double *xn, const double *bPart, double *ynPart, double *fullYN) {
+void calcNextYn(double *aPart, double *xn, const double *B, double *ynPart, double *fullYN) {
     /*
      * YN записываться с idx = 0
      * но в НАЧАЛЬНЫХ данных он может "начинаться" не с 0
      */
     double *partA_xn = matrixMulVect(aPart, xn);
-    for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
-        ynPart[i] = partA_xn[i] - bPart[i];
+    for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
+        ynPart[i] = partA_xn[i] - B[i];
         ///вычисляем соответств rank часть ynPart
     }
-    MPI_Allgatherv(ynPart, vectWorkZoneSize[rank], MPI_DOUBLE,
-                   fullYN, vectWorkZoneSize, vectWorkZoneStartIdx, MPI_DOUBLE, MPI_COMM_WORLD);
+    MPI_Allgatherv(ynPart, aPartCntOfStrs[rank], MPI_DOUBLE,
+                   fullYN, aPartCntOfStrs, aPartBeginPosInFull, MPI_DOUBLE, MPI_COMM_WORLD);
     delete[](partA_xn);
 }
 
@@ -40,11 +39,11 @@ double scalarVectMul(const double *v1, const double *v2) {
      * полное скалярное имеет только rank=0
      */
     double res, curNodeRes = 0;
-    for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
+    for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
         curNodeRes += v1[i] * v2[i];
     }
     MPI_Reduce(&curNodeRes, &res, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD); //TODO вынести отсюда
-    if (rank != 0){     ///использовать это сразу после вызова scalar отправив 0ому рез ото всех
+    if (rank != 0) {     ///использовать это сразу после вызова scalar отправив 0ому рез ото всех
         res = 1.0; ////костыльчик
     }
     return res;
@@ -72,77 +71,72 @@ double calcVectLen(double *v) {
     return sqrt(scalarVectMul(v, v));
 }
 
-bool canFinish(double *aPart, double *xnPart, double *bPart) {
+bool canFinish(double *aPart, double *xn, double *B) {
     /*
      * numerator: каждый процесс независимо может посчитать его, соотв процессу, часть
      * собирать его не нужно т.к. нам нужно будет посчитать его скалярное произведение,
      * а оно автоматически собираеться в rank=0
      */
-    static double bLen = calcVectLen(bPart);
-    bool flag = true;
-    double *numerator = matrixMulVect(aPart, xnPart);
-    for (int i = 0; i < vectWorkZoneSize[rank]; ++i) {
-        numerator[i] -= bPart[i];
+    static double bLen = calcVectLen(B);
+    double *numerator = matrixMulVect(aPart, xn);
+    for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
+        numerator[i] -= B[i];
     }
-    flag = (calcVectLen(numerator) / bLen) < epsilon; /// TODO переделать
-    delete[](numerator);
+    bool flag = (calcVectLen(numerator) / bLen) < epsilon; /// TODO переделать
+//    bool flag = true;
+//    if (rank == 0) {
+//        flag = (calcVectLen(numerator) / bLen) < epsilon;
+//    }
     MPI_Bcast(&flag, 1, MPI_CXX_BOOL, 0, MPI_COMM_WORLD);
+    delete[](numerator);
     return flag;
 }
 
-void calcX(double *aPart, double *bPart, double *xnFull) {
-    auto *ynPart = new double [vectWorkZoneSize[rank]];
-    auto *fullYN = new double [N];
+void calcX(double *aPart, double *B, double *xn) {
+    auto *ynPart = new double[aPartCntOfStrs[rank]];
+    auto *fullYN = new double[N];
     double tau;
-    while (!canFinish(aPart, xnFull, bPart)) {
-        calcNextYn(aPart, xnFull, bPart, ynPart, fullYN);
+    while (!canFinish(aPart, xn, B)) {
+        calcNextYn(aPart, xn, B, ynPart, fullYN);
         tau = calcNextTau(aPart, ynPart, fullYN);
         MPI_Bcast(&tau, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-        calcNextX(xnFull, tau, fullYN);
+        calcNextX(xn, tau, fullYN);
     }
     delete[](ynPart);
     delete[](fullYN);
 }
 
 inline void calcSendDataParam() {
-    sendVectorSize = new int[cntOfProcesses]; /// TODO аттавиз
-    sendVectStartPos = new int[cntOfProcesses]; /// TODO аттавиз
     sendMatrixSize = new int[cntOfProcesses];
     sendMatrixStartPos = new int[cntOfProcesses];
-    vectWorkZoneSize = new int[cntOfProcesses]; /// TODO аттавиз
-    vectWorkZoneStartIdx = new int[cntOfProcesses]; /// TODO аттавиз
+    aPartCntOfStrs = new int[cntOfProcesses];
+    aPartBeginPosInFull = new int[cntOfProcesses];
     int offsetIdx = 0;
     for (int procRank = 0; procRank < cntOfProcesses; ++procRank) {
-        sendVectorSize[procRank] = N; ///
-        sendVectStartPos[procRank] = 0;
         if (procRank < N % cntOfProcesses) {
             sendMatrixSize[procRank] = (N / cntOfProcesses + 1) * N; //целочисленное деление не оч
         } else {
             sendMatrixSize[procRank] = (N / cntOfProcesses) * N;
         }
         sendMatrixStartPos[procRank] = offsetIdx;
-        vectWorkZoneStartIdx[procRank] = offsetIdx / N;
+        aPartBeginPosInFull[procRank] = offsetIdx / N;
         offsetIdx += sendMatrixSize[procRank];
-        vectWorkZoneSize[procRank] = sendMatrixSize[procRank] / N;
+        aPartCntOfStrs[procRank] = sendMatrixSize[procRank] / N;
     }
 }
 
-inline void allocMem(double **aPart, double **bPart, double **xPart) {
-    if (rank == 0) {
-        *aPart = new double[N * N];
-    } else {
-        *aPart = new double[sendMatrixSize[rank]];
-    }
-    *bPart = new double[N]; /// TODO аттавиз
-    *xPart = new double[N];/// TODO аттавиз
+inline void allocMem(double **aPart, double **B, double **X) {
+    *aPart = new double[sendMatrixSize[rank]];
+    *B = new double[N];
+    *X = new double[N];
 }
 
-inline void loadData(double *matrixPart, double *bPart, double *xPart) {
+inline void loadData(double *A, double *B, double *X) {
     for (int i = 0; i < N; ++i) {
-        bPart[i] = N + 1; /// TODO аттавиз
-        xPart[i] = 0;      ///как и это
+        B[i] = N + 1;
+        X[i] = 0;
         for (int j = 0; j < N; ++j) {
-            matrixPart[i * N + j] = i == j ? 2.0 : 1.0;
+            A[i * N + j] = i == j ? 2.0 : 1.0;
         }
     }
 }
@@ -153,41 +147,36 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &cntOfProcesses);
 
-    double *aPart, *bPart, *xPart;
-    //// в процессе rank==0 это все полные начальные данные(A, b, x), в других узлах - только их часть
+    double *aPart, *B, *X;
+    auto *A = new double[N * N];
 
     calcSendDataParam();
-    allocMem(&aPart, &bPart, &xPart);
+    allocMem(&aPart, &B, &X);
     if (rank == 0) {
-        loadData(aPart, bPart, xPart);
+        loadData(A, B, X);
     }
 
-    MPI_Scatterv(aPart, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
+    MPI_Scatterv(A, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
                  aPart, sendMatrixSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем A из rank=0
-                 //TODO решить проблему с aPart, возможно просто добавив в rank=0 саму матрицу A
-    MPI_Scatterv(bPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
-                 bPart, sendVectorSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем b из rank=0
-    MPI_Scatterv(xPart, sendVectorSize, sendVectStartPos, MPI_DOUBLE,
-                 xPart, sendVectorSize[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD); ///отсылаем x из rank=0
+    MPI_Bcast(B, N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(X, N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    calcX(aPart, bPart, xPart);
+    calcX(aPart, B, X);
 
     delete[](aPart);
-    delete[](bPart);
-    delete[](sendVectorSize);////
+    delete[](A);
+    delete[](B);
     delete[](sendMatrixSize);
-    delete[](sendVectStartPos);
     delete[](sendMatrixStartPos);
-    delete[](vectWorkZoneSize);
-    delete[](vectWorkZoneStartIdx);
+    delete[](aPartCntOfStrs);
+    delete[](aPartBeginPosInFull);
     if (rank == 0) {
-        printf("answer\n");
-        for (int i = 0; i < 10; ++i){
-            std::cout << xPart[i] << " ";
+        printf("answer:\n");
+        for (int i = 0; i < 13; ++i) { ///пусть будет не N печатать долго
+            std::cout << X[i] << " ";
         }
         std::cout << "\n";
     }
-    delete[](xPart);
+    delete[](X);
     MPI_Finalize();
-    return 0;
 }
