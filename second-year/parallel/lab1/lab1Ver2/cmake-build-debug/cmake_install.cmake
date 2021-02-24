@@ -1,4 +1,4 @@
-# Install script for directory: /home/yevsyukof/space/lab1oppVer1
+# Install script for directory: /home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

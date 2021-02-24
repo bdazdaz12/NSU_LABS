@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug"/>
+				<Option working_dir="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug"/>
+				<Option working_dir="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug"/>
+				<Option working_dir="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="lab1opp">
-				<Option output="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/lab1opp" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug"/>
+				<Option output="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/lab1opp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -53,15 +53,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 lab1opp"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 lab1opp"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="lab1opp/fast">
-				<Option output="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/lab1opp" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/yevsyukof/space/lab1oppVer1/cmake-build-debug"/>
+				<Option output="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/lab1opp" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -75,17 +75,17 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 lab1opp/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 lab1opp/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/yevsyukof/space/lab1oppVer1/main.cpp">
+		<Unit filename="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/main.cpp">
 			<Option target="lab1opp"/>
 		</Unit>
-		<Unit filename="/home/yevsyukof/space/lab1oppVer1/CMakeLists.txt">
+		<Unit filename="/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

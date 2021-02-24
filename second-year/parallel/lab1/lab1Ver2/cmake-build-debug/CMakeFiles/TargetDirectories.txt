@@ -1,3 +1,3 @@
-/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/yevsyukof/space/lab1oppVer1/cmake-build-debug/CMakeFiles/lab1opp.dir
+/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/yevsyukof/git/NSU_LABS/second-year/parallel/lab1/lab1Ver2/cmake-build-debug/CMakeFiles/lab1opp.dir
