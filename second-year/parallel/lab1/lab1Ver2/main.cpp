@@ -2,7 +2,7 @@
 #include <cmath>
 #include <mpi.h>
 
-#define N 200
+#define N 13
 
 int *sendVectorSize, *sendVectorStartPos, *sendMatrixSize, *sendMatrixStartPos;
 int cntOfProcesses, rank;
@@ -185,7 +185,6 @@ int main(int argc, char **argv) {
     calcX(aPart, bPart, xPart);
     MPI_Gatherv(xPart, sendVectorSize[rank], MPI_DOUBLE,
                 X, sendVectorSize, sendVectorStartPos, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    //TODO объединить части X
 
     delete[](aPart);
     delete[](bPart);
@@ -198,7 +197,7 @@ int main(int argc, char **argv) {
     delete[](B);
     if (rank == 0) {
         printf("answer\n");
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 13; ++i) {
             std::cout << X[i] << " ";
         }
         std::cout << "\n";
