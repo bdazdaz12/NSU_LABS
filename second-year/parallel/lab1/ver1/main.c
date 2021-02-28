@@ -3,11 +3,11 @@
 #include <malloc.h>
 #include <math.h>
 
-#define N 21
+#define N 10113
 
 int *sendMatrixSize, *sendMatrixStartPos, *aPartCntOfStrs, *strBeginPosInFull;
 int cntOfProcesses, rank;
-const double epsilon = 0.0000001;
+const double epsilon = 0.000000001;
 
 double *matrixMulVect(const double *matrixPart, const double *vector) {
     double *res = (double *) calloc(aPartCntOfStrs[rank], sizeof(double));
@@ -125,9 +125,9 @@ void allocMem(double **aPart, double **B, double **X) {
 
 void loadData(double *A, double *B, double *X) {
     for (int i = 0; i < N; ++i) {
-        X[i] = 0.003123 * i;
+        X[i] = 0.004123 * i;
         for (int j = 0; j < N; ++j) {
-            A[i * N + j] = i == j ? 3 : 1;
+            A[i * N + j] = i == j ? 31.0000231 : 0.0000745;
         }
     }
     for (int i = 0; i < N; ++i) {
@@ -135,12 +135,12 @@ void loadData(double *A, double *B, double *X) {
             B[i] += A[i * N + j] * X[j];
         }
     }
-    if (rank == 0) {
-        for (int i = 0; i < 13; ++i){
-            printf("%f ", X[i]);
-        }
-        printf("\n\n");
-    }
+    // if (rank == 0) {
+        // for (int i = 0; i < 13; ++i){
+            // printf("%f ", X[i]);
+        // }
+        // printf("\n\n");
+    // }
     for (int i = 0; i < N; ++i) {
         X[i] = 0;
     }
@@ -183,11 +183,12 @@ int main(int argc, char **argv) {
         FILE *outFile = fopen("time.txt", "w");
         fprintf(outFile, "time = %f\n", end - start);
         fclose(outFile);
-        printf("ans\n");
-        for (int i = 0; i < 13; ++i){
-            printf("%f ", X[i]);
-        }
-        printf("\n");
+        // printf("ans\n");
+        // for (int i = 0; i < 111; ++i){
+            // printf("%f ", X[i]);
+        // }
+        // printf("\n");
+        // printf("%d\n", N);
     }
     free(X);
     MPI_Finalize();
