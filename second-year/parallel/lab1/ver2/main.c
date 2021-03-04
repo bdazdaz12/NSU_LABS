@@ -3,44 +3,52 @@
 #include <malloc.h>
 #include <math.h>
 
-#define N 13
+#define N 5011
 
 int *sendVectorSize, *sendVectorStartPos, *sendMatrixSize, *sendMatrixStartPos;
 int cntOfProcesses, rank;
-const double epsilon = 0.0001;
+const double epsilon = 0.000000001;
 
 double *matrixMulVect(const double *matrixPart, const double *vectPart) {
     /*
-     * matrixPart - представляет собой несколько подряд идущих транспонированных столбцов исходной матрицы
-     * после вычисления полученные "составляющие" итогового веткора - объединяються в rank=0
-     * после, сответствующие части итогового результата рассылаються в соответствующие процессы
+     * передаем данные как цикличсекий сдвиг массива влево
+     * считаем перевой итерацией передачи - загрузку наших начальных данных в буффер
+     * умножаем на полученную часть, соответствующий ей "прямоугольник" в части матрицы
+     * после вычислений передаем данные предыдущему процессу и получаем от следующего
      */
-    double *result = (double *) calloc(N, sizeof(double));
-    for (int i = 0; i < sendVectorSize[rank]; ++i) {
-        for (int j = 0; j < N; ++j) {
-            result[j] += matrixPart[i * N + j] * vectPart[i];
+    double *result = (double*)calloc(sendVectorSize[rank], sizeof(double));
+    double *receiveVectBuf = (double*)malloc(sendVectorSize[0] * sizeof(double)); //делаем буффер макс возм размера
+    for (int i = 0; i < sendVectorSize[rank]; ++i) { // копируем "нулевую" принимаемую часть
+        receiveVectBuf[i] = vectPart[i];
+    }
+
+    int ourSenderRank = (rank + 1) % cntOfProcesses; // индекс того, от кого процесс должен получить
+    int ourRecipientRank = (rank + cntOfProcesses - 1) % cntOfProcesses;
+    for (int ringIteration = 0, curSenderRank = rank; ringIteration < cntOfProcesses; ++ringIteration,
+            curSenderRank = (curSenderRank + 1) % cntOfProcesses) {
+
+        for (int i = 0; i < sendVectorSize[rank]; ++i) {  // индекс строки в matrixPart
+            for (int j = 0; j < sendVectorSize[curSenderRank]; ++j) {
+                result[i] += matrixPart[i * N + sendVectorStartPos[curSenderRank] + j] * receiveVectBuf[j];
+            }
         }
+        //TODO добавить условие для неотправки на последней итерации
+        MPI_Sendrecv_replace(receiveVectBuf, sendVectorSize[0], MPI_DOUBLE, ourRecipientRank, 5,
+                             ourSenderRank, 5, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
     return result;
 }
 
-void calcNextYn(double *aPart, double *xn, const double *bPart, double *ynPart, double *fullYN) {
+void calcNextYn(double *aPart, double *xnPart, const double *bPart, double *ynPart) {
     /*
      * YN записываться с idx = 0
-     * но в НАЧАЛЬНЫХ данных он может "начинаться" не с 0
      */
-    double *partA_xn = matrixMulVect(aPart, xn);
-    double *full_A_xn = (double *) calloc(N, sizeof(double));
-    MPI_Allreduce(partA_xn, full_A_xn, N, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-
+    double *partA_xn = matrixMulVect(aPart, xnPart);
     for (int i = 0; i < sendVectorSize[rank]; ++i) {
-        ynPart[i] = full_A_xn[sendVectorStartPos[rank] + i] - bPart[i];
+        ynPart[i] = partA_xn[i] - bPart[i];
         ///вычисляем соответств rank часть ynPart
     }
-    MPI_Allgatherv(ynPart, sendVectorSize[rank], MPI_DOUBLE,
-                   fullYN, sendVectorSize, sendVectorStartPos, MPI_DOUBLE, MPI_COMM_WORLD);
     free(partA_xn);
-    free(full_A_xn);
 }
 
 double scalarVectMul(const double *v1, const double *v2) {
@@ -55,27 +63,19 @@ double scalarVectMul(const double *v1, const double *v2) {
     return scalarMulRes;
 }
 
-double calcNextTau(double *aPart, double *ynPart, double *fullYN) {
-    double *A_yn_part = matrixMulVect(aPart, fullYN);
-    double *full_A_yn = (double *) calloc(N, sizeof(double));
-    MPI_Allreduce(A_yn_part, full_A_yn, N, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+double calcNextTau(double *aPart, double *ynPart) {
+    double *A_yn_part = matrixMulVect(aPart, ynPart);
 
-    double numerator = scalarVectMul(ynPart, full_A_yn + sendVectorStartPos[rank]);
-    double denominator = scalarVectMul(full_A_yn + sendVectorStartPos[rank],
-                                       full_A_yn + sendVectorStartPos[rank]); // адресная арифметика
+    double numerator = scalarVectMul(ynPart, A_yn_part);
+    double denominator = scalarVectMul(A_yn_part, A_yn_part);
     free(A_yn_part);
-    free(full_A_yn);
     return numerator / denominator;
 }
 
-void calcNextX(double *prevX, double tau, const double *fullYN) {
+void calcNextX(double *prevXnPart, double tau, const double *ynPart) {
     for (int i = 0; i < sendVectorSize[rank]; ++i) {
-        prevX[i] -= tau * fullYN[sendVectorStartPos[rank] + i];
+        prevXnPart[i] -= tau * ynPart[i];
     }
-    /*
-     * т.к. мы имеем на пред итерации полный XN, а YN нам придеться собрать на текущей итерации
-     * то мы имеем на каждом узле все данные для вычисления этого полностью до N
-     */
 }
 
 double calcVectLen(double *v) {
@@ -85,35 +85,25 @@ double calcVectLen(double *v) {
 double bLen;
 
 int canFinish(double *aPart, double *xnPart, const double *bPart) {
-    /*
-     * numerator: каждый процесс независимо может посчитать его, соотв процессу, часть
-     * собирать его не нужно т.к. нам нужно будет посчитать его скалярное произведение,
-     * а оно автоматически собираеться в rank=0
-     */
     double *numerator = matrixMulVect(aPart, xnPart);
-    double *fullNumerator = (double *) calloc(N, sizeof(double));
-    MPI_Allreduce(numerator, fullNumerator, N, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
     for (int i = 0; i < sendVectorSize[rank]; ++i) {
-        fullNumerator[sendVectorStartPos[rank] + i] -= bPart[i];
+        numerator[i] -= bPart[i];
     }
-    int flag = (calcVectLen(fullNumerator + sendVectorStartPos[rank]) / bLen) < epsilon;
+    int flag = (calcVectLen(numerator) / bLen) < epsilon;
     free(numerator);
-    free(fullNumerator);
     return flag;
 }
 
-void calcX(double *aPart, double *bPart, double *xnFull) {
+void calcX(double *aPart, double *bPart, double *xnPart) {
     double *ynPart = (double*) malloc(sendVectorSize[rank] * sizeof(double));
-    double *fullYN = (double*) malloc(N * sizeof(double));
     double tau;
-    while (!canFinish(aPart, xnFull, bPart)) {
-        calcNextYn(aPart, xnFull, bPart, ynPart, fullYN);
-        tau = calcNextTau(aPart, ynPart, fullYN);
-        calcNextX(xnFull, tau, fullYN);
+    while (!canFinish(aPart, xnPart, bPart)) {
+        calcNextYn(aPart, xnPart, bPart, ynPart);
+        tau = calcNextTau(aPart, ynPart);
+        calcNextX(xnPart, tau, ynPart);
     }
     free(ynPart);
-    free(fullYN);
 }
 
 void calcSendDataParam() {
@@ -143,7 +133,7 @@ void allocMem(double **aPart, double **bPart, double **xPart) {
 
 void loadData(double *A, double *B, double *X) {
     for (int i = 0; i < N; ++i) {
-        X[i] = 0.003123 * i;
+        X[i] = 0.003123 * (i + 1);
         for (int j = 0; j < N; ++j) {
             A[i * N + j] = i == j ? 0.00131 : 0.0009;
         }
@@ -164,17 +154,6 @@ void loadData(double *A, double *B, double *X) {
     }
 }
 
-void transposeMatrix(double *A) {
-    double tmp;
-    for (int i = 1; i < N; ++i) {
-        for (int j = 0; j < i; ++j) {
-            tmp = A[i * N + j];
-            A[i * N + j] = A[j * N + i];
-            A[j * N + i] = tmp;
-        }
-    }
-}
-
 int main(int argc, char **argv) {
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -190,9 +169,8 @@ int main(int argc, char **argv) {
     allocMem(&aPart, &bPart, &xPart);
     double start;
     if (rank == 0) {
-        loadData(A, B, X);
         start = MPI_Wtime();
-        transposeMatrix(A);
+        loadData(A, B, X);
     }
 
     MPI_Scatterv(A, sendMatrixSize, sendMatrixStartPos, MPI_DOUBLE,
