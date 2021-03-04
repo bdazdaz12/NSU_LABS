@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 
-#define N 10113
+#define N 1011
 
 int *sendMatrixSize, *sendMatrixStartPos, *aPartCntOfStrs, *strBeginPosInFull;
 int cntOfProcesses, rank;
@@ -125,9 +125,9 @@ void allocMem(double **aPart, double **B, double **X) {
 
 void loadData(double *A, double *B, double *X) {
     for (int i = 0; i < N; ++i) {
-        X[i] = 0.004123 * i;
+        X[i] = 0.003123 * i;
         for (int j = 0; j < N; ++j) {
-            A[i * N + j] = i == j ? 31.0000231 : 0.0000745;
+            A[i * N + j] = i == j ? 0.00131 : 0.0009;
         }
     }
     for (int i = 0; i < N; ++i) {
@@ -135,12 +135,12 @@ void loadData(double *A, double *B, double *X) {
             B[i] += A[i * N + j] * X[j];
         }
     }
-    // if (rank == 0) {
-        // for (int i = 0; i < 13; ++i){
-            // printf("%f ", X[i]);
-        // }
-        // printf("\n\n");
-    // }
+    if (rank == 0) {
+        for (int i = 0; i < 13; ++i){
+            printf("%f ", X[i]);
+        }
+        printf("\n\n");
+    }
     for (int i = 0; i < N; ++i) {
         X[i] = 0;
     }
@@ -183,12 +183,12 @@ int main(int argc, char **argv) {
         FILE *outFile = fopen("time.txt", "w");
         fprintf(outFile, "time = %f\n", end - start);
         fclose(outFile);
-        // printf("ans\n");
-        // for (int i = 0; i < 111; ++i){
-            // printf("%f ", X[i]);
-        // }
-        // printf("\n");
-        // printf("%d\n", N);
+        printf("ans\n");
+        for (int i = 0; i < 11; ++i){
+            printf("%f ", X[i]);
+        }
+        printf("\n");
+        printf("N = %d\n", N);
     }
     free(X);
     MPI_Finalize();
