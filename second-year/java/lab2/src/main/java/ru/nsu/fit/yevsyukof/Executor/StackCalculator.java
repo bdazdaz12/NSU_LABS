@@ -1,5 +1,6 @@
 package ru.nsu.fit.yevsyukof.Executor;
 
+import ru.nsu.fit.yevsyukof.Commands.ExecutableCommand;
 import ru.nsu.fit.yevsyukof.Factory.CommandFactory;
 
 import java.io.*;
@@ -21,8 +22,9 @@ public class StackCalculator {
             ExecutionContext context = new ExecutionContext();
             while ((nextLine = reader.readLine()) != null) {
                 //TODO вызов парсера
+                String[] commandLine = nextLine.split("\\s");
+                ExecutableCommand nextCommand = CommandFactory.getInstance().buildCommand(commandLine[0]);
                 //TODO вызов фабричного метода создания команды из первого аргумента
-//                CommandFactory.getInstance().buildCommand();
 
                 //TODO добавление оставшихся аргументов в лист входных аргументов
                 //TODO выполнения полученного на 2ом шаге блока с передачей контекста
