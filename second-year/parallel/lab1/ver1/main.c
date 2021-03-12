@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <mpi.h>
 #include <malloc.h>
 #include <math.h>
 
-#define N 32110
+#define N 255
 
 int *sendMatrixSize, *sendMatrixStartPos, *aPartCntOfStrs, *strBeginPosInFull;
 int cntOfProcesses, rank;
-const double epsilon = 0.000000001;
+const double epsilon = 0.0000456;
 
 double *matrixMulVect(const double *matrixPart, const double *vector) {
     double *res = (double *) calloc(aPartCntOfStrs[rank], sizeof(double));
@@ -80,7 +81,14 @@ int canFinish(double *aPart, double *xn, const double *B) {
     for (int i = 0; i < aPartCntOfStrs[rank]; ++i) {
         numerator[i] -= B[strBeginPosInFull[rank] + i]; //TODO проеб с этим вектором B
     }
-    int flag = (calcVectLen(numerator) / bLen) < epsilon;
+
+    double curNorma = (calcVectLen(numerator) / bLen);
+   // if (rank == 0) {
+       // printf("cur flag = %f \n", curNorma);
+   // }
+    int flag = curNorma < epsilon;
+
+    //    int flag = (calcVectLen(numerator) / bLen) < epsilon;
     free(numerator);
     return flag;
 }
@@ -124,10 +132,11 @@ void allocMem(double **aPart, double **B, double **X) {
 }
 
 void loadData(double *A, double *B, double *X) {
+    srand(1);
     for (int i = 0; i < N; ++i) {
-        X[i] = 0.003123 * i;
+        X[i] = (double)(rand() % 18 - 9);
         for (int j = 0; j < N; ++j) {
-            A[i * N + j] = i == j ? 0.00131 : 0.0009;
+            A[i * N + j] = i == j ? (double)(rand() % 18 - 9) : 0.0009;
         }
     }
     for (int i = 0; i < N; ++i) {
@@ -136,7 +145,7 @@ void loadData(double *A, double *B, double *X) {
         }
     }
     if (rank == 0) {
-        for (int i = 0; i < 13; ++i){
+        for (int i = N - 10; i < N; ++i){
             printf("%f ", X[i]);
         }
         printf("\n\n");
@@ -146,8 +155,8 @@ void loadData(double *A, double *B, double *X) {
     }
 }
 
-
 int main(int argc, char **argv) {
+	srand(1);
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &cntOfProcesses);
@@ -167,7 +176,6 @@ int main(int argc, char **argv) {
     MPI_Bcast(B, N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
     MPI_Bcast(X, N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-
     bLen = calcVectLen(B + strBeginPosInFull[rank]);
     calcX(aPart, B, X);
 
@@ -180,15 +188,15 @@ int main(int argc, char **argv) {
     free(strBeginPosInFull);
     if (rank == 0) {
         double end = MPI_Wtime();
-        FILE *outFile = fopen("time.txt", "w");
-        fprintf(outFile, "time = %f\n", end - start);
+        FILE *outFile = fopen("time.txt", "a");
+        printf("%d\n", N);
+        fprintf(outFile, "N = %d, cntOfProcesses = %d, time = %f\n", N, cntOfProcesses, end - start);
         fclose(outFile);
         printf("ans\n");
-        for (int i = 0; i < 11; ++i){
+        for (int i = N - 10; i < N; ++i){
             printf("%f ", X[i]);
         }
         printf("\n");
-        printf("N = %d\n", N);
     }
     free(X);
     MPI_Finalize();

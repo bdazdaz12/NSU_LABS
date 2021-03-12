@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <mpi.h>
 #include <malloc.h>
 #include <math.h>
 
-#define N 5011
+#define N 255
 
 int *sendVectorSize, *sendVectorStartPos, *sendMatrixSize, *sendMatrixStartPos;
 int cntOfProcesses, rank;
-const double epsilon = 0.000000001;
+const double epsilon = 0.0000456;
 
 double *matrixMulVect(const double *matrixPart, const double *vectPart) {
     /*
@@ -132,10 +133,11 @@ void allocMem(double **aPart, double **bPart, double **xPart) {
 }
 
 void loadData(double *A, double *B, double *X) {
+    srand(1);
     for (int i = 0; i < N; ++i) {
-        X[i] = 0.003123 * (i + 1);
+        X[i] = (double)(rand() % 18 - 9);
         for (int j = 0; j < N; ++j) {
-            A[i * N + j] = i == j ? 0.00131 : 0.0009;
+            A[i * N + j] = i == j ? (double)(rand() % 18 - 9) : 0.0009;
         }
     }
     for (int i = 0; i < N; ++i) {
@@ -144,7 +146,7 @@ void loadData(double *A, double *B, double *X) {
         }
     }
     if (rank == 0) {
-        for (int i = 0; i < 13; ++i){
+        for (int i = N - 10; i < N; ++i){
             printf("%f ", X[i]);
         }
         printf("\n\n");
@@ -196,11 +198,11 @@ int main(int argc, char **argv) {
     free(B);
     if (rank == 0) {
         double end = MPI_Wtime();
-        FILE *outFile = fopen("time.txt", "w");
-        fprintf(outFile, "time = %f\n", end - start);
+        FILE *outFile = fopen("time.txt", "a");
+        fprintf(outFile, "N = %d, cntOfProcesses = %d, time = %f\n", N, cntOfProcesses, end - start);
         fclose(outFile);
         printf("ans\n");
-        for (int i = 0; i < 13; ++i){
+        for (int i = N - 10; i < N; ++i){
             printf("%f ", X[i]);
         }
         printf("\n");
