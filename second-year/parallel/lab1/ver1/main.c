@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include <math.h>
 
-#define N 1011
+#define N 32110
 
 int *sendMatrixSize, *sendMatrixStartPos, *aPartCntOfStrs, *strBeginPosInFull;
 int cntOfProcesses, rank;

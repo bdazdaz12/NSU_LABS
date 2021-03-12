@@ -21,7 +21,6 @@ public class StackCalculator {
             String nextLine;
             ExecutionContext context = new ExecutionContext();
             while ((nextLine = reader.readLine()) != null) {
-                //TODO вызов парсера
                 String[] commandLine = nextLine.split("\\s");
                 ExecutableCommand nextCommand = CommandFactory.getInstance().buildCommand(commandLine[0]);
                 //TODO вызов фабричного метода создания команды из первого аргумента
