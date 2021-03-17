@@ -4,9 +4,9 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 130
+#define N 1020
 
-const double epsilon = 0.000456;
+const double epsilon = 0.0000456;
 
 double *matrixMulVect(const double *matrix, const double *vector) {
     double *res = (double *) calloc(N, sizeof(double));
@@ -30,11 +30,10 @@ void calcNextYn(double *A, double *xn, const double *B, double *yn) {
 
 double scalarVectMul(const double *v1, const double *v2) {
     double scalarMulRes = 0;
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         scalarMulRes += v1[i] * v2[i]; //TODO вот здесь может коллизия обращения?
     }
-//    printf("ALOOOOOOOOOOOOOOOOOOOO %lf\n", scalarMulRes);
     return scalarMulRes;
 }
 
@@ -66,7 +65,6 @@ int canFinish(double *A, double *xn, const double *B) {
         numerator[i] -= B[i];
     }
     int flag = (calcVectLen(numerator) / bLen) < epsilon;
-//    printf("ALOOOOOOOOOOOOOOOOOOOO %lf\n", bLen);
     free(numerator);
     return flag;
 }
@@ -83,23 +81,22 @@ void calcX(double *A, double *B, double *xn) {
 }
 
 void loadData(double *A, double *B, double *X) {
-    srand(2);
+    srand(1);
     for (int i = 0; i < N; ++i) {
-        X[i] = (double) (rand() % 18 - 9);
+        X[i] = (double)(rand() % 18 - 9);
         for (int j = 0; j < N; ++j) {
-            A[i * N + j] = i == j ? (double) (rand() % 18 - 9) : 1;
+            A[i * N + j] = i == j ? (double)(rand() % 18 - 9) : 0.0009;
         }
     }
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             B[i] += A[i * N + j] * X[j];
         }
-        printf("%f\n", B[i]);
     }
-//    for (int i = 0; i < 13; ++i) {
-//        printf("%f ", X[i]);
-//    }
-    printf("\n");
+    for (int i = 0; i < 13; ++i) {
+        printf("%f ", X[i]);
+    }
+    printf("\n\n");
     for (int i = 0; i < N; ++i) {
         X[i] = 0;
     }
@@ -107,23 +104,19 @@ void loadData(double *A, double *B, double *X) {
 
 int main(int argc, char **argv) {
     double *A = (double *) malloc(N * N * sizeof(double));
-    double *B = (double *) malloc(N * sizeof(double));
+    double *B = (double *) calloc(N, sizeof(double));
     double *X = (double *) malloc(N * sizeof(double));
     loadData(A, B, X);
 
-//    bLen = calcVectLen(B);
-//    printf("%lf\n\n", bLen);
-//    for (int i = 0; i < N; ++i) {
-//        printf("%f\n", B[i]);
-//    }
-//    calcX(A, B, X);
+    bLen = calcVectLen(B);
+    calcX(A, B, X);
 
     free(A);
     free(B);
-//    printf("ans\n");
-//    for (int i = 0; i < 13; ++i) {
-//        printf("%f ", X[i]);
-//    }
-//    printf("\n");
+    printf("ans\n");
+    for (int i = 0; i < 13; ++i) {
+        printf("%f ", X[i]);
+    }
+    printf("\n");
     free(X);
 }
