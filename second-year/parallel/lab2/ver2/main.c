@@ -4,14 +4,16 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 255
+#define N 21
 
-const double epsilon = 0.0000456;
+const double epsilon = 0.000456;
 
-double *matrixMulVectRes; //TODO может выделить память в мейне, на кажд итерации memset для каждого потока
+
+double *matrixMulVectRes, *YN; //TODO может выделить память в мейне, на кажд итерации memset для каждого потока
+
 double *matrixMulVect(const double *matrix, const double *vector) {
 #pragma omp single
-    matrixMulVectRes = (double *) calloc(N, sizeof(double));
+    matrixMulVectRes = (double*)calloc(N, sizeof(double));
 #pragma omp for
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -21,19 +23,21 @@ double *matrixMulVect(const double *matrix, const double *vector) {
     return matrixMulVectRes;
 }
 
-void calcNextYn(double *A, double *xn, const double *B, double *yn) {
-    double *A_xn = matrixMulVect(A, xn); //TODO (single ?)
+void calcNextYn(double *A, double *xn, const double *B) {
+    double *A_xn = matrixMulVect(A, xn); //TODo эта штука вообще ересь какую посчитает?
 #pragma omp for
     for (int i = 0; i < N; ++i) {
-        yn[i] = A_xn[i] - B[i];
+        YN[i] = A_xn[i] - B[i];
     }
 #pragma omp single
     free(A_xn);
 }
 
 double scalarMulRes;
+
 double scalarVectMul(const double *v1, const double *v2) {
-    scalarMulRes = 0;//todo
+#pragma omp single
+    scalarMulRes = 0;
 #pragma omp for reduction(+:scalarMulRes)
     for (int i = 0; i < N; ++i) {
         scalarMulRes += v1[i] * v2[i];
@@ -41,18 +45,19 @@ double scalarVectMul(const double *v1, const double *v2) {
     return scalarMulRes;
 }
 
-double calcNextTau(double *A, double *yn) {
-    double *A_yn = matrixMulVect(A, yn);
-    double numerator = scalarVectMul(yn, A_yn);
+double calcNextTau(double *A) {
+    double *A_yn = matrixMulVect(A, YN);
+    double numerator = scalarVectMul(YN, A_yn);
     double denominator = scalarVectMul(A_yn, A_yn);
-    free(A_yn); //TODO
+#pragma omp single
+    free(A_yn);
     return numerator / denominator;
 }
 
-void calcNextX(double *prevX, double tau, const double *yn) {
+void calcNextX(double *prevX, double tau) {
 #pragma omp for
     for (int i = 0; i < N; ++i) {
-        prevX[i] -= tau * yn[i];
+        prevX[i] -= tau * YN[i];
     }
 }
 
@@ -69,19 +74,22 @@ int canFinish(double *A, double *xn, const double *B) {
         numerator[i] -= B[i];
     }
     int flag = (calcVectLen(numerator) / bLen) < epsilon;
+#pragma omp single
     free(numerator);
     return flag;
 }
 
 void calcX(double *A, double *B, double *xn) {
-    double *yn = (double *) malloc(N * sizeof(double)); //TODO
+#pragma omp single
+    YN = (double *) malloc(N * sizeof(double));
     double tau;
     while (!canFinish(A, xn, B)) {
-        calcNextYn(A, xn, B, yn);
-        tau = calcNextTau(A, yn);
-        calcNextX(xn, tau, yn);
+        calcNextYn(A, xn, B);
+        tau = calcNextTau(A);
+        calcNextX(xn, tau);
     }
-    free(yn);
+#pragma omp single
+    free(YN);
 }
 
 void loadData(double *A, double *B, double *X) {
@@ -110,6 +118,7 @@ int main(int argc, char **argv) {
     double *A = (double *) malloc(N * N * sizeof(double));
     double *B = (double *) calloc(N, sizeof(double));
     double *X = (double *) malloc(N * sizeof(double));
+
     loadData(A, B, X);
 
 #pragma omp parallel
