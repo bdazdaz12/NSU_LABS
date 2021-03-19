@@ -4,7 +4,7 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 21
+#define N 255
 
 const double epsilon = 0.000456;
 
@@ -13,8 +13,8 @@ double *matrixMulVectRes, *YN; //TODO может выделить память �
 
 double *matrixMulVect(const double *matrix, const double *vector) {
 #pragma omp single
-    matrixMulVectRes = (double*)calloc(N, sizeof(double));
-#pragma omp for
+    matrixMulVectRes = (double *) calloc(N, sizeof(double));
+#pragma omp for /// вроде в конце должне стоять барьер
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             matrixMulVectRes[i] += matrix[i * N + j] * vector[j];
@@ -48,6 +48,7 @@ double scalarVectMul(const double *v1, const double *v2) {
 double calcNextTau(double *A) {
     double *A_yn = matrixMulVect(A, YN);
     double numerator = scalarVectMul(YN, A_yn);
+#pragma omp barrier  /// костыльчик
     double denominator = scalarVectMul(A_yn, A_yn);
 #pragma omp single
     free(A_yn);
@@ -80,6 +81,7 @@ int canFinish(double *A, double *xn, const double *B) {
 }
 
 void calcX(double *A, double *B, double *xn) {
+    bLen = calcVectLen(B);
 #pragma omp single
     YN = (double *) malloc(N * sizeof(double));
     double tau;
@@ -114,6 +116,7 @@ void loadData(double *A, double *B, double *X) {
     }
 }
 
+
 int main(int argc, char **argv) {
     double *A = (double *) malloc(N * N * sizeof(double));
     double *B = (double *) calloc(N, sizeof(double));
@@ -123,7 +126,6 @@ int main(int argc, char **argv) {
 
 #pragma omp parallel
     {
-        bLen = calcVectLen(B);
         calcX(A, B, X);
     }
 
