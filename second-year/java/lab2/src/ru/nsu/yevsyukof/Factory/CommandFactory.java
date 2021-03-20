@@ -2,11 +2,10 @@ package ru.nsu.yevsyukof.Factory;
 
 
 import ru.nsu.yevsyukof.Commands.ExecutableCommand;
+import ru.nsu.yevsyukof.Exceptions.BuildCommandException;
 import ru.nsu.yevsyukof.Exceptions.CommandNotFoundException;
-import ru.nsu.yevsyukof.Executor.ExecutionContext;
 
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Properties;
 
 public class CommandFactory {
@@ -16,9 +15,9 @@ public class CommandFactory {
 
     private CommandFactory() {
         try {
-            commandsConfig.load(Class.class.getResourceAsStream("configuration_file.properties"));
+            commandsConfig.load(CommandFactory.class.getResourceAsStream("configuration_file.properties"));
         } catch (IOException e) {
-//            throw new RuntimeException(); //todo
+            e.printStackTrace();
         }
     }
 
@@ -29,16 +28,16 @@ public class CommandFactory {
         return instance;
     }
 
-    public ExecutableCommand buildCommand(String commandName) throws CommandNotFoundException {
-        if (!commandsConfig.contains(commandName)) {
+    public ExecutableCommand buildCommand(String commandName) throws CommandNotFoundException, BuildCommandException {
+        if (!commandsConfig.containsKey(commandName)) {
             throw new CommandNotFoundException("Command " + commandName + " - does not exist");
         }
-        ExecutableCommand newCommand = null;
+        ExecutableCommand newCommand;
         try {
             newCommand = (ExecutableCommand) Class.forName(commandsConfig.getProperty(commandName)).
                     getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw  new BuildCommandException();
         }
         return newCommand;
     }

@@ -5,8 +5,8 @@ import java.util.Stack;
 
 public class ExecutionContext {
 
-    private Stack<Double> stack;
-    private HashMap<String, Double> defines;
+    private final Stack<Double> stack = new Stack<>();
+    private final HashMap<String, Double> defines = new HashMap<>();
 
     public Stack<Double> getStack() {
         return stack;
