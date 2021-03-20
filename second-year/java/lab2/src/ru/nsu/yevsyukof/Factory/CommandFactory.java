@@ -6,7 +6,6 @@ import ru.nsu.yevsyukof.Exceptions.CommandNotFoundException;
 import ru.nsu.yevsyukof.Executor.ExecutionContext;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.Properties;
 
