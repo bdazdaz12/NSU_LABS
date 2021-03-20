@@ -1,6 +1,6 @@
-package ru.nsu.fit.yevsyukof.Commands;
+package ru.nsu.yevsyukof.Commands;
 
-import ru.nsu.fit.yevsyukof.Executor.ExecutionContext;
+import ru.nsu.yevsyukof.Executor.ExecutionContext;
 
 import java.util.LinkedList;
 

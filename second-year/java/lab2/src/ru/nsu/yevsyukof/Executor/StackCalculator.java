@@ -1,7 +1,5 @@
-package ru.nsu.fit.yevsyukof.Executor;
+package ru.nsu.yevsyukof.Executor;
 
-import ru.nsu.fit.yevsyukof.Commands.ExecutableCommand;
-import ru.nsu.fit.yevsyukof.Factory.CommandFactory;
 
 import java.io.*;
 
@@ -22,7 +20,7 @@ public class StackCalculator {
             ExecutionContext context = new ExecutionContext();
             while ((nextLine = reader.readLine()) != null) {
                 String[] commandLine = nextLine.split("\\s");
-                ExecutableCommand nextCommand = CommandFactory.getInstance().buildCommand(commandLine[0]);
+//                ExecutableCommand nextCommand = CommandFactory.getInstance().buildCommand(commandLine[0]);
                 //TODO вызов фабричного метода создания команды из первого аргумента
 
                 //TODO добавление оставшихся аргументов в лист входных аргументов

@@ -1,4 +1,4 @@
-package ru.nsu.fit.yevsyukof.Executor;
+package ru.nsu.yevsyukof.Executor;
 
 import java.util.HashMap;
 import java.util.Stack;

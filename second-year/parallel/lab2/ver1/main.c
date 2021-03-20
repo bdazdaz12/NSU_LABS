@@ -30,7 +30,7 @@ void calcNextYn(double *A, double *xn, const double *B, double *yn) {
 
 double scalarVectMul(const double *v1, const double *v2) {
     double scalarMulRes = 0;
-#pragma omp parallel for
+#pragma omp parallel for //TODO добавить редус
     for (int i = 0; i < N; ++i) {
         scalarMulRes += v1[i] * v2[i]; //TODO вот здесь может коллизия обращения?
     }

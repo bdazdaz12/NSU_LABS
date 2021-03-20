@@ -47,7 +47,7 @@ double scalarVectMul(const double *v1, const double *v2) {
 
 double calcNextTau(double *A) {
     double *A_yn = matrixMulVect(A, YN);
-    double numerator = scalarVectMul(YN, A_yn);
+    double numerator = scalarVectMul(YN, A_yn); //TODO  передавать их внуть скалрного
 #pragma omp barrier  /// костыльчик
     double denominator = scalarVectMul(A_yn, A_yn);
 #pragma omp single
