@@ -4,9 +4,9 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 1020
+#define N 255
 
-const double epsilon = 0.0000456;
+const double epsilon = 0.000456;
 
 double *matrixMulVect(const double *matrix, const double *vector) {
     double *res = (double *) calloc(N, sizeof(double));
@@ -30,9 +30,9 @@ void calcNextYn(double *A, double *xn, const double *B, double *yn) {
 
 double scalarVectMul(const double *v1, const double *v2) {
     double scalarMulRes = 0;
-#pragma omp parallel for //TODO добавить редус
+#pragma omp parallel for reduction(+:scalarMulRes)
     for (int i = 0; i < N; ++i) {
-        scalarMulRes += v1[i] * v2[i]; //TODO вот здесь может коллизия обращения?
+        scalarMulRes += v1[i] * v2[i];
     }
     return scalarMulRes;
 }

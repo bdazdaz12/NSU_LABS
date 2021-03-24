@@ -4,17 +4,19 @@
 #include <math.h>
 #include <omp.h>
 
-#define N 255
+#define N 401
 
 const double epsilon = 0.000456;
 
 
-double *matrixMulVectRes, *YN; //TODO может выделить память в мейне, на кажд итерации memset для каждого потока
+double *matrixMulVectRes, *YN;
 
 double *matrixMulVect(const double *matrix, const double *vector) {
 #pragma omp single
-    matrixMulVectRes = (double *) calloc(N, sizeof(double));
-#pragma omp for /// вроде в конце должне стоять барьер
+    {
+        matrixMulVectRes = (double *) calloc(N, sizeof(double));
+    }
+#pragma omp for
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
             matrixMulVectRes[i] += matrix[i * N + j] * vector[j];
@@ -24,34 +26,41 @@ double *matrixMulVect(const double *matrix, const double *vector) {
 }
 
 void calcNextYn(double *A, double *xn, const double *B) {
-    double *A_xn = matrixMulVect(A, xn); //TODo эта штука вообще ересь какую посчитает?
+    double *A_xn = matrixMulVect(A, xn);
 #pragma omp for
     for (int i = 0; i < N; ++i) {
         YN[i] = A_xn[i] - B[i];
     }
 #pragma omp single
-    free(A_xn);
+    {
+        free(A_xn);
+    }
 }
 
-double scalarMulRes;
+double scalarMulRes = 0;
+double scalarMulResBuf;
 
 double scalarVectMul(const double *v1, const double *v2) {
-#pragma omp single
-    scalarMulRes = 0;
 #pragma omp for reduction(+:scalarMulRes)
     for (int i = 0; i < N; ++i) {
         scalarMulRes += v1[i] * v2[i];
     }
-    return scalarMulRes;
+#pragma omp single
+    {
+        scalarMulResBuf = scalarMulRes;
+        scalarMulRes = 0;
+    }
+    return scalarMulResBuf;
 }
 
 double calcNextTau(double *A) {
     double *A_yn = matrixMulVect(A, YN);
-    double numerator = scalarVectMul(YN, A_yn); //TODO  передавать их внуть скалрного
-#pragma omp barrier  /// костыльчик
+    double numerator = scalarVectMul(YN, A_yn);
     double denominator = scalarVectMul(A_yn, A_yn);
 #pragma omp single
-    free(A_yn);
+    {
+        free(A_yn);
+    }
     return numerator / denominator;
 }
 
@@ -76,14 +85,18 @@ int canFinish(double *A, double *xn, const double *B) {
     }
     int flag = (calcVectLen(numerator) / bLen) < epsilon;
 #pragma omp single
-    free(numerator);
+    {
+        free(numerator);
+    }
     return flag;
 }
 
 void calcX(double *A, double *B, double *xn) {
     bLen = calcVectLen(B);
 #pragma omp single
-    YN = (double *) malloc(N * sizeof(double));
+    {
+        YN = (double *) malloc(N * sizeof(double));
+    }
     double tau;
     while (!canFinish(A, xn, B)) {
         calcNextYn(A, xn, B);
@@ -91,7 +104,9 @@ void calcX(double *A, double *B, double *xn) {
         calcNextX(xn, tau);
     }
 #pragma omp single
-    free(YN);
+    {
+        free(YN);
+    }
 }
 
 void loadData(double *A, double *B, double *X) {

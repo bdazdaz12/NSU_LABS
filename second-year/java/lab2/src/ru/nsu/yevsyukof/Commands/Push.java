@@ -15,7 +15,7 @@ public class Push extends ExecutableCommand {
                 context.getStack().push(Double.valueOf(inputArgs.get(0)));
             }
         } catch (NumberFormatException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage());  // TODO оно не выводит название ошибки (-_-)
         }
     }
 
