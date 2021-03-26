@@ -5,6 +5,6 @@ This repository contains lab projects on programming written by me during my stu
 contains lab projects on C
 
 # second-year
-> labs in C++
+1) labs in C++
 2) labs in Java
 3) laboratory projects on the course of parallel programming
