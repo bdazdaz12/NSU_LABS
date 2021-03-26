@@ -2,7 +2,7 @@
 This repository contains lab projects on programming written by me during my studies at Novosibirsk State University in 2019 - ...
 
 # first-year
-contains lab projects on C
+contains lab projects in C lang
 
 # second-year
 1) labs in C++
