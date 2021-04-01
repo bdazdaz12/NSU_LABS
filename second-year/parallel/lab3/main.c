@@ -82,50 +82,51 @@ void fillData(double **A, double **B, double **C) {
     for (int i = 0; i < n2; ++i) {
         for (int j = 0; j < n3; ++j) {
             if (j == 0) {
-                (*B)[i * n3 + j] = i;
-            } else if (j == 1){
-                (*B)[i * n3 + j] = 2 * i;
+                (*B)[i * n3 + j] = 1;
+            } else if (j == 1) {
+                (*B)[i * n3 + j] = 2;
             } else {
-                (*B)[i * n3 + j] = -1;
+                (*B)[i * n3 + j] = 9;
             }
         }
     }
 }
 
-void sendMatricesParts(double **A, double **B, double **A_part, double **B_part,
+void sendMatricesParts(double *A, double *B, double *A_part, double *B_part,
                        MPI_Comm rowComm, MPI_Comm columnComm, int *coords) {
     if (coords[Y] == 0) { // рассылаем A по первому столбцу по всем его строкам
-        MPI_Scatterv(*A, sendRowSize, sendRowBeginPos, MPI_DOUBLE,
-                     *A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, rowComm);
+        MPI_Scatterv(A, sendRowSize, sendRowBeginPos, MPI_DOUBLE,
+                     A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, rowComm);
     }
     if (coords[X] == 0) { // рассылаем B по первой строке и всем её столбцам
-        MPI_Datatype column_t;
         MPI_Datatype row_t;
-
         MPI_Type_contiguous(n2, MPI_DOUBLE, &row_t);
         MPI_Type_commit(&row_t);
+
+        MPI_Datatype column_t;
         MPI_Type_vector(n2, 1, n3, MPI_DOUBLE, &column_t);
         MPI_Type_commit(&column_t);
 
-        sendColumnCnt[0] = 2; // посылаем 2 столца
-//
-//        printf("gridRank = %d, rowRank = %d, colRank = %d, sendColCnt[0] = %d\n",
-//               gridRank, rowRank, columnRank, sendColumnCnt[0]);
-//        printf("sendColumnCnt[0] = %d, sendColumnBeginPos[0] = %d\n", sendColumnCnt[0], sendColumnBeginPos[0]);
-        MPI_Scatterv(*B + 1, sendColumnCnt, sendColumnBeginPos, column_t,
-                     *B_part, sendColumnCnt[columnRank], row_t, 0, columnComm); // TODO тут валиться
+        MPI_Datatype columnShell_t;
+        MPI_Type_create_resized(column_t, 0, sizeof(double), &columnShell_t);
+        MPI_Type_commit(&columnShell_t);
+
+        MPI_Scatterv(B, sendColumnCnt, sendColumnBeginPos, columnShell_t,
+                     B_part, sendColumnCnt[columnRank], row_t, 0, columnComm); // TODO тут валиться, а вроде уже нет
 
         for (int i = 0; i < 2; ++i) { // выводим присланные столбцы
             for (int j = 0; j < n2; ++j) {
-                printf("%f ", (*B_part)[i * n2 + j]);
+                printf("%f ", B_part[i * n2 + j]);
             }
             printf("\n");
         }
+
         MPI_Type_free(&column_t);
         MPI_Type_free(&row_t);
+        MPI_Type_free(&columnShell_t);
     }
-    MPI_Bcast(*A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, columnComm);
-//    MPI_Bcast(*B_part, sendColumnSize[columnRank], MPI_DOUBLE, 0, rowComm);
+    MPI_Bcast(A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, columnComm);
+    MPI_Bcast(B_part, sendColumnSize[columnRank], MPI_DOUBLE, 0, rowComm);
 }
 
 double *calcMatricesMul(double **A_part, double **B_part) {
@@ -167,11 +168,8 @@ int main(int argc, char **argv) {
         fillData(&A, &B, &C);
     }
 
-//    printf("dims[X] = %d, dims[Y] = %d\n", dims[X], dims[Y]);
-//    printf("gridRank = %d, rowRank = %d, colRank = %d \n", gridRank, rowRank, columnRank);
 
-
-    sendMatricesParts(&A, &B, &A_part, &B_part, rowComm, columnComm, coords);
+    sendMatricesParts(A, B, A_part, B_part, rowComm, columnComm, coords);
 //    double *C_part = calcMatricesMul(&A_part, &B_part);
 
 
