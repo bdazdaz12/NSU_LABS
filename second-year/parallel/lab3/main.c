@@ -65,7 +65,7 @@ void calcSendDataParams(const int *dims) {
         }
         sendColumnSize[rankInColumnComm] = sendColumnCnt[rankInColumnComm] * n2;
         sendColumnBeginPos[rankInColumnComm] = offsetIdx;
-        offsetIdx += sendColumnSize[rankInColumnComm];
+        offsetIdx += sendColumnCnt[rankInColumnComm]; /// тута была ошибка
     }
 }
 
@@ -87,16 +87,40 @@ void fillData(double **A, double **B, double **C) {
 }
 
 void sendMatricesParts(double **A, double **B, double **A_part, double **B_part,
-                       MPI_Comm gridComm, MPI_Comm rowComm, MPI_Comm columnComm, int *dims, int *coords) {
+                       MPI_Comm gridComm, MPI_Comm rowComm, MPI_Comm columnComm, int *coords) {
     if (coords[Y] == 0) { // рассылаем A по первому столбцу по всем его строкам
         MPI_Scatterv(*A, sendRowSize, sendRowBeginPos, MPI_DOUBLE,
                      *A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, rowComm);
     }
-    if (coords[X] == 0) {
-        //TODO
+    if (coords[X] == 0) { // рассылаем B по первой строке и всем её столбцам
+        MPI_Datatype column_t;
+        MPI_Datatype row_t;
+
+        MPI_Type_contiguous(n2, MPI_DOUBLE, &row_t);
+        MPI_Type_commit(&row_t);
+        MPI_Type_vector(n2, 1, n3, MPI_DOUBLE, &column_t);
+        MPI_Type_commit(&column_t);
+
+        MPI_Scatterv(*B, sendColumnCnt, sendColumnBeginPos, column_t,
+                     *B_part, sendColumnCnt[columnRank], row_t, 0, columnComm);
+
+        MPI_Type_free(&column_t);
+        MPI_Type_free(&row_t);
     }
     MPI_Bcast(*A_part, sendRowSize[rowRank], MPI_DOUBLE, 0, columnComm);
     MPI_Bcast(*B_part, sendColumnSize[columnRank], MPI_DOUBLE, 0, rowComm);
+}
+
+double* calcMatricesMul (double **A_part, double **B_part) {
+    double *C_part = (double *) calloc(sendRowCnt[rowRank] * sendColumnCnt[columnRank], sizeof(double));
+    for (int i = 0; i < sendRowCnt[rowRank]; ++i) {
+        for (int j = 0; j < n2; ++j) {
+            for (int k = 0; k < sendColumnCnt[columnRank]; ++k) {
+                // TODO вообще подумать про итерацию в цикле
+            }
+        }
+    }
+    return C_part;
 }
 
 int main(int argc, char **argv) {
@@ -117,11 +141,12 @@ int main(int argc, char **argv) {
     double *A, *B, *C;
     double *A_part = (double *) malloc(sizeof(double) * sendRowCnt[rowRank] * n2);
     double *B_part = (double *) malloc(sizeof(double) * sendColumnCnt[columnRank] * n2);
-    double *C_part = (double *) calloc(sendRowCnt[rowRank] * sendColumnCnt[columnRank], sizeof(double));
-
     if (gridRank == 0) {
         fillData(&A, &B, &C);
     }
+
+    sendMatricesParts(&A, &B, &A_part, &B_part, gridComm, rowComm, columnComm, coords);
+    double *C_part = calcMatricesMul(&A, &B);
 
     free(A_part);
     free(B_part);
@@ -129,5 +154,6 @@ int main(int argc, char **argv) {
     free(sendRowSize);
     free(sendRowBeginPos);
     free(sendRowCnt);
+
     MPI_Finalize();
 }
