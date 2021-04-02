@@ -4,7 +4,7 @@
 
 #define n1 10
 #define n2 14
-#define n3 9
+#define n3 16 // сделать кратным 16, для сбора C
 
 #define ndims 2 // размерность сетки
 #define X 0 // номер измерения X. Отвечает за направление "по строкам".
@@ -76,18 +76,12 @@ void fillData(double **A, double **B, double **C) {
 
     for (int i = 0; i < n1; ++i) {
         for (int j = 0; j < n2; ++j) {
-            (*A)[i * n2 + j] = i == j ? 1 : 0;
+            (*A)[i * n2 + j] = i;
         }
     }
     for (int i = 0; i < n2; ++i) {
         for (int j = 0; j < n3; ++j) {
-            if (j == 0) {
-                (*B)[i * n3 + j] = 1;
-            } else if (j == 1) {
-                (*B)[i * n3 + j] = 2;
-            } else {
-                (*B)[i * n3 + j] = 9;
-            }
+            (*B)[i * n3 + j] = i == j ? 1 : 0;
         }
     }
 }
@@ -114,13 +108,6 @@ void sendMatricesParts(double *A, double *B, double *A_part, double *B_part,
         MPI_Scatterv(B, sendColumnCnt, sendColumnBeginPos, columnShell_t,
                      B_part, sendColumnCnt[columnRank], row_t, 0, columnComm); // TODO тут валиться, а вроде уже нет
 
-        for (int i = 0; i < 2; ++i) { // выводим присланные столбцы
-            for (int j = 0; j < n2; ++j) {
-                printf("%f ", B_part[i * n2 + j]);
-            }
-            printf("\n");
-        }
-
         MPI_Type_free(&column_t);
         MPI_Type_free(&row_t);
         MPI_Type_free(&columnShell_t);
@@ -129,21 +116,45 @@ void sendMatricesParts(double *A, double *B, double *A_part, double *B_part,
     MPI_Bcast(B_part, sendColumnSize[columnRank], MPI_DOUBLE, 0, rowComm);
 }
 
-double *calcMatricesMul(double **A_part, double **B_part) {
+double *calcMatricesMul(const double *A_part, const double *B_part) {
     double *C_part = (double *) calloc(sendRowCnt[rowRank] * sendColumnCnt[columnRank], sizeof(double));
 
     for (int i = 0; i < sendRowCnt[rowRank]; ++i) { // индексы строки в A_part и столбца в B_part
         for (int k = 0; k < sendColumnCnt[columnRank]; ++k) { // индекс движения по столбцам
             for (int j = 0; j < n2; ++j) { // индекс движения по строке и столбцу
-                C_part[i * sendColumnCnt[columnRank] + k] += (*A_part)[i * n2 + j] * (*B_part)[k * n2 + j];
+                C_part[i * sendColumnCnt[columnRank] + k] += A_part[i * n2 + j] * B_part[k * n2 + j];
             } // записываем здесь по полной строке в C_part
         }
     }
     return C_part;
 }
 
-void collecting_C (double **C_part) {
+void collecting_C(double *C_part, double *C, int *dims, int *coords, MPI_Comm gridComm) {
+    // TODO: пока что это работает только с матрицами у которых sendColumnCnt одинаковый для всех частей
+    //// gridRank = coords[X] * dims[Y] + coords[Y]
 
+    int *displs = (int*) malloc(sizeof(int) * cntOfProcesses);
+    int offset = 0;
+    for (int i = 0; i < dims[X]; ++i) {
+        for (int j = 0; j < dims[Y]; ++j) {
+            displs[i * dims[Y] + j] = offset;
+            offset += sendColumnCnt[j];
+        }
+        offset += sendRowCnt[i] * n3; //xyuta
+    }
+
+    if (gridRank == 0) {
+        for (int i = 0; i < cntOfProcesses; ++i) {
+            C[displs[i]] = 1;
+        }
+
+        for (int i = 0; i < n1; ++i) {
+            for (int j = 0; j < n3; ++j) {
+                printf("%f ", C[i * n3 + j]);
+            }
+            printf("\n");
+        }
+    }
 }
 
 int main(int argc, char **argv) {
@@ -161,21 +172,38 @@ int main(int argc, char **argv) {
     createCommunicators(&gridComm, &rowComm, &columnComm, dims, coords);
     calcSendDataParams(dims);
 
-    double *A, *B, *C;
+    double *A = NULL, *B = NULL, *C = NULL;
     double *A_part = (double *) malloc(sizeof(double) * sendRowCnt[rowRank] * n2); // TODO здесь валиться
     double *B_part = (double *) malloc(sizeof(double) * sendColumnCnt[columnRank] * n2);
     if (gridRank == 0) {
         fillData(&A, &B, &C);
     }
 
-
     sendMatricesParts(A, B, A_part, B_part, rowComm, columnComm, coords);
-//    double *C_part = calcMatricesMul(&A_part, &B_part);
 
+//    if (coords[X] == 1 && coords[Y] == 1) {
+//        for (int i = 0; i < sendRowCnt[rowRank]; ++i) { // выводим присланные строки
+//            for (int j = 0; j < n2; ++j) {
+//                printf("%f ", A_part[i * n2 + j]);
+//            }
+//            printf("\n");
+//        }
+//    }
+//    if (coords[X] == 1 && coords[Y] == 1) {
+//        for (int i = 0; i < sendColumnCnt[columnRank]; ++i) { // выводим присланные столбцы
+//            for (int j = 0; j < n2; ++j) {
+//                printf("%f ", B_part[i * n2 + j]);
+//            }
+//            printf("\n");
+//        }
+//    }
+
+    double *C_part = calcMatricesMul(A_part, B_part);
+    collecting_C(C_part, C, dims, coords, gridComm);
 
     free(A_part);
     free(B_part);
-//    free(C_part);
+    free(C_part);
 
     free(sendRowSize);
     free(sendRowBeginPos);
@@ -184,5 +212,10 @@ int main(int argc, char **argv) {
     free(sendColumnBeginPos);
     free(sendColumnCnt);
 
+    if (gridRank == 0) {
+        free(A);
+        free(B);
+        free(C);
+    }
     MPI_Finalize();
 }
