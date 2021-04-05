@@ -2,8 +2,8 @@
 #include <mpi.h>
 #include <malloc.h>
 
-#define n1 10
-#define n2 14
+#define n1 8
+#define n2 16
 #define n3 16 // сделать кратным 16, для сбора C
 
 #define ndims 2 // размерность сетки
@@ -53,7 +53,7 @@ void calcSendDataParams(const int *dims) {
         }
         sendRowSize[rankInRowComm] = sendRowCnt[rankInRowComm] * n2;
         sendRowBeginPos[rankInRowComm] = offsetIdx;
-        offsetIdx += sendRowSize[rankInRowComm]; //TODO: мог тут ошибиться с подсчетами
+        offsetIdx += sendRowSize[rankInRowComm];
     }
 
     offsetIdx = 0;
@@ -106,7 +106,7 @@ void sendMatricesParts(double *A, double *B, double *A_part, double *B_part,
         MPI_Type_commit(&columnShell_t);
 
         MPI_Scatterv(B, sendColumnCnt, sendColumnBeginPos, columnShell_t,
-                     B_part, sendColumnCnt[columnRank], row_t, 0, columnComm); // TODO тут валиться, а вроде уже нет
+                     B_part, sendColumnCnt[columnRank], row_t, 0, columnComm);
 
         MPI_Type_free(&column_t);
         MPI_Type_free(&row_t);
@@ -134,27 +134,29 @@ void collecting_C(double *C_part, double *C, int *dims, int *coords, MPI_Comm gr
     //// gridRank = coords[X] * dims[Y] + coords[Y]
 
     int *displs = (int*) malloc(sizeof(int) * cntOfProcesses);
+    int *recvCounts = (int*) malloc(sizeof(int) * cntOfProcesses);
     int offset = 0;
     for (int i = 0; i < dims[X]; ++i) {
         for (int j = 0; j < dims[Y]; ++j) {
             displs[i * dims[Y] + j] = offset;
+            recvCounts[i * dims[Y] + j] = sendRowCnt[i];
             offset += sendColumnCnt[j];
         }
-        offset += sendRowCnt[i] * n3; //xyuta
+        offset += (sendRowCnt[i] - 1) * n3;
     }
+///////////////////////////////// дальше написанный на паре код //TODO тут что то не так работает
+    MPI_Datatype row_t;
+    MPI_Type_contiguous(sendColumnCnt[0], MPI_DOUBLE, &row_t);
+    MPI_Type_commit(&row_t);
 
-    if (gridRank == 0) {
-        for (int i = 0; i < cntOfProcesses; ++i) {
-            C[displs[i]] = 1;
-        }
+    MPI_Datatype rowShell_t;
+    MPI_Type_create_resized(row_t, 0, n3 * sizeof(double), &rowShell_t);
+    MPI_Type_commit(&rowShell_t);
 
-        for (int i = 0; i < n1; ++i) {
-            for (int j = 0; j < n3; ++j) {
-                printf("%f ", C[i * n3 + j]);
-            }
-            printf("\n");
-        }
-    }
+    MPI_Gatherv(C_part, sendRowCnt[rowRank], row_t, C, recvCounts, displs, rowShell_t, 0, gridComm);
+
+    MPI_Type_free(&row_t);
+    MPI_Type_free(&rowShell_t);
 }
 
 int main(int argc, char **argv) {
@@ -173,33 +175,48 @@ int main(int argc, char **argv) {
     calcSendDataParams(dims);
 
     double *A = NULL, *B = NULL, *C = NULL;
-    double *A_part = (double *) malloc(sizeof(double) * sendRowCnt[rowRank] * n2); // TODO здесь валиться
+    double *A_part = (double *) malloc(sizeof(double) * sendRowCnt[rowRank] * n2);
     double *B_part = (double *) malloc(sizeof(double) * sendColumnCnt[columnRank] * n2);
     if (gridRank == 0) {
         fillData(&A, &B, &C);
+        printf("matrix A:\n");
+        for (int i = 0; i < n1; ++i) {
+            for (int j = 0; j < n2; ++j) {
+                printf("%f ", A[i * n2 + j]);
+            }
+            printf("\n");
+        }
+        printf("\n");
+
+        printf("matrix B:\n");
+        for (int i = 0; i < n2; ++i) {
+            for (int j = 0; j < n3; ++j) {
+                printf("%f ", B[i * n2 + j]);
+            }
+            printf("\n");
+        }
+        printf("\n\n");
     }
 
     sendMatricesParts(A, B, A_part, B_part, rowComm, columnComm, coords);
 
-//    if (coords[X] == 1 && coords[Y] == 1) {
-//        for (int i = 0; i < sendRowCnt[rowRank]; ++i) { // выводим присланные строки
-//            for (int j = 0; j < n2; ++j) {
-//                printf("%f ", A_part[i * n2 + j]);
-//            }
-//            printf("\n");
-//        }
-//    }
-//    if (coords[X] == 1 && coords[Y] == 1) {
-//        for (int i = 0; i < sendColumnCnt[columnRank]; ++i) { // выводим присланные столбцы
-//            for (int j = 0; j < n2; ++j) {
-//                printf("%f ", B_part[i * n2 + j]);
+    double *C_part = calcMatricesMul(A_part, B_part);
+
+//    for (int i = 0; i < cntOfProcesses; ++i) {
+//        MPI_Barrier(MPI_COMM_WORLD);
+//        if (gridRank == i) {
+//            printf("gridRank =  %d\n", gridRank);
+//            for (int j = 0; j < sendRowCnt[rowRank]; ++j) {
+//                for (int k = 0; k < sendColumnCnt[columnRank]; ++k) {
+//                    printf("%f ", C_part[j * sendColumnCnt[columnRank] + k]);
+//                }
+//                printf("\n");
 //            }
 //            printf("\n");
 //        }
 //    }
 
-    double *C_part = calcMatricesMul(A_part, B_part);
-    collecting_C(C_part, C, dims, coords, gridComm);
+    collecting_C(C_part, C, dims, coords, gridComm); //TODO тут валиться
 
     free(A_part);
     free(B_part);
@@ -213,6 +230,15 @@ int main(int argc, char **argv) {
     free(sendColumnCnt);
 
     if (gridRank == 0) {
+
+        printf("matrix C:\n");
+        for (int i = 0; i < n1; ++i) {
+            for (int j = 0; j < n3; ++j) {
+                printf("%f \n\n", C[i * n3 + j]);
+            }
+            printf("\n");
+        }
+
         free(A);
         free(B);
         free(C);

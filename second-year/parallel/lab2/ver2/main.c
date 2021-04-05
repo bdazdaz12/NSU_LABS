@@ -40,7 +40,7 @@ void calcNextYn(double *A, double *xn, const double *B) {
 double scalarMulRes = 0;
 double scalarMulResBuf;
 
-double scalarVectMul(const double *v1, const double *v2) {
+double scalarVectMul(const double *v1, const double *v2) { // TODO добавить shared
 #pragma omp for reduction(+:scalarMulRes)
     for (int i = 0; i < N; ++i) {
         scalarMulRes += v1[i] * v2[i];
