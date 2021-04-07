@@ -10,7 +10,9 @@
 #define X 0 // номер измерения X. Отвечает за направление "по строкам".
 #define Y 1 // направление "по столбцам". число - "индекс доступа".
 
-#define debug
+//#define print_parts_C_on_processes
+//#define print_A_and_B
+#define print_C
 
 int gridRank, rowRank, columnRank, cntOfProcesses;
 int *sendRowCnt, *sendRowBeginPos, *sendRowSize;
@@ -181,7 +183,7 @@ void print_C_parts(double *C_part) {
     }
 }
 
-void printMatrix(double *matrix, int n, int m) {
+void print_A_and_B(double *matrix, int n, int m) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < m; ++j) {
             printf("%f ", matrix[i * m + j]);
@@ -212,11 +214,11 @@ int main(int argc, char **argv) {
     if (gridRank == 0) {
         fillData(&A, &B, &C);
 
-#ifdef debug
+#ifdef print_A_and_B
         printf("matrix A:\n");
-        printMatrix(A, n1, n2);
+        print_A_and_B(A, n1, n2);
         printf("matrix B:\n");
-        printMatrix(B, n2, n3);
+        print_A_and_B(B, n2, n3);
 #endif
     }
 
@@ -224,11 +226,11 @@ int main(int argc, char **argv) {
 
     double *C_part = calcMatricesMul(A_part, B_part);
 
-#ifdef debug
+#ifdef print_parts_C_on_processes
     print_C_parts(C_part);
 #endif
 
-//    collecting_C(C_part, C, dims, gridComm); //TODO тут валиться
+    collecting_C(C_part, C, dims, gridComm); //TODO тут валиться
 
     free(A_part);
     free(B_part);
@@ -242,8 +244,11 @@ int main(int argc, char **argv) {
     free(sendColumnCnt);
 
     if (gridRank == 0) {
-//        printf("matrix C:\n");
-//        printMatrix(C, n1, n3);
+
+#ifdef print_C
+        printf("matrix C:\n");
+        print_A_and_B(C, n1, n3);
+#endif
 
         free(A);
         free(B);
