@@ -2,13 +2,15 @@
 #include <mpi.h>
 #include <malloc.h>
 
-#define n1 8
+#define n1 16
 #define n2 16
 #define n3 16 // сделать кратным 16, для сбора C
 
 #define ndims 2 // размерность сетки
 #define X 0 // номер измерения X. Отвечает за направление "по строкам".
 #define Y 1 // направление "по столбцам". число - "индекс доступа".
+
+#define debug
 
 int gridRank, rowRank, columnRank, cntOfProcesses;
 int *sendRowCnt, *sendRowBeginPos, *sendRowSize;
@@ -129,12 +131,13 @@ double *calcMatricesMul(const double *A_part, const double *B_part) {
     return C_part;
 }
 
-void collecting_C(double *C_part, double *C, int *dims, int *coords, MPI_Comm gridComm) {
+void collecting_C(double *C_part, double *C, const int *dims, MPI_Comm gridComm) { // TODO оно не работает
     // TODO: пока что это работает только с матрицами у которых sendColumnCnt одинаковый для всех частей
-    //// gridRank = coords[X] * dims[Y] + coords[Y]
+    // gridRank = coords[X] * dims[Y] + coords[Y]
 
     int *displs = (int*) malloc(sizeof(int) * cntOfProcesses);
     int *recvCounts = (int*) malloc(sizeof(int) * cntOfProcesses);
+
     int offset = 0;
     for (int i = 0; i < dims[X]; ++i) {
         for (int j = 0; j < dims[Y]; ++j) {
@@ -144,7 +147,7 @@ void collecting_C(double *C_part, double *C, int *dims, int *coords, MPI_Comm gr
         }
         offset += (sendRowCnt[i] - 1) * n3;
     }
-///////////////////////////////// дальше написанный на паре код //TODO тут что то не так работает
+
     MPI_Datatype row_t;
     MPI_Type_contiguous(sendColumnCnt[0], MPI_DOUBLE, &row_t);
     MPI_Type_commit(&row_t);
@@ -157,6 +160,35 @@ void collecting_C(double *C_part, double *C, int *dims, int *coords, MPI_Comm gr
 
     MPI_Type_free(&row_t);
     MPI_Type_free(&rowShell_t);
+
+    free(displs);
+    free(recvCounts);
+}
+
+void print_C_parts(double *C_part) {
+    for (int i = 0; i < cntOfProcesses; ++i) {
+        MPI_Barrier(MPI_COMM_WORLD);
+        if (gridRank == i) {
+            printf("gridRank =  %d\n", gridRank);
+            for (int j = 0; j < sendRowCnt[rowRank]; ++j) {
+                for (int k = 0; k < sendColumnCnt[columnRank]; ++k) {
+                    printf("%f ", C_part[j * sendColumnCnt[columnRank] + k]);
+                }
+                printf("\n");
+            }
+            printf("\n");
+        }
+    }
+}
+
+void printMatrix(double *matrix, int n, int m) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            printf("%f ", matrix[i * m + j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
 }
 
 int main(int argc, char **argv) {
@@ -179,44 +211,24 @@ int main(int argc, char **argv) {
     double *B_part = (double *) malloc(sizeof(double) * sendColumnCnt[columnRank] * n2);
     if (gridRank == 0) {
         fillData(&A, &B, &C);
-        printf("matrix A:\n");
-        for (int i = 0; i < n1; ++i) {
-            for (int j = 0; j < n2; ++j) {
-                printf("%f ", A[i * n2 + j]);
-            }
-            printf("\n");
-        }
-        printf("\n");
 
+#ifdef debug
+        printf("matrix A:\n");
+        printMatrix(A, n1, n2);
         printf("matrix B:\n");
-        for (int i = 0; i < n2; ++i) {
-            for (int j = 0; j < n3; ++j) {
-                printf("%f ", B[i * n2 + j]);
-            }
-            printf("\n");
-        }
-        printf("\n\n");
+        printMatrix(B, n2, n3);
+#endif
     }
 
     sendMatricesParts(A, B, A_part, B_part, rowComm, columnComm, coords);
 
     double *C_part = calcMatricesMul(A_part, B_part);
 
-//    for (int i = 0; i < cntOfProcesses; ++i) {
-//        MPI_Barrier(MPI_COMM_WORLD);
-//        if (gridRank == i) {
-//            printf("gridRank =  %d\n", gridRank);
-//            for (int j = 0; j < sendRowCnt[rowRank]; ++j) {
-//                for (int k = 0; k < sendColumnCnt[columnRank]; ++k) {
-//                    printf("%f ", C_part[j * sendColumnCnt[columnRank] + k]);
-//                }
-//                printf("\n");
-//            }
-//            printf("\n");
-//        }
-//    }
+#ifdef debug
+    print_C_parts(C_part);
+#endif
 
-    collecting_C(C_part, C, dims, coords, gridComm); //TODO тут валиться
+//    collecting_C(C_part, C, dims, gridComm); //TODO тут валиться
 
     free(A_part);
     free(B_part);
@@ -230,14 +242,8 @@ int main(int argc, char **argv) {
     free(sendColumnCnt);
 
     if (gridRank == 0) {
-
-        printf("matrix C:\n");
-        for (int i = 0; i < n1; ++i) {
-            for (int j = 0; j < n3; ++j) {
-                printf("%f \n\n", C[i * n3 + j]);
-            }
-            printf("\n");
-        }
+//        printf("matrix C:\n");
+//        printMatrix(C, n1, n3);
 
         free(A);
         free(B);
