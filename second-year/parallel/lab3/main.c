@@ -133,8 +133,8 @@ double *calcMatricesMul(const double *A_part, const double *B_part) {
     return C_part;
 }
 
-void collecting_C(double *C_part, double *C, const int *dims, MPI_Comm gridComm) { // TODO оно не работает
-    // TODO: пока что это работает только с матрицами у которых sendColumnCnt одинаковый для всех частей
+void collecting_C(double *C_part, double *C, const int *dims, MPI_Comm gridComm) {
+    // TODO: в теории это работает только с матрицами у которых sendColumnCnt одинаковый для всех частей
     // gridRank = coords[X] * dims[Y] + coords[Y]
 
     int *displs = (int*) malloc(sizeof(int) * cntOfProcesses);
@@ -157,6 +157,17 @@ void collecting_C(double *C_part, double *C, const int *dims, MPI_Comm gridComm)
     MPI_Datatype rowShell_t;
     MPI_Type_create_resized(row_t, 0, n3 * sizeof(double), &rowShell_t);
     MPI_Type_commit(&rowShell_t);
+
+    // gatherv не работает, данные нормально передает только 0-вой процесс
+    // а другие в зависимости от их кол-ва тоже иногда могу передеать правильно, но так быть не должно
+    // при этом связка send-recive с такой же логикой передачи - работает правильно
+
+    /*
+     * передаем части матриц "которые на процессах" посторочно в 0-вой
+     * записываем эти строки начиная с индекса displs[рангОтправителя] 
+     * по логике, после записи первой строки по такому принципу следующая - след. строка начнет записываться
+     * с индекс, указывающего на "тот же столбец, но на строку ниже" 
+     */
 
     MPI_Gatherv(C_part, sendRowCnt[rowRank], row_t, C, recvCounts, displs, rowShell_t, 0, gridComm);
 
@@ -230,7 +241,7 @@ int main(int argc, char **argv) {
     print_C_parts(C_part);
 #endif
 
-    collecting_C(C_part, C, dims, gridComm); //TODO тут валиться
+    collecting_C(C_part, C, dims, gridComm); //TODO тут неправильно собирается
 
     free(A_part);
     free(B_part);
