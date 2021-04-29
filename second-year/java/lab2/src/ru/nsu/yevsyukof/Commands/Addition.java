@@ -4,7 +4,7 @@ import ru.nsu.yevsyukof.Executor.ExecutionContext;
 
 import java.util.List;
 
-public class Addition extends ExecutableCommand{
+public class Addition extends ExecutableCommand {
 
     @Override
     public void execute(ExecutionContext context, List<String> inputArgs) {
