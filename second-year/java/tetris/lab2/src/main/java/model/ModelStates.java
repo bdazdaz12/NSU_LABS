@@ -1,5 +1,5 @@
 package model;
 
 public enum ModelStates {
-    IN_PROGRESS, PAUSE, END
+    IN_PROCESS, PAUSE, END
 }

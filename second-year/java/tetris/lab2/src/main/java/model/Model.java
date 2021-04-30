@@ -11,6 +11,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+* ИГРОВОЕ ПОЛЕ С КЛЕТКАМИ ориентируется осями X и Y.
+* X - направлена от левого верхнего угла поля ВНИЗ по строкам
+* Y - направлена от левого верхнего угла ВПРАВО по столбцам
+* */
+
 public class Model implements Observable {
 
     private List<Observer> observers;
@@ -18,8 +24,8 @@ public class Model implements Observable {
     private ModelStates curModelState;
     private int scores;
 
-    private Color gameField[][];
-    private byte countFilledCellsInLine[];
+    private Color[][] gameField;
+    private byte[] countFilledCellsInLine;
     private Figure curFigure;
 
     public Model() {
@@ -29,7 +35,7 @@ public class Model implements Observable {
     }
 
     public void initModel() {
-        curModelState = ModelStates.IN_PROGRESS;
+        curModelState = ModelStates.IN_PROCESS;
         scores = 0;
         initFieldCells();
         // заспавнить новую фигуру
@@ -46,18 +52,16 @@ public class Model implements Observable {
         if (curModelState.equals(ModelStates.END) || curModelState.equals(ModelStates.PAUSE)) {
             return;
         }
-        boolean hasModelChange = true; /// обдумать
-        // можно сделать так чтобы вызываемые методы возвращали true при измении модели
+        boolean hasModelChange = false;
         switch (command) {
-            case ROTATE -> curFigure.rotateRight();
-//            case SLIDE_DOWN -> curFigure.slideDown(); // TODO
-            case SLIDE_DOWN -> System.err.println("slideDown");
-            case MOVE_LEFT -> curFigure.moveLeft();
-            case MOVE_RIGHT -> curFigure.moveRight();
-            default -> hasModelChange = false;
+            case ROTATE -> hasModelChange = curFigure.rotateRight(gameField);
+            case SLIDE_DOWN -> hasModelChange = curFigure.slideDown(gameField);
+            case MOVE_LEFT -> hasModelChange = curFigure.moveLeft(gameField);
+            case MOVE_RIGHT -> hasModelChange = curFigure.moveRight(gameField);
+            default -> { }
         }
         if (hasModelChange) {
-            notifyObservers(); // TODO делать только если произошли изменения
+            notifyObservers();
         }
     }
 
