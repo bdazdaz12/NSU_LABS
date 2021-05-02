@@ -7,7 +7,7 @@ public class Z extends Figure {
 
     public Z() {
         figureColor = Color.red;
-        boxCoords = new Coords(0, 4);
+        boxCoords = new Coords(2, 4);
 
         inBoxCoords = new ArrayList<>(4);
         inBoxCoords.add(new Coords(1, 0));

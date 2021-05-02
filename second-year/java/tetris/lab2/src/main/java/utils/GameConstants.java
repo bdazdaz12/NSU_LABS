@@ -2,7 +2,7 @@ package utils;
 
 import java.awt.*;
 
-public class GameConstants {
+public final class GameConstants {
 
     public static final int FPS = 30;
 

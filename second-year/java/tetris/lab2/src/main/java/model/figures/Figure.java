@@ -71,6 +71,7 @@ public abstract class Figure {
     protected abstract Coords mapCoords(Coords curCoords);
 
     public boolean rotateRight(Color[][] curGameField) { // поворот при нажатии стрелки вверх
+        clearFigureDraw(curGameField);
         boolean canRotateRight = true;
 
         List<Coords> newInBoxCoords = new ArrayList<>(4);
@@ -89,14 +90,14 @@ public abstract class Figure {
         }
 
         if (canRotateRight) {
-            clearFigureDraw(curGameField);
             inBoxCoords = newInBoxCoords;
-            drawFigure(curGameField);
         }
+        drawFigure(curGameField);
         return canRotateRight;
     }
 
     public boolean moveRight(Color[][] curGameField) {
+        clearFigureDraw(curGameField);
         boolean canMoveRight = true;
 
         for (Coords square : inBoxCoords) {
@@ -109,15 +110,15 @@ public abstract class Figure {
         }
 
         if (canMoveRight) {
-            clearFigureDraw(curGameField);
             boxCoords.setX(boxCoords.getX());
             boxCoords.setY(boxCoords.getY() + 1);
-            drawFigure(curGameField);
         }
+        drawFigure(curGameField);
         return canMoveRight;
     }
 
     public boolean moveLeft(Color[][] curGameField) {
+        clearFigureDraw(curGameField);
         boolean canMoveLeft = true;
 
         for (Coords square : inBoxCoords) {
@@ -130,15 +131,15 @@ public abstract class Figure {
         }
 
         if (canMoveLeft) {
-            clearFigureDraw(curGameField);
             boxCoords.setX(boxCoords.getX());
             boxCoords.setY(boxCoords.getY() - 1);
-            drawFigure(curGameField);
         }
+        drawFigure(curGameField);
         return canMoveLeft;
     }
 
     public boolean slideDown(Color[][] curGameField) {
+        clearFigureDraw(curGameField); // баг - фигура не может упасть сама в себя
         boolean canSlideDown = true;
 
         for (Coords square : inBoxCoords) {
@@ -151,11 +152,10 @@ public abstract class Figure {
         }
 
         if (canSlideDown) {
-            clearFigureDraw(curGameField);
             boxCoords.setX(boxCoords.getX() + 1);
             boxCoords.setY(boxCoords.getY());
-            drawFigure(curGameField);
         }
+        drawFigure(curGameField);
         return canSlideDown;
     }
 }

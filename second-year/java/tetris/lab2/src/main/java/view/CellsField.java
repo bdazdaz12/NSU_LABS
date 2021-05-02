@@ -26,8 +26,17 @@ public class CellsField extends JPanel {
         for (int x = 0; x < GameConstants.CELLS_FIELD_HEIGHT; ++x) {
             for (int y = 0; y < GameConstants.CELLS_FIELD_WIDTH; ++y) {
                 cellsField[x][y] = new Cell(x, y);
-                add(cellsField[x][y]);
+                this.add(cellsField[x][y]);
             }
         }
+    }
+
+    public void updateCellsField(Color[][] gameField) {
+        for (int x = 4; x < GameConstants.GAME_FIELD_HEIGHT; ++x) {
+            for (int y = 0; y < GameConstants.GAME_FIELD_WIDTH; ++y) {
+                cellsField[x - 4][y].setBackground(gameField[x][y]);
+            }
+        }
+        repaint();
     }
 }

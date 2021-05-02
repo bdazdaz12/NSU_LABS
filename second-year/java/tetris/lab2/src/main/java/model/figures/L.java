@@ -7,7 +7,7 @@ public class L extends Figure {
 
     public L() {
         figureColor = Color.orange;
-        boxCoords = new Coords(0, 4);
+        boxCoords = new Coords(2, 4);
 
         inBoxCoords = new ArrayList<>(4);
         inBoxCoords.add(new Coords(1, 0));

@@ -7,7 +7,7 @@ public class O extends Figure {
 
     public O() {
         figureColor = Color.yellow;
-        boxCoords = new Coords(0, 4);
+        boxCoords = new Coords(1, 4);
 
         inBoxCoords = new ArrayList<>(4);
         inBoxCoords.add(new Coords(1, 1));

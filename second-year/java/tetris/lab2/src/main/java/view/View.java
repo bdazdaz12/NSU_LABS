@@ -36,12 +36,14 @@ public class View implements Observer, Runnable { // все манипуляци
 
     @Override
     public void handleEvent() {
-        ///TODO
+        cellsField.updateCellsField(model.getGameField());
+        mainWindow.repaint();
     }
 
     @Override
     public void run() { // TODO запустить эту штуку отложенно
         mainWindow.add(cellsField, BorderLayout.CENTER);
+//        mainWindow.pack();
         mainWindow.setVisible(true);
     }
 }

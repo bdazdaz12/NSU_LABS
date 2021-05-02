@@ -15,7 +15,7 @@ import java.util.List;
 * ИГРОВОЕ ПОЛЕ С КЛЕТКАМИ ориентируется осями X и Y.
 * X - направлена от левого верхнего угла поля ВНИЗ по строкам
 * Y - направлена от левого верхнего угла ВПРАВО по столбцам
-* */
+*/
 
 public class Model implements Observable {
 
@@ -38,6 +38,7 @@ public class Model implements Observable {
         curModelState = ModelStates.IN_PROCESS;
         scores = 0;
         initFieldCells();
+        curFigure = Figure.generateNewFigure();
         // заспавнить новую фигуру
         notifyObservers();
     }
@@ -54,13 +55,31 @@ public class Model implements Observable {
         }
         boolean hasModelChange = false;
         switch (command) {
-            case ROTATE -> hasModelChange = curFigure.rotateRight(gameField);
-            case SLIDE_DOWN -> hasModelChange = curFigure.slideDown(gameField);
-            case MOVE_LEFT -> hasModelChange = curFigure.moveLeft(gameField);
-            case MOVE_RIGHT -> hasModelChange = curFigure.moveRight(gameField);
+            case ROTATE -> {
+                hasModelChange = curFigure.rotateRight(gameField);
+                System.err.println("rotate");
+            }
+            case SLIDE_DOWN -> {
+                hasModelChange = curFigure.slideDown(gameField);
+                System.err.println("slide");
+                if (!hasModelChange) {
+                    curFigure = Figure.generateNewFigure();
+                } else {
+                    //
+                }
+            }
+            case MOVE_LEFT -> {
+                hasModelChange = curFigure.moveLeft(gameField);
+                System.err.println("moveLeft");
+            }
+            case MOVE_RIGHT -> {
+                hasModelChange = curFigure.moveRight(gameField);
+                System.err.println("moveRight");
+            }
             default -> { }
         }
         if (hasModelChange) {
+            System.err.println("model has change");
             notifyObservers();
         }
     }
