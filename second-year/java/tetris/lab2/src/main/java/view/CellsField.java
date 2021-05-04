@@ -37,6 +37,5 @@ public class CellsField extends JPanel {
                 cellsField[x - 4][y].setBackground(gameField[x][y]);
             }
         }
-        repaint();
     }
 }

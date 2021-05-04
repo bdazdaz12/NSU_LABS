@@ -1,6 +1,7 @@
 package view;
 
 import model.Model;
+import model.ModelStates;
 import utils.GameConstants;
 import utils.Observer;
 
@@ -12,7 +13,6 @@ public class View implements Observer, Runnable { // все манипуляци
     private final JFrame mainWindow;
     private CellsField cellsField;
     private Model model;
-//    Timer timer = new Timer();
 
     public View(Model model) {
         this.model = model;
@@ -35,9 +35,14 @@ public class View implements Observer, Runnable { // все манипуляци
     }
 
     @Override
-    public void handleEvent() {
-        cellsField.updateCellsField(model.getGameField());
-        mainWindow.repaint();
+    public synchronized void handleEvent() {
+        switch (model.getCurModelState()) {
+            case IN_PROCESS -> {
+                cellsField.updateCellsField(model.getGameField());
+            }
+            case END -> {}
+            case PAUSE -> {}
+        }
     }
 
     @Override

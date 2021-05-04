@@ -1,6 +1,7 @@
 package model;
 
 import controller.Command;
+import model.figures.Coords;
 import model.figures.Figure;
 import utils.GameConstants;
 import utils.Observable;
@@ -12,10 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /*
-* ИГРОВОЕ ПОЛЕ С КЛЕТКАМИ ориентируется осями X и Y.
-* X - направлена от левого верхнего угла поля ВНИЗ по строкам
-* Y - направлена от левого верхнего угла ВПРАВО по столбцам
-*/
+ * ИГРОВОЕ ПОЛЕ С КЛЕТКАМИ ориентируется осями X и Y.
+ * X - направлена от левого верхнего угла поля ВНИЗ по строкам
+ * Y - направлена от левого верхнего угла ВПРАВО по столбцам
+ */
 
 public class Model implements Observable {
 
@@ -31,21 +32,20 @@ public class Model implements Observable {
     public Model() {
         observers = new LinkedList<>();
         gameField = new Color[GameConstants.GAME_FIELD_HEIGHT][GameConstants.GAME_FIELD_WIDTH];
-        countFilledCellsInLine = new byte[GameConstants.GAME_FIELD_WIDTH]; //по умолчанию заполнен нулями
+        countFilledCellsInLine = new byte[GameConstants.GAME_FIELD_HEIGHT]; //по умолчанию заполнен нулями
     }
 
-    public void initModel() {
+    public void initNewModel() {
         curModelState = ModelStates.IN_PROCESS;
         scores = 0;
         initFieldCells();
-        curFigure = Figure.generateNewFigure();
-        // заспавнить новую фигуру
+        spawnNewFigure();
         notifyObservers();
     }
 
     private void initFieldCells() {
         for (int i = 0; i < GameConstants.GAME_FIELD_HEIGHT; ++i) {
-            Arrays.fill(gameField[i],GameConstants.EMPTY_CELL);
+            Arrays.fill(gameField[i], GameConstants.EMPTY_CELL);
         }
     }
 
@@ -53,43 +53,95 @@ public class Model implements Observable {
         if (curModelState.equals(ModelStates.END) || curModelState.equals(ModelStates.PAUSE)) {
             return;
         }
-        boolean hasModelChange = false;
+        boolean modelHasChanged = false;
         switch (command) {
             case ROTATE -> {
-                hasModelChange = curFigure.rotateRight(gameField);
+                modelHasChanged = curFigure.rotateRight(gameField);
                 System.err.println("rotate");
             }
             case SLIDE_DOWN -> {
-                hasModelChange = curFigure.slideDown(gameField);
                 System.err.println("slide");
-                if (!hasModelChange) {
-                    curFigure = Figure.generateNewFigure();
-                } else {
-                    //
+                modelHasChanged = curFigure.slideDown(gameField);
+
+                if (!modelHasChanged) { // TODO все в блоке ниже нужно фиксить
+                    updateCountFilledCellsInLine();
+                    int countOfFilledLines = calcNumOfFilledLines();
+                    if (countOfFilledLines > 0) {
+                        destroyFilledLines(countOfFilledLines); // TODO эта работает неправильно
+                        notifyObservers();
+                        // начислить очки
+                    }
+                    spawnNewFigure(); // я спавнил фигуру до нотифая обзерверов
                 }
             }
             case MOVE_LEFT -> {
-                hasModelChange = curFigure.moveLeft(gameField);
+                modelHasChanged = curFigure.moveLeft(gameField);
                 System.err.println("moveLeft");
             }
             case MOVE_RIGHT -> {
-                hasModelChange = curFigure.moveRight(gameField);
+                modelHasChanged = curFigure.moveRight(gameField);
                 System.err.println("moveRight");
             }
-            default -> { }
+            default -> {
+            }
         }
-        if (hasModelChange) {
+        if (modelHasChanged) {
             System.err.println("model has change");
             notifyObservers();
         }
     }
 
-    public Color[][] getGameField() {
-        return gameField;
+    private void destroyFilledLines(int countOfFilledLines) {
+        for (int i = 0; i < countOfFilledLines; ++i) {
+            for (int x = GameConstants.GAME_FIELD_HEIGHT - 1; x >= 4; --x) {
+                if (countFilledCellsInLine[x] == 10) {
+                    destroyLine(x);
+                }
+            }
+        }
     }
 
-    public byte[] getCountFilledCellsInLine() {
-        return countFilledCellsInLine;
+    // TODO условия окончания игры == cntFilledCells[в последней невидимой строке] > 0
+
+    // countFilledCellsInLine[0] - не может никогда быть != 0, потому что для нужно чтобы там останов фигура, а это
+    // может произойти только после исполнения условия окончания игры
+    private void destroyLine(int lineNum) {
+        System.arraycopy(countFilledCellsInLine, 0, countFilledCellsInLine, 1, lineNum);
+        for (int x = lineNum; x >= 4; --x) {
+            System.arraycopy(gameField[x - 1], 0, gameField[x], 0, GameConstants.GAME_FIELD_WIDTH);
+        }
+    }
+
+    private void destroyLine_Wrong(int lineNum) {
+        System.arraycopy(gameField, 3, gameField, 4, lineNum - 3);
+        System.arraycopy(countFilledCellsInLine, 3, countFilledCellsInLine, 4, lineNum - 3);
+        // TODO этот сволочь неправильно работает, походу он копирует ссылки
+        // потому что при изменении значений массива в одной строке - происхводит и изменение значений в другой
+    }
+
+    private void spawnNewFigure() {
+        curFigure = Figure.generateNewFigure();
+    }
+
+    private void updateCountFilledCellsInLine() {
+        List<Coords> curFigureCoords = curFigure.getFigureCoordsOnGameField();
+        for (Coords figureSquare : curFigureCoords) {
+            countFilledCellsInLine[figureSquare.getX()]++;
+        }
+    }
+
+    private int calcNumOfFilledLines() {
+        int countFilledLines = 0;
+        for (int x = 4; x < GameConstants.GAME_FIELD_HEIGHT; ++x) {
+            if (countFilledCellsInLine[x] == 10) {
+                ++countFilledLines;
+            }
+        }
+        return countFilledLines;
+    }
+
+    public Color[][] getGameField() {
+        return gameField;
     }
 
     public int getScores() {
@@ -111,7 +163,7 @@ public class Model implements Observable {
     }
 
     @Override
-    public void notifyObservers() {
+    public synchronized void notifyObservers() {
         for (Observer observer : observers) {
             observer.handleEvent();
         }

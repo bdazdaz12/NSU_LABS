@@ -158,4 +158,12 @@ public abstract class Figure {
         drawFigure(curGameField);
         return canSlideDown;
     }
+
+    public List<Coords> getFigureCoordsOnGameField() {
+        List<Coords> onGameFieldCoords = new ArrayList<>(4);
+        for (Coords square : inBoxCoords) {
+            onGameFieldCoords.add(new Coords(boxCoords.getX() + square.getX(), boxCoords.getY() + square.getY()));
+        }
+        return onGameFieldCoords;
+    }
 }

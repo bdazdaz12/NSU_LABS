@@ -17,7 +17,7 @@ public class Controller implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) { }
+    public synchronized void keyTyped(KeyEvent e) { }
 
     @Override
     public synchronized void keyPressed(KeyEvent e) {
@@ -30,12 +30,12 @@ public class Controller implements KeyListener, ActionListener {
     }
 
     @Override
-    public void keyReleased(KeyEvent e) { }
+    public synchronized void keyReleased(KeyEvent e) { }
 
     @Override
-    public void actionPerformed(ActionEvent e) { }
+    public synchronized void actionPerformed(ActionEvent e) { }
 
-    public void handleTimerRequest() {
+    public synchronized void handleTimerRequest() {
         model.handleRequest(Command.SLIDE_DOWN); // опускаем летящую фигуру вниз по таймеру
     }
 }

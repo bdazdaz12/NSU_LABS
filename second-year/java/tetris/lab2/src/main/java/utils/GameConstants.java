@@ -19,6 +19,6 @@ public final class GameConstants {
     public static final int MAIN_WINDOW_WIDTH = 400; // cnt of pixels
     public static final int MAIN_WINDOW_HEIGHT = 650;
 
-    public static final int TIMER_DELAY = 1000;
+    public static final int TIMER_DELAY = 500;
 
 }
