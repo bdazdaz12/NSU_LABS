@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Model implements Observable {
 
-    private List<Observer> observers;
+    private final List<Observer> observers;
 
     private ModelStates curModelState;
     private int scores;
@@ -38,12 +38,12 @@ public class Model implements Observable {
     public void initNewModel() {
         curModelState = ModelStates.IN_PROCESS;
         scores = 0;
-        initFieldCells();
+        initNewFieldCells();
         spawnNewFigure();
         notifyObservers();
     }
 
-    private void initFieldCells() {
+    private void initNewFieldCells() {
         for (int i = 0; i < GameConstants.GAME_FIELD_HEIGHT; ++i) {
             Arrays.fill(gameField[i], GameConstants.EMPTY_CELL);
         }
@@ -67,11 +67,15 @@ public class Model implements Observable {
                     updateCountFilledCellsInLine();
                     int countOfFilledLines = calcNumOfFilledLines();
                     if (countOfFilledLines > 0) {
+                        earnPoints(countOfFilledLines);
                         destroyFilledLines(countOfFilledLines);
-                        notifyObservers();
-                        // начислить очки
+                        notifyObservers(); // здесь ли или ниже?
                     }
-                    spawnNewFigure(); // я спавнил фигуру до нотифая обзерверов
+                    if (isGameEnd()) {
+                        curModelState = ModelStates.END;
+                    } else {
+                        spawnNewFigure();
+                    }
                 }
             }
             case MOVE_LEFT -> {
@@ -82,13 +86,16 @@ public class Model implements Observable {
                 modelHasChanged = curFigure.moveRight(gameField);
                 System.err.println("moveRight");
             }
-            default -> {
-            }
+            default -> { }
         }
         if (modelHasChanged) {
             System.err.println("model has change");
             notifyObservers();
         }
+    }
+
+    private boolean isGameEnd() {
+        return countFilledCellsInLine[3] > 0;
     }
 
     private void destroyFilledLines(int countOfFilledLines) {
@@ -101,10 +108,6 @@ public class Model implements Observable {
         }
     }
 
-    // TODO условия окончания игры == cntFilledCells[в последней невидимой строке] > 0
-
-    // countFilledCellsInLine[0] - не может никогда быть != 0, потому что для нужно чтобы там останов фигура, а это
-    // может произойти только после исполнения условия окончания игры
     private void destroyLine(int lineNum) {
         System.arraycopy(countFilledCellsInLine, 0, countFilledCellsInLine, 1, lineNum);
         for (int x = lineNum; x >= 4; --x) {
@@ -112,8 +115,13 @@ public class Model implements Observable {
         }
     }
 
-    private void spawnNewFigure() {
-        curFigure = Figure.generateNewFigure();
+    private void earnPoints(int countOfFilledLines) {
+        switch (countOfFilledLines) {
+            case 1 -> scores += 100;
+            case 2 -> scores += 300;
+            case 3 -> scores += 700;
+            case 4 -> scores += 1500;
+        }
     }
 
     private void updateCountFilledCellsInLine() {
@@ -130,6 +138,10 @@ public class Model implements Observable {
             }
         }
         return countFilledLines;
+    }
+
+    private void spawnNewFigure() {
+        curFigure = Figure.generateNewFigure();
     }
 
     public Color[][] getGameField() {

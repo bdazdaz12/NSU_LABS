@@ -11,8 +11,8 @@ import java.awt.*;
 public class View implements Observer, Runnable { // все манипуляции с отрисовкой будем производить через этот класс
 
     private final JFrame mainWindow;
-    private CellsField cellsField;
-    private Model model;
+    private final CellsField cellsField;
+    private final Model model;
 
     public View(Model model) {
         this.model = model;
@@ -48,7 +48,6 @@ public class View implements Observer, Runnable { // все манипуляци
     @Override
     public void run() { // TODO запустить эту штуку отложенно
         mainWindow.add(cellsField, BorderLayout.CENTER);
-//        mainWindow.pack();
         mainWindow.setVisible(true);
     }
 }
