@@ -25,8 +25,8 @@ public class Model implements Observable {
     private ModelStates curModelState;
     private int scores;
 
-    private Color[][] gameField;
-    private byte[] countFilledCellsInLine;
+    private final Color[][] gameField;
+    private final byte[] countFilledCellsInLine;
     private Figure curFigure;
 
     public Model() {
@@ -63,11 +63,11 @@ public class Model implements Observable {
                 System.err.println("slide");
                 modelHasChanged = curFigure.slideDown(gameField);
 
-                if (!modelHasChanged) { // TODO все в блоке ниже нужно фиксить
+                if (!modelHasChanged) {
                     updateCountFilledCellsInLine();
                     int countOfFilledLines = calcNumOfFilledLines();
                     if (countOfFilledLines > 0) {
-                        destroyFilledLines(countOfFilledLines); // TODO эта работает неправильно
+                        destroyFilledLines(countOfFilledLines);
                         notifyObservers();
                         // начислить очки
                     }
@@ -112,21 +112,13 @@ public class Model implements Observable {
         }
     }
 
-    private void destroyLine_Wrong(int lineNum) {
-        System.arraycopy(gameField, 3, gameField, 4, lineNum - 3);
-        System.arraycopy(countFilledCellsInLine, 3, countFilledCellsInLine, 4, lineNum - 3);
-        // TODO этот сволочь неправильно работает, походу он копирует ссылки
-        // потому что при изменении значений массива в одной строке - происхводит и изменение значений в другой
-    }
-
     private void spawnNewFigure() {
         curFigure = Figure.generateNewFigure();
     }
 
     private void updateCountFilledCellsInLine() {
-        List<Coords> curFigureCoords = curFigure.getFigureCoordsOnGameField();
-        for (Coords figureSquare : curFigureCoords) {
-            countFilledCellsInLine[figureSquare.getX()]++;
+        for (Coords figureSquare : curFigure.getFigureCoordsOnGameField()) {
+            ++countFilledCellsInLine[figureSquare.getX()];
         }
     }
 
@@ -163,7 +155,7 @@ public class Model implements Observable {
     }
 
     @Override
-    public synchronized void notifyObservers() {
+    public void notifyObservers() {
         for (Observer observer : observers) {
             observer.handleEvent();
         }

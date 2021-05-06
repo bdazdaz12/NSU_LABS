@@ -35,7 +35,7 @@ public class View implements Observer, Runnable { // все манипуляци
     }
 
     @Override
-    public synchronized void handleEvent() {
+    public void handleEvent() {
         switch (model.getCurModelState()) {
             case IN_PROCESS -> {
                 cellsField.updateCellsField(model.getGameField());

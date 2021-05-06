@@ -35,7 +35,7 @@ public class Tetris implements Runnable {
         controller = new Controller(model);
 
         gui.getMainWindow().addKeyListener(controller);
-        javax.swing.SwingUtilities.invokeLater(gui); // TODO
+        javax.swing.SwingUtilities.invokeLater(gui);
 
         model.initNewModel();
         timer = new Timer(GameConstants.TIMER_DELAY, e -> controller.handleTimerRequest());
