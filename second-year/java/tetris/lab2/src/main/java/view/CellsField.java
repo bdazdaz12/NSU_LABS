@@ -1,8 +1,6 @@
 package view;
 
 
-import utils.GameConstants;
-
 import javax.swing.*;
 import java.awt.*;
 

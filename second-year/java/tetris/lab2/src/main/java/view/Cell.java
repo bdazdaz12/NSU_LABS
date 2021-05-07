@@ -1,7 +1,5 @@
 package view;
 
-import utils.GameConstants;
-
 import javax.swing.*;
 
 public class Cell extends JPanel {

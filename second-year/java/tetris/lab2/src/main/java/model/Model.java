@@ -3,7 +3,7 @@ package model;
 import controller.Command;
 import model.figures.Coords;
 import model.figures.Figure;
-import utils.GameConstants;
+import view.GameConstants;
 import utils.Observable;
 import utils.Observer;
 
@@ -32,7 +32,7 @@ public class Model implements Observable {
     public Model() {
         observers = new LinkedList<>();
         gameField = new Color[GameConstants.GAME_FIELD_HEIGHT][GameConstants.GAME_FIELD_WIDTH];
-        countFilledCellsInLine = new byte[GameConstants.GAME_FIELD_HEIGHT]; //по умолчанию заполнен нулями
+        countFilledCellsInLine = new byte[GameConstants.GAME_FIELD_HEIGHT];
     }
 
     public void initNewModel() {
@@ -40,6 +40,7 @@ public class Model implements Observable {
         scores = 0;
         initNewFieldCells();
         spawnNewFigure();
+        Arrays.fill(countFilledCellsInLine, (byte) 0);
         notifyObservers();
     }
 
@@ -47,6 +48,10 @@ public class Model implements Observable {
         for (int i = 0; i < GameConstants.GAME_FIELD_HEIGHT; ++i) {
             Arrays.fill(gameField[i], GameConstants.EMPTY_CELL);
         }
+    }
+
+    public synchronized void setModelState(ModelStates newModelState) {
+        curModelState = newModelState;
     }
 
     public synchronized void handleRequest(Command command) {

@@ -1,6 +1,6 @@
 package model.figures;
 
-import utils.GameConstants;
+import view.GameConstants;
 
 import java.awt.*;
 import java.util.ArrayList;

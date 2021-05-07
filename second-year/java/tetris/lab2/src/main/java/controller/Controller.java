@@ -1,7 +1,10 @@
 package controller;
 
 import model.Model;
+import model.ModelStates;
 
+import javax.swing.*;
+import javax.swing.text.html.Option;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,7 +36,25 @@ public class Controller implements KeyListener, ActionListener {
     public synchronized void keyReleased(KeyEvent e) { }
 
     @Override
-    public synchronized void actionPerformed(ActionEvent e) { }
+    public synchronized void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
+        switch (e.getActionCommand()) {
+            case "Exit" -> System.exit(0);
+            case "About" -> {
+                model.setModelState(ModelStates.PAUSE);
+                JOptionPane.showMessageDialog(null, "Eto Tetris");
+            }
+            case "New Game" -> {
+                model.initNewModel();
+            }
+            case "High Scores" -> {
+                model.setModelState(ModelStates.PAUSE);
+                //
+            }
+            case "Pause" -> model.setModelState(ModelStates.PAUSE);
+            case "Continue" -> model.setModelState(ModelStates.IN_PROCESS);
+        }
+    }
 
     public synchronized void handleTimerRequest() {
         model.handleRequest(Command.SLIDE_DOWN); // опускаем летящую фигуру вниз по таймеру

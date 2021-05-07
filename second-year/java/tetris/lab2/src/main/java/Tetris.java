@@ -1,6 +1,6 @@
 import controller.Controller;
 import model.Model;
-import utils.GameConstants;
+import view.GameConstants;
 import view.View;
 
 import javax.swing.*;
@@ -30,11 +30,10 @@ public class Tetris implements Runnable {
         endOfGame = false;
 
         model = new Model();
-        gui = new View(model);
-        model.addObserver(gui);
         controller = new Controller(model);
+        gui = new View(model, controller);
+        model.addObserver(gui);
 
-        gui.getMainWindow().addKeyListener(controller);
         javax.swing.SwingUtilities.invokeLater(gui);
 
         model.initNewModel();
