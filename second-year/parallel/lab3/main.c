@@ -134,45 +134,38 @@ double *calcMatricesMul(const double *A_part, const double *B_part) {
 }
 
 void collecting_C(double *C_part, double *C, const int *dims, MPI_Comm gridComm) {
-    // TODO: в теории это работает только с матрицами у которых sendColumnCnt одинаковый для всех частей
+    // TODO: этот метод работает только с в случае, если матрицы C_part "на процессах" будут ОДИНАКОВОГО размера
     // gridRank = coords[X] * dims[Y] + coords[Y]
 
-    int *displs = (int*) malloc(sizeof(int) * cntOfProcesses);
-    int *recvCounts = (int*) malloc(sizeof(int) * cntOfProcesses);
+    int *displs = (int*) malloc(cntOfProcesses * sizeof(int));
+    int *recvCounts = (int*) malloc(cntOfProcesses * sizeof(int));
 
     int offset = 0;
     for (int i = 0; i < dims[X]; ++i) {
         for (int j = 0; j < dims[Y]; ++j) {
-            displs[i * dims[Y] + j] = offset;
-            recvCounts[i * dims[Y] + j] = sendRowCnt[i];
+            displs[i * dims[Y] + j] = offset; // эта чертова штука считает сдвиги в размерности принимаемого типа
+            recvCounts[i * dims[Y] + j] = 1;
             offset += sendColumnCnt[j];
         }
         offset += (sendRowCnt[i] - 1) * n3;
     }
 
-    MPI_Datatype row_t;
-    MPI_Type_contiguous(sendColumnCnt[0], MPI_DOUBLE, &row_t);
-    MPI_Type_commit(&row_t);
+    MPI_Datatype send_part_t;
+    MPI_Type_contiguous(sendColumnCnt[0] * sendRowCnt[0], MPI_DOUBLE, &send_part_t);
+    MPI_Type_commit(&send_part_t);
 
-    MPI_Datatype rowShell_t;
-    MPI_Type_create_resized(row_t, 0, n3 * sizeof(double), &rowShell_t);
-    MPI_Type_commit(&rowShell_t);
+    MPI_Datatype recv_part_t;
+    MPI_Type_vector(sendRowCnt[0], sendColumnCnt[0], n3, MPI_DOUBLE, &recv_part_t);
+    MPI_Type_commit(&recv_part_t);
 
-    // gatherv не работает, данные нормально передает только 0-вой процесс
-    // а другие в зависимости от их кол-ва тоже иногда могу передеать правильно, но так быть не должно
-    // при этом связка send-recive с такой же логикой передачи - работает правильно
+    MPI_Datatype recv_part_shell_t;
+    MPI_Type_create_resized(recv_part_t, 0, sizeof(double), &recv_part_shell_t);
+    MPI_Type_commit(&recv_part_shell_t);
 
-    /*
-     * передаем части матриц "которые на процессах" посторочно в 0-вой
-     * записываем эти строки начиная с индекса displs[рангОтправителя] 
-     * по логике, после записи первой строки по такому принципу следующая - след. строка начнет записываться
-     * с индекс, указывающего на "тот же столбец, но на строку ниже" 
-     */
+    MPI_Gatherv(C_part, 1, send_part_t, C, recvCounts, displs, recv_part_shell_t, 0, gridComm);
 
-    MPI_Gatherv(C_part, sendRowCnt[rowRank], row_t, C, recvCounts, displs, rowShell_t, 0, gridComm);
-
-    MPI_Type_free(&row_t);
-    MPI_Type_free(&rowShell_t);
+    MPI_Type_free(&send_part_t);
+    MPI_Type_free(&recv_part_shell_t);
 
     free(displs);
     free(recvCounts);
@@ -241,7 +234,7 @@ int main(int argc, char **argv) {
     print_C_parts(C_part);
 #endif
 
-    collecting_C(C_part, C, dims, gridComm); //TODO тут неправильно собирается
+    collecting_C(C_part, C, dims, gridComm); 
 
     free(A_part);
     free(B_part);
