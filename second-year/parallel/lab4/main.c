@@ -9,16 +9,16 @@
  * где psi(rank) - индикатор того, нужно ли давать дополнительный слой для оптимальной нагрузке на процессы */
 /// облатсь декомпозируется СВЕРХУ ВНИЗУ по Z
 
-#define Nx 4 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
-#define Ny 4 // число узлов сетки ОМЕГА по Y
-#define Nz 4 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
+#define Nx 10 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
+#define Ny 10 // число узлов сетки ОМЕГА по Y
+#define Nz 10 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
 #define a 1
 #define up 0
 #define below 1
 
-const double X0 = 0;
-const double Y0 = 0;
-const double Z0 = 0;
+const double X0 = -1;
+const double Y0 = -1;
+const double Z0 = -1;
 const double epsilon = 10e-4;
 double iteration_constant;
 
@@ -73,7 +73,7 @@ void calc_edges(int *flag, const double hx, const double hy, const double hz, co
                         / iteration_constant;
 
                 if (fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] -
-                         phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz)) > epsilon) {
+                curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + y]) > epsilon) {
                     *flag = 0;
                 }
             }
@@ -96,7 +96,7 @@ void calc_edges(int *flag, const double hx, const double hy, const double hz, co
                         / iteration_constant;
 
                 if (fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] -
-                         phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz)) > epsilon) {
+                curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + y]) > epsilon) {
                     *flag = 0;
                 }
             }
@@ -171,8 +171,8 @@ void calc_center(int *flag, const double hx, const double hy, const double hz, c
                         / iteration_constant;
 
                 //условие того, что функция пока недостаточно близка в некотором узле == 0
-                if (fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] -
-                         phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz)) > epsilon) {
+                if (fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y]-
+                curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + y]) > epsilon) {
                     *flag = 0;
                 }
             }
@@ -180,27 +180,27 @@ void calc_center(int *flag, const double hx, const double hy, const double hz, c
     }
 }
 
-//void find_max_diff(const double hx, const double hy, const double hz, const int *levels, const int *offsets) {
-//    double max = 0;
-//    double F1;
-//
-//    for (int i = 1; i < levels[rank] - 2; i++) {
-//        for (int j = 1; j < Ny; j++) {
-//            for (int k = 1; k < Nz; k++) {
-//                if ((F1 = fabs(curAndPrevPhi[curPhi][i * Y * Z + j * Z + k] -
-//                               phi((i + offsets[rank]) * hx, j * hy, k * hz))) > max) {
-//                    max = F1;
-//                }
-//            }
-//        }
-//    }
-//    double allProcMax = 0;
-//    MPI_Allreduce(&max, &allProcMax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-//
-//    if (rank == 0) {
-//        printf("Max diff = %.9lf\n", allProcMax);
-//    }
-//}
+void find_max_diff(const double hx, const double hy, const double hz, const int *levels, const int *offsets) {
+    double max = 0;
+    double F;
+
+    for (int z = 1; z < levels[rank] - 1; ++z) {
+        for (int x = 0; x < Nx; ++x) {
+            for (int y = 0; y < Ny; ++y) {
+                if ((F = fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] -
+                              phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz))) > max) {
+                    max = F;
+                }
+            }
+        }
+    }
+    double allProcMax = 0;
+    MPI_Allreduce(&max, &allProcMax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+
+    if (rank == 0) {
+        printf("Max diff = %.9lf\n", allProcMax);
+    }
+}
 
 void swap(int *x, int *y) {
     int tmp = *x;
@@ -280,7 +280,7 @@ int main(int argc, char **argv) {
     if (rank == 0) {
         printf("Time: %lf\n", finish - start);
     }
-//    find_max_diff(Y, Z, hx, hy, hz, rank, levels, offsets);
+    find_max_diff(hx, hy, hz, levels, offsets);
 
     free(bufferedLvlFromOtherProc[0]);
     free(bufferedLvlFromOtherProc[1]);
