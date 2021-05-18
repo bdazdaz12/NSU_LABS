@@ -9,21 +9,21 @@
  * где psi(rank) - индикатор того, нужно ли давать дополнительный слой для оптимальной нагрузке на процессы */
 /// облатсь декомпозируется СВЕРХУ ВНИЗУ по Z
 
-#define Nx 16 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
-#define Ny 16 // число узлов сетки ОМЕГА по Y
-#define Nz 16 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
+#define Nx 4 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
+#define Ny 4 // число узлов сетки ОМЕГА по Y
+#define Nz 4 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
 #define a 1
 #define up 0
 #define below 1
 
-const double X0 = -1;
-const double Y0 = -1;
-const double Z0 = -1;
-const double epsilon = 10e-8;
+const double X0 = 0;
+const double Y0 = 0;
+const double Z0 = 0;
+const double epsilon = 10e-4;
 double iteration_constant;
 
 double *curAndPrevPhi[2];
-double *bufLayerFromOtherProc[2];
+double *bufferedLvlFromOtherProc[2];
 
 MPI_Request send_requests[2];
 //объект для асинхронной отправки сообщений, для процесса СВЕРХУ и процесса СНИЗУ
@@ -31,8 +31,7 @@ MPI_Request recv_requests[2]; //аналогично для асинхронно
 /* частичные значения функции */
 double Fz, Fx, Fy;
 
-int prevPhi = 0;
-int curPhi = 1;
+int prevPhi = 0, curPhi = 1;
 
 int rank, cntOfProcess;
 
@@ -44,11 +43,15 @@ double rho(double x, double y, double z) { // TODO done
     return 6 - a * phi(x, y, z);
 }
 
-void calc_edges(int *flag, double hx, double hy, double hz, const int *layers, const int *offsets,
-                double squared_hx, double squared_hy, double squared_hz) { // TODO done
-    /// квадрат внутри квадрата
+//для следующей итерации считаем новые значения для 2х слоев - верхнего и нижнего (в зависимости от контекста процесса)
+void calc_edges(int *flag, const double hx, const double hy, const double hz, const int *levels, const int *offsets,
+                const double squared_hx, const double squared_hy, const double squared_hz) { // TODO done
+    /// "КВАДРАТ ВНУТРИ КВАДРАТА"
+
     /// Fi - это сеточная phi, которая, условно не зависит от точки пространства,
     /// а только от соседних значений на предыдущих итерациях
+
+    // граничные точки(грани) по X и Y - неизменны, потому что известены точные для искомой функции для каждого процесса
     int z;
     for (int x = 1; x < Nx - 1; ++x) {
         for (int y = 1; y < Ny - 1; ++y) {
@@ -63,7 +66,7 @@ void calc_edges(int *flag, double hx, double hy, double hz, const int *layers, c
                       curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + (y - 1)]) / squared_hy;
 
                 Fz = (curAndPrevPhi[prevPhi][(z + 1) * Nx * Ny + x * Ny + y] +
-                      bufLayerFromOtherProc[below][x * Ny + y]) / squared_hz;
+                      bufferedLvlFromOtherProc[below][x * Ny + y]) / squared_hz;
 
                 curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] =
                         (Fx + Fy + Fz - rho(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz))
@@ -76,7 +79,7 @@ void calc_edges(int *flag, double hx, double hy, double hz, const int *layers, c
             }
 
             if (rank != cntOfProcess - 1) {
-                z = layers[rank] - 1;
+                z = levels[rank] - 1;
 
                 Fx = (curAndPrevPhi[prevPhi][z * Nx * Ny + (x + 1) * Ny + y] +
                       curAndPrevPhi[prevPhi][z * Nx * Ny + (x - 1) * Ny + y]) / squared_hx;
@@ -86,7 +89,7 @@ void calc_edges(int *flag, double hx, double hy, double hz, const int *layers, c
 
 
                 Fz = (curAndPrevPhi[prevPhi][(z - 1) * Nx * Ny + x * Ny + y] +
-                      bufLayerFromOtherProc[up][x * Ny + y]) / squared_hz;
+                      bufferedLvlFromOtherProc[up][x * Ny + y]) / squared_hz;
 
                 curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] =
                         (Fx + Fy + Fz - rho(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz))
@@ -101,34 +104,40 @@ void calc_edges(int *flag, double hx, double hy, double hz, const int *layers, c
     }
 }
 
-void fillLayers(const int *layers, const int *offsets, int Y, int Z, double Hx, double Hy, double Hz) {
-    for (int i = 0, startLine = offsets[rank]; i <= layers[rank] - 1; i++, startLine++) {
-        for (int j = 0; j <= Ny; j++) {
-            for (int k = 0; k <= Nz; k++) {
-                if ((startLine != 0) && (j != 0) && (k != 0) && (startLine != Nx) && (j != Ny) && (k != Nz)) {
-                    curAndPrevPhi[0][i * Y * Z + j * Z + k] = 0;
-                    curAndPrevPhi[1][i * Y * Z + j * Z + k] = 0;
+void fillLevels(const int *levels, const int *offsets, const double hx, const double hy, const double hz) {
+    for (int z = 0, curLevel = offsets[rank]; z < levels[rank]; ++z, ++curLevel) {
+        for (int x = 0; x < Nx; ++x) {
+            for (int y = 0; y < Ny; ++y) {
+                if ((curLevel != 0) && (x != 0) && (y != 0) && (curLevel != Nz) && (x != Nx - 1) && (y != Ny - 1)) {
+                    curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + y] = 0;
+                    curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] = 0;
                 } else {
-                    curAndPrevPhi[0][i * Y * Z + j * Z + k] = phi(startLine * Hx, j * Hy, k * Hz);
-                    curAndPrevPhi[1][i * Y * Z + j * Z + k] = phi(startLine * Hx, j * Hy, k * Hz);
+                    curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + y] =
+                            phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz);
+                    curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] =
+                            phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz);
+                            /// это в принципе для curPhi не нужно
                 }
             }
         }
     }
 }
 
-void send_data(int Y, int Z, const int *layers) {
+void send_data(const int *levels) {
     if (rank != 0) {
-        /*передача сообщения без блокировки, обменялись верхними слоями*/
-        MPI_Isend(&(curAndPrevPhi[prevPhi][0]), Z * Y, MPI_DOUBLE, rank - 1, 0, MPI_COMM_WORLD,
-                  &send_requests[0]); //низ
-        MPI_Irecv(bufLayerFromOtherProc[0], Z * Y, MPI_DOUBLE, rank - 1, 1, MPI_COMM_WORLD, &recv_requests[1]);
+        // отправляем нижний слой на процесс "вниз"
+        MPI_Isend(&(curAndPrevPhi[prevPhi][0]), Nx * Ny, MPI_DOUBLE, rank - 1,
+                  0, MPI_COMM_WORLD,&send_requests[0]);
+        // принимаем слой от процесса "снизу", т.е. его верхний слой
+        MPI_Irecv(bufferedLvlFromOtherProc[0], Nx * Ny, MPI_DOUBLE, rank - 1,
+                  1, MPI_COMM_WORLD, &recv_requests[1]);
     }
     if (rank != cntOfProcess - 1) {
-        /*передача сообщения без блокировки, обменялись нижними слоями*/
-        MPI_Isend(&(curAndPrevPhi[prevPhi][(layers[rank] - 1) * Y * Z]), Z * Y, MPI_DOUBLE, rank + 1, 1,
-                  MPI_COMM_WORLD, &send_requests[1]); //верх
-        MPI_Irecv(bufLayerFromOtherProc[1], Z * Y, MPI_DOUBLE, rank + 1, 0, MPI_COMM_WORLD, &recv_requests[0]);
+        /* обменялись верхними слоями*/
+        MPI_Isend(&(curAndPrevPhi[prevPhi][(levels[rank] - 1) * Nx * Ny]), Nx * Ny, MPI_DOUBLE, rank + 1,
+                  1, MPI_COMM_WORLD, &send_requests[1]);
+        MPI_Irecv(bufferedLvlFromOtherProc[1], Nx * Ny, MPI_DOUBLE, rank + 1,
+                  0, MPI_COMM_WORLD, &recv_requests[0]);
     }
 }
 
@@ -143,23 +152,27 @@ void receive_data() { // ждем окончания обмена данными
     }
 }
 
-void calc_center(int *flag, int Y, int Z, double hx, double hy, double hz, const int *layers, const int *offsets,
-                 double squared_hx, double squared_hy, double squared_hz) {
-    for (int i = 1; i < layers[rank] - 1; ++i) {
-        for (int j = 1; j < Ny; ++j) {
-            for (int k = 1; k < Nz; ++k) {
-                Fz = (curAndPrevPhi[prevPhi][(i + 1) * Y * Z + j * Z + k] +
-                      curAndPrevPhi[prevPhi][(i - 1) * Y * Z + j * Z + k]) / squared_hx;
-                Fx = (curAndPrevPhi[prevPhi][i * Y * Z + (j + 1) * Z + k] +
-                      curAndPrevPhi[prevPhi][i * Y * Z + (j - 1) * Z + k]) / squared_hy;
-                Fy = (curAndPrevPhi[prevPhi][i * Y * Z + j * Z + (k + 1)] +
-                      curAndPrevPhi[prevPhi][i * Y * Z + j * Z + (k - 1)]) / squared_hz;
-                curAndPrevPhi[curPhi][i * Y * Z + j * Z + k] =
-                        (Fz + Fx + Fy - rho((i + offsets[rank]) * hx, j * hy, k * hz)) / iteration_constant;
+void calc_center(int *flag, const double hx, const double hy, const double hz, const int *levels, const int *offsets,
+                 const double squared_hx, const double squared_hy, const double squared_hz) {
+    for (int z = 1; z < levels[rank] - 1; ++z) {
+        for (int x = 1; x < Nx - 1; ++x) {
+            for (int y = 1; y < Ny - 1; ++y) {
+                Fx = (curAndPrevPhi[prevPhi][z * Nx * Ny + (x + 1) * Ny + y] +
+                      curAndPrevPhi[prevPhi][z * Nx * Ny + (x - 1) * Ny + y]) / squared_hx;
 
-                //условия выхода
-                if (fabs(curAndPrevPhi[curPhi][i * Y * Z + j * Z + k] -
-                         phi((i + offsets[rank]) * hx, j * hy, k * hz)) > epsilon) {
+                Fy = (curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + (y + 1)] +
+                      curAndPrevPhi[prevPhi][z * Nx * Ny + x * Ny + (y - 1)]) / squared_hy;
+
+                Fz = (curAndPrevPhi[prevPhi][(z + 1) * Nx * Ny + x * Ny + y] +
+                        curAndPrevPhi[prevPhi][(z - 1) * Nx * Ny + x * Ny + y]) / squared_hz;
+
+                curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] =
+                        (Fx + Fy + Fz - rho(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz))
+                        / iteration_constant;
+
+                //условие того, что функция пока недостаточно близка в некотором узле == 0
+                if (fabs(curAndPrevPhi[curPhi][z * Nx * Ny + x * Ny + y] -
+                         phi(X0 + x * hx, Y0 + y * hy, Z0 + (offsets[rank] + z) * hz)) > epsilon) {
                     *flag = 0;
                 }
             }
@@ -167,27 +180,27 @@ void calc_center(int *flag, int Y, int Z, double hx, double hy, double hz, const
     }
 }
 
-void find_max_diff(int Y, int Z, double hx, double hy, double hz, const int *layers, const int *offsets) {
-    double max = 0;
-    double F1;
-
-    for (int i = 1; i < layers[rank] - 2; i++) {
-        for (int j = 1; j < Ny; j++) {
-            for (int k = 1; k < Nz; k++) {
-                if ((F1 = fabs(curAndPrevPhi[curPhi][i * Y * Z + j * Z + k] -
-                               phi((i + offsets[rank]) * hx, j * hy, k * hz))) > max) {
-                    max = F1;
-                }
-            }
-        }
-    }
-    double allProcMax = 0;
-    MPI_Allreduce(&max, &allProcMax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
-
-    if (rank == 0) {
-        printf("Max diff = %.9lf\n", allProcMax);
-    }
-}
+//void find_max_diff(const double hx, const double hy, const double hz, const int *levels, const int *offsets) {
+//    double max = 0;
+//    double F1;
+//
+//    for (int i = 1; i < levels[rank] - 2; i++) {
+//        for (int j = 1; j < Ny; j++) {
+//            for (int k = 1; k < Nz; k++) {
+//                if ((F1 = fabs(curAndPrevPhi[curPhi][i * Y * Z + j * Z + k] -
+//                               phi((i + offsets[rank]) * hx, j * hy, k * hz))) > max) {
+//                    max = F1;
+//                }
+//            }
+//        }
+//    }
+//    double allProcMax = 0;
+//    MPI_Allreduce(&max, &allProcMax, 1, MPI_DOUBLE, MPI_MAX, MPI_COMM_WORLD);
+//
+//    if (rank == 0) {
+//        printf("Max diff = %.9lf\n", allProcMax);
+//    }
+//}
 
 void swap(int *x, int *y) {
     int tmp = *x;
@@ -204,47 +217,44 @@ int main(int argc, char **argv) {
         printf("Thread count: %d\n", cntOfProcess);
     }
 
-    int *cntOfLayers = (int *) malloc(cntOfProcess * sizeof(int));
+    int *levels = (int *) malloc(cntOfProcess * sizeof(int)); // колво уровней сопоставляемых процессу
     int *offsets = (int *) malloc(cntOfProcess * sizeof(int));
 
     /*Распределение слоев по процессам*/
     for (int procRank = 0, height = Nz, maxRankWithAddLoad = height % cntOfProcess,
-                 curLayer = 0; procRank < cntOfProcess; ++procRank) {
-        offsets[procRank] = curLayer;
-        cntOfLayers[procRank] = procRank < maxRankWithAddLoad ? (height / cntOfProcess + 1) : (height / cntOfProcess);
-        curLayer += cntOfLayers[procRank];
+                 curLevel = 0; procRank < cntOfProcess; ++procRank) {
+        offsets[procRank] = curLevel;
+        levels[procRank] = procRank < maxRankWithAddLoad ? (height / cntOfProcess + 1) : (height / cntOfProcess);
+        curLevel += levels[procRank];
     }
 
-    int I = Nx; // размерность уровня "на процессе" по направлению X
-    int J = Ny; // размерность уровня по направлению Y
-    int K = cntOfLayers[rank]; // размерность уровня по направлению Z
-
     /* Выделение памяти для 3D пространства для предыдущей и текущей итерации */
-    curAndPrevPhi[0] = (double *) malloc(I * J * K * sizeof(double));
-    curAndPrevPhi[1] = (double *) malloc(I * J * K * sizeof(double));
+    /// Содержит в памяти "модель" только своего уровня
+    curAndPrevPhi[prevPhi] = (double *) malloc(Nx * Ny * levels[rank] * sizeof(double));
+    curAndPrevPhi[curPhi] = (double *) malloc(Nx * Ny * levels[rank] * sizeof(double));
 
     /* Вспомогательный буфер для хранения границ при обмене */
-    bufLayerFromOtherProc[0] = (double *) malloc(K * J * sizeof(double));
-    bufLayerFromOtherProc[1] = (double *) malloc(K * J * sizeof(double));
+    bufferedLvlFromOtherProc[0] = (double *) malloc(Nx * Ny * sizeof(double));
+    bufferedLvlFromOtherProc[1] = (double *) malloc(Nx * Ny * sizeof(double));
 
     /* Размеры области */
-    double Dx = 2.0;
-    double Dy = 2.0;
-    double Dz = 2.0;
+    const double Dx = 2.0;
+    const double Dy = 2.0;
+    const double Dz = 2.0;
 
     /*Расстояния между соседними узлами сетки пространства по соответствующему координатному направлению */
-    double hx = Dx / (Nx - 1);
-    double hy = Dy / (Ny - 1);
-    double hz = Dz / (Nz - 1);
+    const double hx = Dx / (Nx - 1);
+    const double hy = Dy / (Ny - 1);
+    const double hz = Dz / (Nz - 1);
 
-    double squared_hx = pow(hx, 2);
-    double squared_hy = pow(hy, 2);
-    double squared_hz = pow(hz, 2);
+    const double squared_hx = pow(hx, 2);
+    const double squared_hy = pow(hy, 2);
+    const double squared_hz = pow(hz, 2);
     iteration_constant = 2 / squared_hx + 2 / squared_hy + 2 / squared_hz + a;
     //константа в начале формулы итерационного процесс метода Якоби
 
     /*Инициализация значений*/
-    fillLayers(cntOfLayers, offsets, rank, J, K, hx, hy, hz);
+    fillLevels(levels, offsets, hx, hy, hz);
 
     double start = MPI_Wtime();
 
@@ -252,32 +262,32 @@ int main(int argc, char **argv) {
     do {
         atProcFlag = 1;
         /*Обмениваемся краями*/
-        send_data(J, K, rank, cntOfProcess, cntOfLayers);
+        send_data(levels);
         /*Считаем середину*/
-        calc_center(&atProcFlag, J, K, hx, hy, hz, rank, cntOfLayers, offsets, squared_hx, squared_hy, squared_hz);
+        calc_center(&atProcFlag, hx, hy, hz, levels, offsets, squared_hx, squared_hy, squared_hz);
         /*Ждем получения всех данных*/
-        receive_data(rank, cntOfProcess);
+        receive_data();
         /*Считаем края*/
-        calc_edges(&atProcFlag, J, K, hx, hy, hz, rank, cntOfProcess, cntOfLayers, offsets, squared_hx, squared_hy,
-                   squared_hz);
+        calc_edges(&atProcFlag, hx, hy, hz, levels, offsets, squared_hx, squared_hy, squared_hz);
         swap(&prevPhi, &curPhi); // т.к. полученные на итерации моделирования, записываются на место предпредыдущего
 
         MPI_Allreduce(&atProcFlag, &finalFlag, 1, MPI_INT, MPI_MIN, MPI_COMM_WORLD);
-    } while (finalFlag == 0);
+        atProcFlag = finalFlag;
+    } while (atProcFlag == 0);
 
     double finish = MPI_Wtime();
 
     if (rank == 0) {
         printf("Time: %lf\n", finish - start);
     }
-    find_max_diff(J, K, hx, hy, hz, rank, cntOfLayers, offsets);
+//    find_max_diff(Y, Z, hx, hy, hz, rank, levels, offsets);
 
-    free(bufLayerFromOtherProc[0]);
-    free(bufLayerFromOtherProc[1]);
+    free(bufferedLvlFromOtherProc[0]);
+    free(bufferedLvlFromOtherProc[1]);
     free(curAndPrevPhi[0]);
     free(curAndPrevPhi[1]);
     free(offsets);
-    free(cntOfLayers);
+    free(levels);
 
     MPI_Finalize();
     return 0;
