@@ -9,9 +9,9 @@
  * где psi(rank) - индикатор того, нужно ли давать дополнительный слой для оптимальной нагрузке на процессы */
 /// облатсь декомпозируется СВЕРХУ ВНИЗУ по Z
 
-#define Nx 10 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
-#define Ny 10 // число узлов сетки ОМЕГА по Y
-#define Nz 10 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
+#define Nx 60 // число узлов, на которые мы разбиваем сетку ОМЕГА по X
+#define Ny 60 // число узлов сетки ОМЕГА по Y
+#define Nz 60 // число узлов сетки ОМЕГА по Z, ДОЛЖНО БЫТЬ РАВНО ВЕРХНИМ
 #define a 1
 #define up 0
 #define below 1
@@ -19,7 +19,7 @@
 const double X0 = -1;
 const double Y0 = -1;
 const double Z0 = -1;
-const double epsilon = 10e-4;
+const double epsilon = 10e-8;
 double iteration_constant;
 
 double *curAndPrevPhi[2];
