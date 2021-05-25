@@ -8,6 +8,7 @@ import utils.Observable;
 import utils.Observer;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
  */
 
 public class Model implements Observable {
+
+//    private static final List<Integer> scoresTop = new ArrayList<>();
 
     private final List<Observer> observers;
 
@@ -59,6 +62,7 @@ public class Model implements Observable {
             return;
         }
         boolean modelHasChanged = false;
+
         switch (command) {
             case ROTATE -> {
                 modelHasChanged = curFigure.rotateRight(gameField);
@@ -74,13 +78,14 @@ public class Model implements Observable {
                     if (countOfFilledLines > 0) {
                         earnPoints(countOfFilledLines);
                         destroyFilledLines(countOfFilledLines);
-                        notifyObservers(); // здесь ли или ниже?
+//                        notifyObservers(); // здесь ли или ниже?
                     }
                     if (isGameEnd()) {
                         curModelState = ModelStates.END;
                     } else {
                         spawnNewFigure();
                     }
+                    notifyObservers();
                 }
             }
             case MOVE_LEFT -> {
@@ -93,6 +98,7 @@ public class Model implements Observable {
             }
             default -> { }
         }
+
         if (modelHasChanged) {
             System.err.println("model has change");
             notifyObservers();

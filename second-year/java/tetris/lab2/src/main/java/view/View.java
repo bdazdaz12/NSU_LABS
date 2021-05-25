@@ -90,7 +90,9 @@ public class View implements Observer, Runnable { // все манипуляци
                 cellsField.updateCellsField(model.getGameField());
                 scores.setText("Scores: " + model.getScores());
             }
-            case END -> {}
+            case END -> {
+                JOptionPane.showMessageDialog(null, "End of game");
+            }
             case PAUSE -> {}
         }
     }
