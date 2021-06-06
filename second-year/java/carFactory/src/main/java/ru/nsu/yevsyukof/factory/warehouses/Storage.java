@@ -8,13 +8,16 @@ public class Storage <ProductType> {
     private final BlockingQueue<ProductType> blockingQueue;
     private final int capacity;
 
+//    private final NotifyList consumersList; // TODO
+//    private final NotifyList suppliersList;
+
     public Storage(int capacity) {
         this.capacity = capacity;
         blockingQueue = new LinkedBlockingQueue<>(capacity);
     }
 
     public synchronized void storeProduct(ProductType product) {
-        while (isStorageFull()) {
+        while (isFull()) {
             try {
                 this.wait();
             } catch (InterruptedException e) {
@@ -26,7 +29,7 @@ public class Storage <ProductType> {
     }
 
     public synchronized ProductType getProduct() {
-        while (isStorageEmpty()) {
+        while (isEmpty()) {
             try {
                 this.wait();
             } catch (InterruptedException e) {
@@ -37,12 +40,16 @@ public class Storage <ProductType> {
         return blockingQueue.poll();
     }
 
-    private synchronized boolean isStorageFull() {
+    public synchronized boolean isFull() {
         return capacity == blockingQueue.size();
     }
 
-    private synchronized boolean isStorageEmpty() {
+    public synchronized boolean isEmpty() {
         return blockingQueue.size() == 0;
+    }
+
+    public synchronized int countAvailablePlaces() {
+        return capacity - blockingQueue.size();
     }
 }
 

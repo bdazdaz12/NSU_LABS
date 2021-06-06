@@ -11,7 +11,7 @@ public class ThreadPool implements Executor {
 
     public ThreadPool(int countThreads) {
         for (int i = 0; i < countThreads; ++i) {
-            new Thread(new ThreadWorkScenario()).start();
+            new Thread(new ThreadInPoolWorkScenario(), "ThreadInPool").start();
         }
     }
 
@@ -26,7 +26,7 @@ public class ThreadPool implements Executor {
         isRunning = false;
     }
 
-    private final class ThreadWorkScenario implements Runnable {
+    private final class ThreadInPoolWorkScenario implements Runnable {
 
         @Override
         public void run() {

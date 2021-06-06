@@ -10,7 +10,8 @@ abstract class SupplierThread<SuppliedProductType extends IdentifiableProduct> e
 
     protected final Storage<SuppliedProductType> destinationStorage;
 
-    public SupplierThread(Storage<SuppliedProductType> destinationStorage) {
+    public SupplierThread(Storage<SuppliedProductType> destinationStorage, String threadName) {
+        super(threadName);
         this.destinationStorage = destinationStorage;
     }
 

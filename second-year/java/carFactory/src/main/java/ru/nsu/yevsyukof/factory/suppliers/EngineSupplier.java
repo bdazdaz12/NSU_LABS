@@ -7,7 +7,7 @@ import ru.nsu.yevsyukof.factory.warehouses.Storage;
 public class EngineSupplier extends SupplierThread<Engine> {
 
     public EngineSupplier(Storage<Engine> destinationStorage) {
-        super(destinationStorage);
+        super(destinationStorage, "EngineSupplierThread");
     }
 
     @Override
