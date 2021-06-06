@@ -1,5 +1,6 @@
 package ru.nsu.yevsyukof.factory.workers;
 
+import ru.nsu.yevsyukof.factory.FactoryInfrastructure;
 import ru.nsu.yevsyukof.factory.products.IDIssuingService;
 import ru.nsu.yevsyukof.factory.products.car.Car;
 import ru.nsu.yevsyukof.factory.products.car.parts.Accessory;
@@ -27,6 +28,14 @@ public final class BuildCarTask implements Runnable {
         Engine engine = engineStorage.getProduct();
         Body body = bodyStorage.getProduct();
         Accessory accessory = accessoryStorage.getProduct();
+
+        try {
+            Thread.sleep(1000L * FactoryInfrastructure.getInstance()
+                    .getInfrastructureParameters().getWorkerDelay()); // TODO TODO TODO
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         Car newCar = new Car(IDIssuingService.getNewProductID(), engine, body, accessory);
         carStorage.storeProduct(newCar);
     }

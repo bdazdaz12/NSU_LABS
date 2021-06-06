@@ -1,5 +1,6 @@
 package ru.nsu.yevsyukof.factory;
 
+import ru.nsu.yevsyukof.factory.dealers.Dealer;
 import ru.nsu.yevsyukof.factory.products.car.Car;
 import ru.nsu.yevsyukof.factory.products.car.parts.Accessory;
 import ru.nsu.yevsyukof.factory.products.car.parts.Body;
@@ -19,6 +20,8 @@ public class FactoryInfrastructure implements Runnable {
 
     private static final Properties properties = new Properties();
 
+    private final InfrastructureParameters infrastructureParameters;
+
     private static Storage<Engine> engineStorage;
     private static Storage<Body> bodyStorage;
     private static Storage<Accessory> accessoryStorage;
@@ -27,10 +30,11 @@ public class FactoryInfrastructure implements Runnable {
     private static EngineSupplier engineSupplier;
     private static BodySupplier bodySupplier;
     private static final List<AccessorySupplier> accessorySuppliers = new ArrayList<>();
-//    private static final List<AccessorySupplier> accessorySuppliers = new ArrayList<>();
-    // dealers
+
     private static ThreadPool workersPool;
+
     private static CarStorageController carStorageController;
+    private static final List<Dealer> dealers = new ArrayList<>();
 
     private static FactoryInfrastructure instance;
 
@@ -49,10 +53,13 @@ public class FactoryInfrastructure implements Runnable {
             System.err.println("Load factory.properties ERROR!");
             e.printStackTrace();
         }
-
+        infrastructureParameters = new InfrastructureParameters();
         createStorages();
         createThreads();
-        //создаем потоки
+    }
+
+    public synchronized InfrastructureParameters getInfrastructureParameters() {
+        return infrastructureParameters;
     }
 
     private void createStorages() {
@@ -67,7 +74,7 @@ public class FactoryInfrastructure implements Runnable {
         }
     }
 
-    private void createThreads() {
+    private void createThreads() throws NumberFormatException { // эксепшены
         engineSupplier = new EngineSupplier(engineStorage);
 
         bodySupplier = new BodySupplier(bodyStorage);
@@ -81,20 +88,40 @@ public class FactoryInfrastructure implements Runnable {
         carStorageController = new CarStorageController(carStorage, workersPool,
                 engineStorage, bodyStorage, accessoryStorage);
 
-
-        // TODO dealers
+        for (int i = 0; i < Integer.parseInt(properties.getProperty("DealersCount")); ++i) {
+            dealers.add(new Dealer(carStorage));
+        }
     }
 
     @Override
     public void run() {
-        // TODO runThreads
+        carStorageController.start();
+        for (Dealer dealer : dealers) {
+            dealer.start();
+        }
+
+        engineSupplier.start();
+        bodySupplier.start();
+        for (AccessorySupplier accessorySupplier : accessorySuppliers) {
+            accessorySupplier.start();
+        }
     }
 
-    public void shutdown() {
+    public void shutdown() { // прерываем все потоки
+        workersPool.shutdown();
+
         for (AccessorySupplier accessorySupplier : accessorySuppliers) {
             accessorySupplier.interrupt();
         }
-        workersPool.shutdown();
+        engineSupplier.interrupt();
+        bodySupplier.interrupt();
 
+
+        for (Dealer dealer : dealers) {
+            dealer.interrupt();
+        }
+        carStorageController.interrupt();
     }
+
+
 }

@@ -10,6 +10,6 @@ import ru.nsu.yevsyukof.factory.warehouses.Storage;
 public class Main {
 
     public static void main(String[] args) {
-
+        CarFactory.getInstance().run();
     }
 }

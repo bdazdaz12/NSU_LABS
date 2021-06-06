@@ -36,7 +36,7 @@ public class CarStorageController extends Thread {
                 try {
                     carStorage.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace(); // TODO
+                    e.printStackTrace(); // TODO добавить прерывание
                 }
             }
             for (int i = 0; i < carStorage.countAvailablePlaces(); ++i) {

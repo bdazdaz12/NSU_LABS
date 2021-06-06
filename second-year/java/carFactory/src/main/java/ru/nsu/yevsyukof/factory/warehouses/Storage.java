@@ -21,7 +21,7 @@ public class Storage <ProductType> {
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace(); // TODO
+                e.printStackTrace(); // TODO обработать прерывание потоков
             }
         }
         blockingQueue.add(product);
@@ -33,7 +33,8 @@ public class Storage <ProductType> {
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace(); // TODO
+                Thread.currentThread().interrupt();
+                // TODO обработать прерывание потоков
             }
         }
         this.notifyAll();

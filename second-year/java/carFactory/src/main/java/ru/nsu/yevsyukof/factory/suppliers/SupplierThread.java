@@ -20,7 +20,7 @@ abstract class SupplierThread<SuppliedProductType extends IdentifiableProduct> e
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            destinationStorage.storeProduct(createProduct()); // TODO расширить
+            destinationStorage.storeProduct(createProduct()); // TODO добавить задержку
         }
     }
 }

@@ -1,12 +1,17 @@
 package ru.nsu.yevsyukof;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.nsu.yevsyukof.factory.FactoryInfrastructure;
 
 public class CarFactory implements Runnable {
 
-    private static Logger logger = LoggerFactory;
+    private static final Logger logger = LoggerFactory.getLogger(CarFactory.class);
+    private static boolean isLogging;
+
+    public synchronized Logger getLogger() {
+        return logger;
+    }
 
     private static CarFactory instance;
 
@@ -22,6 +27,6 @@ public class CarFactory implements Runnable {
     @Override
     public void run() {
         FactoryInfrastructure.getInstance().run();
-        // gui run
+        //TODO gui run
     }
 }
