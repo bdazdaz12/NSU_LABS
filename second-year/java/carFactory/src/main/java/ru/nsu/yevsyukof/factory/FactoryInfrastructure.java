@@ -20,21 +20,25 @@ public class FactoryInfrastructure implements Runnable {
 
     private static final Properties properties = new Properties();
 
-    private final InfrastructureParameters infrastructureParameters;
+    private Storage<Engine> engineStorage;
+    private Storage<Body> bodyStorage;
+    private Storage<Accessory> accessoryStorage;
+    private Storage<Car> carStorage;
 
-    private static Storage<Engine> engineStorage;
-    private static Storage<Body> bodyStorage;
-    private static Storage<Accessory> accessoryStorage;
-    private static Storage<Car> carStorage;
+    private EngineSupplier engineSupplier;
+    private BodySupplier bodySupplier;
+    private final List<AccessorySupplier> accessorySuppliers = new ArrayList<>();
 
-    private static EngineSupplier engineSupplier;
-    private static BodySupplier bodySupplier;
-    private static final List<AccessorySupplier> accessorySuppliers = new ArrayList<>();
+    private ThreadPool workersPool;
 
-    private static ThreadPool workersPool;
+    private CarStorageController carStorageController;
+    private final List<Dealer> dealers = new ArrayList<>();
 
-    private static CarStorageController carStorageController;
-    private static final List<Dealer> dealers = new ArrayList<>();
+    private final Delay engineSupplierDelay;
+    private final Delay bodySupplierDelay;
+    private final Delay accessorySupplierDelay;
+    private final Delay workerDelay;
+    private final Delay dealerDelay;
 
     private static FactoryInfrastructure instance;
 
@@ -53,13 +57,14 @@ public class FactoryInfrastructure implements Runnable {
             System.err.println("Load factory.properties ERROR!");
             e.printStackTrace();
         }
-        infrastructureParameters = new InfrastructureParameters();
+        engineSupplierDelay = new Delay(1);
+        bodySupplierDelay = new Delay(1);
+        accessorySupplierDelay = new Delay(1);
+        workerDelay = new Delay(1);
+        dealerDelay = new Delay(10);
+
         createStorages();
         createThreads();
-    }
-
-    public synchronized InfrastructureParameters getInfrastructureParameters() {
-        return infrastructureParameters;
     }
 
     private void createStorages() {
@@ -75,35 +80,35 @@ public class FactoryInfrastructure implements Runnable {
     }
 
     private void createThreads() throws NumberFormatException { // эксепшены
-        engineSupplier = new EngineSupplier(engineStorage);
+        engineSupplier = new EngineSupplier(engineStorage, engineSupplierDelay);
 
-        bodySupplier = new BodySupplier(bodyStorage);
+        bodySupplier = new BodySupplier(bodyStorage, bodySupplierDelay);
 
         for (int i = 0; i < Integer.parseInt(properties.getProperty("AccessorySuppliersCount")); ++i) {
-            accessorySuppliers.add(new AccessorySupplier(accessoryStorage));
+            accessorySuppliers.add(new AccessorySupplier(accessoryStorage, accessorySupplierDelay));
         }
 
         workersPool = new ThreadPool(Integer.parseInt(properties.getProperty("WorkersCount")));
 
-        carStorageController = new CarStorageController(carStorage, workersPool,
+        carStorageController = new CarStorageController(carStorage, workersPool, workerDelay,
                 engineStorage, bodyStorage, accessoryStorage);
 
         for (int i = 0; i < Integer.parseInt(properties.getProperty("DealersCount")); ++i) {
-            dealers.add(new Dealer(carStorage));
+            dealers.add(new Dealer(carStorage, dealerDelay));
         }
     }
 
     @Override
     public void run() {
-        carStorageController.start();
-        for (Dealer dealer : dealers) {
-            dealer.start();
-        }
-
         engineSupplier.start();
         bodySupplier.start();
         for (AccessorySupplier accessorySupplier : accessorySuppliers) {
             accessorySupplier.start();
+        }
+
+        carStorageController.start();
+        for (Dealer dealer : dealers) {
+            dealer.start();
         }
     }
 
@@ -123,5 +128,23 @@ public class FactoryInfrastructure implements Runnable {
         carStorageController.interrupt();
     }
 
+    public synchronized Delay getEngineSupplierDelay() {
+        return engineSupplierDelay;
+    }
 
+    public synchronized Delay getBodySupplierDelay() {
+        return bodySupplierDelay;
+    }
+
+    public synchronized Delay getAccessorySupplierDelay() {
+        return accessorySupplierDelay;
+    }
+
+    public synchronized Delay getWorkerDelay() {
+        return workerDelay;
+    }
+
+    public synchronized Delay getDealerDelay() {
+        return dealerDelay;
+    }
 }

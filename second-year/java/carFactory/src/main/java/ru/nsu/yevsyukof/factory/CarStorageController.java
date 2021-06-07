@@ -13,16 +13,21 @@ public class CarStorageController extends Thread {
     private final Storage<Car> carStorage;
     private final ThreadPool workersPool;
 
+    private final Delay workerDelay;
+
     private final Storage<Engine> engineStorage;
     private final Storage<Body> bodyStorage;
     private final Storage<Accessory> accessoryStorage;
 
-    public CarStorageController(Storage<Car> carStorage, ThreadPool workersPool,
+
+    public CarStorageController(Storage<Car> carStorage, ThreadPool workersPool, Delay workerDelay,
                                 Storage<Engine> engineStorage, Storage<Body> bodyStorage,
                                 Storage<Accessory> accessoryStorage) {
         super("CarStorageController");
         this.carStorage = carStorage;
         this.workersPool = workersPool;
+
+        this.workerDelay = workerDelay;
 
         this.engineStorage = engineStorage;
         this.bodyStorage = bodyStorage;
@@ -31,16 +36,21 @@ public class CarStorageController extends Thread {
 
     @Override
     public void run() {
-        synchronized (carStorage) {
-            while (carStorage.isFull()) {
-                try {
-                    carStorage.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace(); // TODO добавить прерывание
+        while (!Thread.currentThread().isInterrupted()) {
+            synchronized (carStorage) {
+                while (workersPool.countTasksInQueue() >= carStorage.countAvailablePlaces()) {
+                    try {
+                        carStorage.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace(); // TODO добавить прерывание
+                    }
                 }
-            }
-            for (int i = 0; i < carStorage.countAvailablePlaces(); ++i) {
-                workersPool.execute(new BuildCarTask(engineStorage, bodyStorage, accessoryStorage, carStorage));
+
+                for (int i = 0; i < carStorage.countAvailablePlaces() -
+                        workersPool.countTasksInQueue() + workersPool.getPoolSize(); ++i) {
+                    workersPool.execute(new BuildCarTask(engineStorage, bodyStorage, accessoryStorage,
+                            carStorage, workerDelay));
+                }
             }
         }
     }

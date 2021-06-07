@@ -8,7 +8,7 @@ public class Storage <ProductType> {
     private final BlockingQueue<ProductType> blockingQueue;
     private final int capacity;
 
-//    private final NotifyList consumersList; // TODO
+//    private final NotifyList consumersList;
 //    private final NotifyList suppliersList;
 
     public Storage(int capacity) {
@@ -51,6 +51,10 @@ public class Storage <ProductType> {
 
     public synchronized int countAvailablePlaces() {
         return capacity - blockingQueue.size();
+    }
+
+    public synchronized int getCapacity() {
+        return capacity;
     }
 }
 

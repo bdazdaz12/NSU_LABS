@@ -1,5 +1,6 @@
 package ru.nsu.yevsyukof.factory.workers;
 
+import ru.nsu.yevsyukof.factory.Delay;
 import ru.nsu.yevsyukof.factory.FactoryInfrastructure;
 import ru.nsu.yevsyukof.factory.products.IDIssuingService;
 import ru.nsu.yevsyukof.factory.products.car.Car;
@@ -15,12 +16,15 @@ public final class BuildCarTask implements Runnable {
     private final Storage<Accessory> accessoryStorage;
     private final Storage<Car> carStorage;
 
+    private final Delay workerDelay;
+
     public BuildCarTask(Storage<Engine> engineStorage, Storage<Body> bodyStorage,
-                        Storage<Accessory> accessoryStorage, Storage<Car> carStorage) {
+                        Storage<Accessory> accessoryStorage, Storage<Car> carStorage, Delay workerDelay) {
         this.engineStorage = engineStorage;
         this.bodyStorage = bodyStorage;
         this.accessoryStorage = accessoryStorage;
         this.carStorage = carStorage;
+        this.workerDelay = workerDelay;
     }
 
     @Override
@@ -30,8 +34,7 @@ public final class BuildCarTask implements Runnable {
         Accessory accessory = accessoryStorage.getProduct();
 
         try {
-            Thread.sleep(1000L * FactoryInfrastructure.getInstance()
-                    .getInfrastructureParameters().getWorkerDelay()); // TODO TODO TODO
+            Thread.sleep(1000L * workerDelay.getDelay()); // TODO TODO TODO
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
