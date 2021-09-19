@@ -6,7 +6,7 @@
 #include <ctime>
 #include <arpa/inet.h>
 
-#define timeout 4 // timeout = 4 seconds
+#define timeout 1 // timeout = 4 seconds
 
 class AddressMap {
 private:

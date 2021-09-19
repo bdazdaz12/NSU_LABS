@@ -11,9 +11,7 @@
 #include "AddressInterpreter.h"
 
 #define multicast_port 54000
-#define check_delay 5 // seconds
-
-void roflBind(int socket);
+#define check_delay 2 // seconds
 
 std::shared_ptr<sockaddr> createMulticastEndpoint(char *multicastAddress, bool IPv4_mode) {
     if (IPv4_mode) {
@@ -37,13 +35,31 @@ std::shared_ptr<sockaddr> createMulticastEndpoint(char *multicastAddress, bool I
     }
 }
 
-void bindMulticastUdpSocket(int multicastUdpSocket, const std::shared_ptr<sockaddr>& multicastEndpoint,
+void bindMulticastUdpSocket(int multicastUdpSocket, const std::shared_ptr<sockaddr> &multicastEndpoint,
                             bool IPv4_mode) {
     if (bind(multicastUdpSocket, multicastEndpoint.get(),
-             IPv4_mode? sizeof(sockaddr_in) : sizeof(sockaddr_in6)) == -1) {
+             IPv4_mode ? sizeof(sockaddr_in) : sizeof(sockaddr_in6)) == -1) {
         perror("BIND ERROR \n");
         close(multicastUdpSocket);
         exit(22);
+    }
+}
+
+void roflBind(int multicastUdpSocket, bool IPv4_mode) {
+    if (IPv4_mode) {
+        struct sockaddr_in address = {AF_INET, htons(multicast_port)};
+        if (bind(multicastUdpSocket, (struct sockaddr *) &address, sizeof address) == -1) {
+            perror("BIND IPv4 ERROR \n");
+            close(multicastUdpSocket);
+            exit(22);
+        }
+    } else {
+        struct sockaddr_in6 address = {AF_INET6, htons(multicast_port)};
+        if (bind(multicastUdpSocket, (struct sockaddr *) &address, sizeof address) == -1) {
+            perror("BIND IPv6 ERROR \n");
+            close(multicastUdpSocket);
+            exit(22);
+        }
     }
 }
 
@@ -75,9 +91,9 @@ int main(int argc, char **argv) {
     bool IPv4_mode = strstr(multicastAddress, ":") == nullptr;
 
     if (IPv4_mode) {
-        std::cout << "IPv4_MODE" << std::endl;
+        std::cout << "IPv4_MODE\n" << std::endl;
     } else {
-        std::cout << "IPv6_MODE" << std::endl;
+        std::cout << "IPv6_MODE\n" << std::endl;
     }
 
     int multicastUdpSocket = socket(IPv4_mode ? AF_INET : AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
@@ -93,7 +109,7 @@ int main(int argc, char **argv) {
     std::shared_ptr<sockaddr> multicastEndpoint = createMulticastEndpoint(multicastAddress, IPv4_mode);
 
 //    bindMulticastUdpSocket(multicastUdpSocket, multicastEndpoint, IPv4_mode);
-    roflBind(multicastUdpSocket);
+    roflBind(multicastUdpSocket, IPv4_mode);
     joinMulticastGroup(multicastUdpSocket, multicastAddress, IPv4_mode);
 
     pid_t pid = getpid();
@@ -106,10 +122,10 @@ int main(int argc, char **argv) {
 
     while (true) {
         sendto(multicastUdpSocket, &pid, sizeof(pid_t), 0, multicastEndpoint.get(),
-               IPv4_mode? sizeof(sockaddr_in) : sizeof(sockaddr_in6));
+               IPv4_mode ? sizeof(sockaddr_in) : sizeof(sockaddr_in6));
 
-        auto *senderAddress = (sockaddr *) calloc(1, IPv4_mode? sizeof(sockaddr_in) : sizeof(sockaddr_in6));
-        socklen_t len = IPv4_mode? sizeof(sockaddr_in) : sizeof(sockaddr_in6);
+        auto *senderAddress = (sockaddr *) calloc(1, IPv4_mode ? sizeof(sockaddr_in) : sizeof(sockaddr_in6));
+        socklen_t len = IPv4_mode ? sizeof(sockaddr_in) : sizeof(sockaddr_in6);
         // пакет с IP 0.0.0.0 - появлялся из-за того, что я не инициализировал len
 
         int cnt = recvfrom(multicastUdpSocket, &senderPid, sizeof(senderPid), 0, senderAddress, &len);
@@ -130,10 +146,4 @@ int main(int argc, char **argv) {
         free(senderAddress);
         sleep(1);
     }
-}
-
-void roflBind(int socket) {
-//    struct sockaddr_in6 address = {AF_INET6, htons(multicast_port)};
-    struct sockaddr_in address = {AF_INET, htons(multicast_port)};
-    bind(socket, (struct sockaddr*)&address, sizeof address);
 }
