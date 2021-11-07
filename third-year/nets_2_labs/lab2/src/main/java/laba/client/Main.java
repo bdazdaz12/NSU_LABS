@@ -1,4 +1,4 @@
-package client;
+package laba.client;
 
 public class Main {
 
@@ -7,12 +7,11 @@ public class Main {
         String serverName = args[1];
         String serverPort = args[2];
 
-        int port = 0;
+        int port = -1;
         try {
             port = Integer.parseInt(serverPort);
         } catch (NumberFormatException e) {
             System.err.println("INVALID SERVER PORT");
-            e.printStackTrace();
             System.exit(1);
         }
 

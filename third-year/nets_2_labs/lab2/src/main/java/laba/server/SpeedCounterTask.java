@@ -1,19 +1,18 @@
-package server;
+package laba.server;
 
 import java.util.TimerTask;
 
-public class SpeedCounter extends TimerTask {
+public class SpeedCounterTask extends TimerTask {
 
-    long oldBytes = 0;
-    SenderThread parent;
+    private long oldBytes = 0;
+    private final ReceiverTask parent;
 
-    public SpeedCounter(SenderThread parent) {
+    public SpeedCounterTask(ReceiverTask parent) {
         this.parent = parent;
     }
 
     @Override
     public void run() {
-
         long newBytes = parent.getReceivedBytes();
         System.out.printf("Current speed of '%s': %.3f Mb/s, received %.1f %%\n", parent.getFileName(),
                 ((newBytes - oldBytes) * 1000.0 / 1000 / 8 / 1024 / 1024),

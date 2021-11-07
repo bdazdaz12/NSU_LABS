@@ -1,4 +1,6 @@
-package client;
+package laba.client;
+
+import laba.FileService;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -8,10 +10,9 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 public class SendService {
-
-    private static final int BUFFER_SIZE = 8192;
 
     private static void sendFileMetadata(BufferedOutputStream sockOutStream,
                                          File fileToSend) throws IOException {
@@ -26,33 +27,20 @@ public class SendService {
         byte[] fileSizeBuf = ByteBuffer.allocate(8).putLong(fileToSend.length()).array();
         sockOutStream.write(fileSizeBuf);
 
-        System.out.println("\n-------- Sent file metadata --------");
+        try {
+            sockOutStream.write(FileService.calculateFileHash(fileToSend));
+        } catch (NoSuchAlgorithmException ignored) {
+            System.err.println("NE YDALOS CALC HASH pochemyto blya");
+        }
+
+        System.out.println("-------- Sent file metadata --------");
     }
 
     private static void sendFileData(BufferedOutputStream sockOutStream,
                                      File fileToSend) throws IOException {
         Files.copy(Path.of(fileToSend.getPath()), sockOutStream);
-        System.out.println("-------- File data sent 2--------");
+        System.out.println("-------- File data sent --------");
     }
-
-
-//    private static void sendFileData(BufferedOutputStream sockOutStream,
-//                                     File fileToSend) throws IOException {
-//        byte[] fileBuf = new byte[BUFFER_SIZE];
-//        long bytesSent = 0;
-//        long bytesRemain = fileToSend.length();
-//        InputStream inputStream = new FileInputStream(fileToSend);
-//        while (bytesSent < fileToSend.length()) {
-//            int bytesToSend = bytesRemain < BUFFER_SIZE ? (int) bytesRemain : 4096;
-//            int bytesReadNow = inputStream.read(fileBuf, 0, bytesToSend);
-//            sockOutStream.write(fileBuf, 0, bytesReadNow);
-//            sockOutStream.flush();
-//            bytesSent += bytesReadNow;
-//            bytesRemain -= bytesReadNow;
-//        }
-//        inputStream.close();
-//        System.out.println("-------- File data sent --------");
-//    }
 
     public static void sendFile(String filePath, String hostName, int port) {
         try (Socket socket = new Socket(InetAddress.getByName(hostName), port);
@@ -61,7 +49,7 @@ public class SendService {
             sendFileMetadata(sockOutStream, fileToSend);
             sendFileData(sockOutStream, fileToSend);
         } catch (UnknownHostException e) {
-            System.err.println("UNKNOWN_HOST_ERROR: invalid server address (-_-)");
+            System.err.println("UNKNOWN_HOST_ERROR: invalid laba.server address (-_-)");
             e.printStackTrace();
             System.exit(2);
         } catch (IOException e) {
