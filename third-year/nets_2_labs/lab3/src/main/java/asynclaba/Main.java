@@ -38,26 +38,26 @@ public class Main {
 
                         System.out.print("\nВведите номер нужной вам локации: ");
                         int requiredLocationNumber = sc.nextInt() - 1;
+
                         System.out.print("Введите радиус поиска интересных мест (в метрах): ");
                         foundLocations.get(requiredLocationNumber).searchRadius = sc.nextInt();
+
+                        System.out.print("Введите максимальное количество интересных мест: ");
+                        foundLocations.get(requiredLocationNumber).countPlacesUpperBound = sc.nextInt();
 
                         System.out.println("----------------------------------------------------\n");
 
                         return foundLocations.get(requiredLocationNumber);
                     })
-                    .thenApplyAsync(requiredLocation -> {
+                    .thenApply(requiredLocation -> {
                         List<CompletableFuture<Void>> tasks = new ArrayList<>();
 
                         tasks.add(CompletableFuture
                                 .runAsync(new AsyncGetWeatherTask(asyncHttpClientInstance, requiredLocation)));
-//                        tasks.add(CompletableFuture
-//                                .runAsync(new AsyncFindPlacesTask(asyncHttpClientInstance, requiredLocation)));
+                        tasks.add(CompletableFuture
+                                .runAsync(new AsyncFindPlacesTask(asyncHttpClientInstance, requiredLocation)));
 
-                        try {
-                            CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            e.printStackTrace();
-                        }
+                        CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).join();
 
                         return requiredLocation;
                     });
@@ -66,7 +66,7 @@ public class Main {
             Location foundLocationData = locationFuture.get();
 
             System.out.println(foundLocationData.getCurrentWeather());
-//            System.out.println(foundLocationData.getInterestingPlacesData());
+            System.out.println(foundLocationData.getInterestingPlacesData());
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

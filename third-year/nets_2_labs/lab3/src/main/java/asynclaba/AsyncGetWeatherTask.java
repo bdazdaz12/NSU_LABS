@@ -1,7 +1,6 @@
 package asynclaba;
 
 import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.Dsl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,10 +23,7 @@ public class AsyncGetWeatherTask implements Runnable {
         String url = "https://api.openweathermap.org/data/2.5/weather?lat=" + requiredLocation.latitude +
                 "&lon=" + requiredLocation.longitude + "&apikey=d9cc4eb99b79ce7cbcd85ca973cb740a";
 
-
-        AsyncHttpClient asc = Dsl.asyncHttpClient();
-//        asyncHttpClientInstance
-        asc.prepareGet(url).execute().toCompletableFuture()
+        asyncHttpClientInstance.prepareGet(url).execute().toCompletableFuture()
                 .thenAccept(response -> {
 
                     JSONObject parsedResponse;
@@ -38,10 +34,6 @@ public class AsyncGetWeatherTask implements Runnable {
                         System.err.println("\n\tPARSE_ERROR (Weather JSON) !!!\n");
                         return;
                     }
-
-                    System.out.println("AAAAAAAAAAAAAAA");
-                    System.out.println(parsedResponse.toJSONString());
-                    System.out.println("BBBBBBBBBBB");
 
                     JSONArray weatherArray = (JSONArray) (parsedResponse.get("weather"));
 
@@ -56,6 +48,6 @@ public class AsyncGetWeatherTask implements Runnable {
                     requiredLocation.weatherDescription =
                             ((JSONObject) weatherArray.get(0)).get("description") == null ? null
                                     : ((JSONObject) weatherArray.get(0)).get("description").toString();
-                });
+                }).join();
     }
 }

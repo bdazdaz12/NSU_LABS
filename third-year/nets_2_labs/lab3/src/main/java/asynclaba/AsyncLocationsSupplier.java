@@ -10,7 +10,6 @@ import org.json.simple.parser.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 public class AsyncLocationsSupplier implements Supplier<List<Location>> {
@@ -32,50 +31,44 @@ public class AsyncLocationsSupplier implements Supplier<List<Location>> {
         CompletableFuture<Response> getResponse = asyncHttpClientInstance.prepareGet(url).execute()
                 .toCompletableFuture();
 
-        try {
-            List<Location> foundLocations = getResponse.thenApply(response -> {
-                JSONObject parsedResponse;
-                try {
-                    parsedResponse = (JSONObject) new JSONParser().parse(response.getResponseBody());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    System.err.println("\n\tPARSE_ERROR (Locations JSON)!!!\n");
-                    return null;
-                }
+        List<Location> foundLocations = getResponse.thenApply(response -> {
+            JSONObject parsedResponse;
+            try {
+                parsedResponse = (JSONObject) new JSONParser().parse(response.getResponseBody());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                System.err.println("\n\tPARSE_ERROR (Locations JSON)!!!\n");
+                return null;
+            }
 
-                JSONArray hits = (JSONArray) parsedResponse.get("hits");
-                ArrayList<Location> locations = new ArrayList<>();
+            JSONArray hits = (JSONArray) parsedResponse.get("hits");
+            ArrayList<Location> locations = new ArrayList<>();
 
-                for (var point : hits) {
-                    Location nextFoundLocation = new Location();
+            for (var point : hits) {
+                Location nextFoundLocation = new Location();
 
-                    nextFoundLocation.latitude =
-                            ((JSONObject) ((JSONObject) point).get("point")).get("lat").toString();
-                    nextFoundLocation.longitude =
-                            ((JSONObject) ((JSONObject) point).get("point")).get("lng").toString();
-                    nextFoundLocation.locationName =
-                            ((JSONObject) point).get("name").toString();
+                nextFoundLocation.latitude =
+                        ((JSONObject) ((JSONObject) point).get("point")).get("lat").toString();
+                nextFoundLocation.longitude =
+                        ((JSONObject) ((JSONObject) point).get("point")).get("lng").toString();
+                nextFoundLocation.locationName =
+                        ((JSONObject) point).get("name").toString();
 
-                    nextFoundLocation.city = ((JSONObject) point).get("city") == null ? null
-                            : ((JSONObject) point).get("city").toString();
+                nextFoundLocation.city = ((JSONObject) point).get("city") == null ? null
+                        : ((JSONObject) point).get("city").toString();
 
-                    nextFoundLocation.street = ((JSONObject) point).get("street") == null ? null
-                            : ((JSONObject) point).get("street").toString();
+                nextFoundLocation.street = ((JSONObject) point).get("street") == null ? null
+                        : ((JSONObject) point).get("street").toString();
 
-                    nextFoundLocation.country = ((JSONObject) point).get("country") == null ? null
-                            : ((JSONObject) point).get("country").toString();
+                nextFoundLocation.country = ((JSONObject) point).get("country") == null ? null
+                        : ((JSONObject) point).get("country").toString();
 
-                    locations.add(nextFoundLocation);
-                }
+                locations.add(nextFoundLocation);
+            }
+            return locations;
 
-                return locations;
+        }).join();
 
-            }).get();
-
-            return foundLocations;
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return foundLocations;
     }
 }

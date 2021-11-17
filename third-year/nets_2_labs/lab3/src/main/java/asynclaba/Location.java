@@ -1,6 +1,7 @@
 package asynclaba;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class Location {
@@ -12,8 +13,9 @@ public final class Location {
     String city;
     String street;
 
-    List<Place> interestingPlaces = null;
+    List<Place> interestingPlaces = new ArrayList<>();
     int searchRadius;
+    int countPlacesUpperBound;
 
     String currentTemperature;
     String currentWindSpeed;
@@ -36,33 +38,24 @@ public final class Location {
 
     public String getCurrentWeather() {
         return "Current location weather:" +
-                "\n\t" +  currentTemperature +
-                "\n\t" + currentWindSpeed +
-                "\n\t" + weatherDescription + "\n";
+                "\n\tCurrent temperature: " + currentTemperature +
+                "\n\tCurrent wind speed: " + currentWindSpeed +
+                "\n\tWeather description: " + weatherDescription + "\n";
     }
-
-//    public List<Place> getInterestingPlaces() {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("list of interesting places in this location\n within a radius of ")
-//                .append(searchRadius)
-//                .append(" meters with a description:\n");
-//        for (Place place : interestingPlaces) {
-//            sb.append('\t');
-//            sb.append(place.name);
-//            sb.append("\n\n");
-//        }
-//        return sb.toString();
-//    }
-
 
     public String getInterestingPlacesData() {
         StringBuilder sb = new StringBuilder();
-        sb.append("list of interesting places in this location\n within a radius of ")
+        sb.append("List of interesting places in this location within a radius of ")
                 .append(searchRadius)
                 .append(" meters with a description:\n");
         for (Place place : interestingPlaces) {
             sb.append('\t');
+            sb.append("Place name: ");
             sb.append(place.name);
+            sb.append("\n\tXID: ");
+            sb.append(place.xid);
+            sb.append("\n\tDescription: ");
+            sb.append(place.description);
             sb.append("\n\n");
         }
         return sb.toString();
