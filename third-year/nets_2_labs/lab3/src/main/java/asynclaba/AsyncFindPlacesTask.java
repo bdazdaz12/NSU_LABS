@@ -24,8 +24,7 @@ public final class AsyncFindPlacesTask implements Runnable {
         this.requiredLocation = requiredLocation;
     }
 
-    @Override
-    public void run() {
+    private CompletableFuture<List<Place>> findPlacesByXid() {
         String findPlacesUrl = "https://api.opentripmap.com/0.1/ru/places/radius?radius="
                 + requiredLocation.searchRadius
                 + "&lon=" + requiredLocation.longitude
@@ -33,7 +32,8 @@ public final class AsyncFindPlacesTask implements Runnable {
                 + "&format=json"
                 + "&apikey=" + apiKey;
 
-        asyncHttpClientInstance.prepareGet(
+
+        return asyncHttpClientInstance.prepareGet(
                 findPlacesUrl).execute()
                 .toCompletableFuture()
                 .thenApply(response -> { // ищем места по coords
@@ -46,13 +46,13 @@ public final class AsyncFindPlacesTask implements Runnable {
                         System.exit(23);
                     }
 
-                    List<Place> foundPlaces = new ArrayList<>();
+                    List<Place> places = new ArrayList<>();
                     int countPLaces = 0;
                     for (var place : parsedResponse) {
                         if (countPLaces >= requiredLocation.countPlacesUpperBound) {
-                            System.err.println(requiredLocation.countPlacesUpperBound);
                             break;
                         }
+                        countPLaces++;
 
                         Place nextFoundPlace = new Place();
                         nextFoundPlace.xid = ((JSONObject) place).get("xid").toString();
@@ -61,52 +61,47 @@ public final class AsyncFindPlacesTask implements Runnable {
                         if (nextFoundPlace.name.isEmpty()) {
                             continue;
                         }
-                        foundPlaces.add(nextFoundPlace);
-                        countPLaces++;
+                        places.add(nextFoundPlace);
                     }
-                    return foundPlaces;
-                })
-                .thenAccept(foundPlaces -> { // ищем описания мест по XID
+                    return places;
+                });
+    }
 
-                    String urlPrefix = "https://api.opentripmap.com/0.1/ru/places/xid/";
-                    String urlPostfix = "?apikey=" + apiKey;
-                    List<CompletableFuture<Response>> findPlacesDescriptionsAsyncRequests = new ArrayList<>();
+    private void findPlacesDescriptions(List<Place> foundPlaces) {
+        String urlPrefix = "https://api.opentripmap.com/0.1/ru/places/xid/";
+        String urlPostfix = "?apikey=" + apiKey;
+        List<CompletableFuture<Void>> findPlacesDescriptionsAsyncRequests = new ArrayList<>();
 
-                    for (Place place : foundPlaces) {
-                        findPlacesDescriptionsAsyncRequests.add(asyncHttpClientInstance
-                                .prepareGet(urlPrefix + place.xid + urlPostfix)
-                                .execute()
-                                .toCompletableFuture());
-                    }
+        for (Place place : foundPlaces) {
+            findPlacesDescriptionsAsyncRequests.add(asyncHttpClientInstance
+                    .prepareGet(urlPrefix + place.xid + urlPostfix)
+                    .execute()
+                    .toCompletableFuture()
+                    .thenAcceptAsync(response -> {
+                        JSONObject parsedResponse;
+                        try {
+                            parsedResponse = (JSONObject) new JSONParser()
+                                    .parse(response.getResponseBody());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            System.err.println("\n\tPARSE_ERROR (Places_2 JSON) !!!\n");
+                            return;
+                        }
 
-                    System.err.println("\nждем завершения ответов " + findPlacesDescriptionsAsyncRequests.size()
-                    + "\n");
+                        if (parsedResponse.get("wikipedia_extracts") != null
+                                && ((JSONObject) parsedResponse.get("wikipedia_extracts")).get("text") != null) {
+                            place.description = ((JSONObject) parsedResponse.get("wikipedia_extracts"))
+                                    .get("text").toString();
+                        }
+                    }));
+        }
+        CompletableFuture.allOf(findPlacesDescriptionsAsyncRequests.toArray(new CompletableFuture[0])).join();
+    }
 
-                    CompletableFuture.allOf(findPlacesDescriptionsAsyncRequests
-                            .toArray(new CompletableFuture[0])).join();
-                    requiredLocation.interestingPlaces = foundPlaces;
-
-
-
-//                    .thenAcceptAsync(response -> {
-//                        JSONObject parsedResponse = null;
-//
-//                        System.err.println("cyka eto otvet daaaa!!!");
-//
-//                        try {
-//                            parsedResponse = (JSONObject) new JSONParser()
-//                                    .parse(response.getResponseBody());
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                            System.err.println("\n\tPARSE_ERROR (Places_2 JSON) !!!\n");
-//                            System.exit(23);
-//                        }
-//
-//                        place.description =
-//                                ((JSONObject) parsedResponse.get("info")).get("descr") == null ? null
-//                                        : ((JSONObject) parsedResponse
-//                                        .get("info")).get("descr").toString();
-//                    })
-                }).join();
+    @Override
+    public void run() {
+        List<Place> foundPlaces = findPlacesByXid().join();
+        findPlacesDescriptions(foundPlaces);
+        requiredLocation.interestingPlaces = foundPlaces;
     }
 }

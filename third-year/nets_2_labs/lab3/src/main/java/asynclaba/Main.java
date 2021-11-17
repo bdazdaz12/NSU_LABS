@@ -70,6 +70,5 @@ public class Main {
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 }
